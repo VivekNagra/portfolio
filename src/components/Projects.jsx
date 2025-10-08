@@ -1,20 +1,20 @@
 const items = [
   {
-    title: 'Project One',
-    summary: 'Short description of the project and your impact.',
-    tech: ['React', 'Tailwind', 'Vite'],
-    link: '#',
+    title: 'Fittrack App',
+    summary: 'Fitness Tracker App',
+    tech: ['Java', 'JavaScript', 'CSS', 'HTML'],
+    link: 'https://github.com/VivekNagra/fittrack-app',
   },
   {
-    title: 'Project Two',
-    summary: 'Another project showcasing your expertise.',
-    tech: ['Node', 'Express', 'MongoDB'],
-    link: '#',
+    title: 'Diabetes Prediction Dashboard',
+    summary: 'Diabetes Prediction Dashboard',
+    tech: ['Python', 'C', 'JavaScript', 'TypeScript', 'HTML', 'CSS'],
+    link: 'https://github.com/VivekNagra/hop',
   },
   {
-    title: 'Project Three',
-    summary: 'A third example with measurable results.',
-    tech: ['TypeScript', 'Next.js', 'Vercel'],
+    title: 'F1 AI prediction app',
+    summary: 'A simople app that uses Supervised Learning and RAG-based Question Answering with LLaMA2',
+    tech: ['Jypeter Notebook', 'Python'],
     link: '#',
   },
 ]
@@ -23,7 +23,7 @@ export default function Projects() {
   return (
     <section id="projects" className="mx-auto max-w-6xl px-4 py-12">
       <h2 className="text-3xl font-bold tracking-tight text-zinc-900 dark:text-white">Projects</h2>
-      <p className="mt-2 text-zinc-600 dark:text-zinc-300">A selection of work demonstrating breadth and impact.</p>
+      <p className="mt-2 text-zinc-600 dark:text-zinc-300">A selection of work demonstrating my abilities and skills.</p>
       <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {items.map((p) => (
           <a
