@@ -12,8 +12,8 @@ const items = [
     link: 'https://github.com/VivekNagra/hop',
   },
   {
-    title: 'F1 AI prediction app',
-    summary: 'A simople app that uses Supervised Learning and RAG-based Question Answering with LLaMA2',
+    title: 'F1 AI Prediction App',
+    summary: 'A simple app that uses Supervised Learning and RAG-based Question Answering with LLaMA2',
     tech: ['Jypeter Notebook', 'Python'],
     link: '#',
   },
