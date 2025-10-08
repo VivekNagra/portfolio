@@ -58,3 +58,41 @@ html.dark body {
   100% { transform: translate(0px, 0px) scale(1); filter: blur(20px); }
 }
 
+/* Subtle animated gradient for primary button even when idle */
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+.btn-ambient {
+  background-image: linear-gradient(90deg, var(--color-brand), #a855f7, var(--color-brand));
+  background-size: 200% 100%;
+  animation: gradientShift 12s ease-in-out infinite;
+}
+.btn-ambient:hover {
+  animation-duration: 4s;
+}
+
+/* Soft pulse aura for primary button */
+@keyframes pulseAura {
+  0% { opacity: 0.28; transform: scale(1); }
+  60% { opacity: 0.04; transform: scale(1.2); }
+  100% { opacity: 0; transform: scale(1.2); }
+}
+.btn-pulse { position: relative; overflow: visible; }
+.btn-pulse::before {
+  content: "";
+  position: absolute;
+  inset: -6px;
+  border-radius: inherit;
+  background: radial-gradient(60% 60% at 50% 50%, color-mix(in oklab, var(--color-brand), transparent 55%), transparent 72%);
+  filter: blur(10px);
+  animation: pulseAura 2.4s ease-out infinite;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btn-ambient { animation: none; }
+  .btn-pulse::before { animation: none; }
+}
+

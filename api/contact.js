@@ -8,7 +8,14 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { name, email, message } = req.body || {}
+    // Ensure JSON body in case of missing middleware
+    let body = req.body
+    if (!body || typeof body !== 'object') {
+      const text = await readReqBody(req)
+      try { body = JSON.parse(text) } catch { body = {} }
+    }
+
+    const { name, email, message } = body || {}
 
     if (!name || !email || !message) {
       return res.status(400).json({ ok: false, error: 'Missing required fields' })
@@ -17,7 +24,13 @@ export default async function handler(req, res) {
     // Basic validation
     const normalizedEmail = String(email).trim()
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(normalizedEmail)) {
-      return res.status(400).json({ ok: false, error: 'Invalid email' })
+      return res.status(400).json({ ok: false, error: 'Invalid email', fieldErrors: { email: 'Please enter a valid email.' } })
+    }
+    if (String(name).trim().length < 2) {
+      return res.status(400).json({ ok: false, error: 'Invalid name', fieldErrors: { name: 'Name must be at least 2 characters.' } })
+    }
+    if (String(message).trim().length < 10) {
+      return res.status(400).json({ ok: false, error: 'Message too short', fieldErrors: { message: 'Message must be at least 10 characters.' } })
     }
 
     const RESEND_API_KEY = process.env.RESEND_API_KEY
@@ -68,6 +81,14 @@ function escapeHtml(str) {
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&#039;')
+}
+
+function readReqBody(req) {
+  return new Promise((resolve) => {
+    let data = ''
+    req.on('data', chunk => { data += chunk })
+    req.on('end', () => resolve(data))
+  })
 }
 
 
