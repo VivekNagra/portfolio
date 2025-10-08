@@ -1,5 +1,5 @@
 const skills = [
-  'JavaScript', 'React', 'TailwindCSS', 'Node.js', 'Express', 'REST APIs', 'Git', 'Vite'
+  'Python', 'Java', 'Python Notebook', 'JavaScript', 'React', 'TailwindCSS', 'Node.js', 'REST APIs', 'Git', 'Vite'
 ]
 
 export default function Skills() {
