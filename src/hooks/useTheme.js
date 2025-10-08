@@ -3,39 +3,36 @@ import { useEffect, useState, useCallback } from 'react'
 const STORAGE_KEY = 'theme'
 
 export function useTheme() {
-  const [theme, setTheme] = useState('system')
+  const [isDark, setIsDark] = useState(false)
 
   useEffect(() => {
-    const stored = localStorage.getItem(STORAGE_KEY)
-    if (stored === 'light' || stored === 'dark') {
-      setTheme(stored)
-      applyTheme(stored)
-    } else {
-      setTheme('system')
-      applyTheme(systemPrefersDark() ? 'dark' : 'light')
+    try {
+      const stored = localStorage.getItem(STORAGE_KEY)
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
+      const next = stored ? stored === 'dark' : prefersDark
+      applyTheme(next)
+      setIsDark(next)
+    } catch {
+      // no-op
     }
   }, [])
 
   const toggle = useCallback(() => {
-    setTheme(prev => {
-      const next = prev === 'dark' ? 'light' : 'dark'
-      localStorage.setItem(STORAGE_KEY, next)
+    setIsDark(prev => {
+      const next = !prev
+      localStorage.setItem(STORAGE_KEY, next ? 'dark' : 'light')
       applyTheme(next)
       return next
     })
   }, [])
 
-  return { theme, toggle }
+  return { isDark, toggle }
 }
 
-function applyTheme(mode) {
+function applyTheme(isDark) {
   const root = document.documentElement
-  if (mode === 'dark') root.classList.add('dark')
+  if (isDark) root.classList.add('dark')
   else root.classList.remove('dark')
-}
-
-function systemPrefersDark() {
-  return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
 }
 
 

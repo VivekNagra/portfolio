@@ -29,7 +29,7 @@ export default function Projects() {
           <a
             key={p.title}
             href={p.link}
-            className="group rounded-lg border border-zinc-200 p-5 transition will-change-transform dark:border-zinc-800"
+            className="group rounded-lg border border-zinc-200 bg-white p-5 transition will-change-transform dark:border-zinc-800 dark:bg-zinc-900/60"
             onMouseMove={(e) => {
               const el = e.currentTarget
               const r = el.getBoundingClientRect()
@@ -44,7 +44,7 @@ export default function Projects() {
               el.style.boxShadow = ''
             }}
           >
-            <div className="h-36 w-full rounded-md bg-gradient-to-br from-[--color-brand]/15 to-fuchsia-500/10 transition group-hover:from-[--color-brand]/25 group-hover:to-fuchsia-500/20 dark:from-[--color-brand]/10 dark:to-fuchsia-500/10" />
+            <div className="h-36 w-full rounded-md bg-gradient-to-br from-[--color-brand]/15 to-fuchsia-500/10 transition group-hover:from-[--color-brand]/25 group-hover:to-fuchsia-500/20 dark:from-[--color-brand]/20 dark:to-fuchsia-500/20" />
             <h3 className="mt-4 text-xl font-semibold text-zinc-900 dark:text-white">{p.title}</h3>
             <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-300">{p.summary}</p>
             <div className="mt-3 flex flex-wrap gap-2">

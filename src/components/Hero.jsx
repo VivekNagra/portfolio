@@ -4,7 +4,7 @@ export default function Hero() {
       <div className="grid items-center gap-8 md:grid-cols-2">
         <div>
           <h1 className="text-4xl font-extrabold tracking-tight text-zinc-900 dark:text-white md:text-5xl">Hi, I’m Vivek Singh Nagra</h1>
-          <p className="mt-4 text-lg text-zinc-600 dark:text-zinc-300">26-year-old computer science student crafting modern, accessible web experiences. Futuristic, minimal design. React + Tailwind. Mobile-first.</p>
+          <p className="mt-4 text-lg text-zinc-700 dark:text-zinc-300">26-year-old computer science student crafting modern, accessible web experiences. Futuristic, minimal design. React + Tailwind. Mobile-first.</p>
           <div className="mt-6 flex gap-3">
             <a href="#projects" className="link-underline rounded-md bg-[--color-brand] px-5 py-2.5 text-white shadow hover:opacity-90">
               View Projects

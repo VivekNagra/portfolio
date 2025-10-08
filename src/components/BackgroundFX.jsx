@@ -1,6 +1,6 @@
 export default function BackgroundFX() {
   return (
-    <div aria-hidden className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
+    <div aria-hidden className="pointer-events-none absolute inset-0 -z-10 overflow-hidden hidden dark:block">
       {/* Grid overlay */}
       <div
         className="absolute inset-0 opacity-[0.35] dark:opacity-[0.25]"

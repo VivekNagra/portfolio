@@ -3,10 +3,10 @@ import { useTheme } from '../hooks/useTheme'
 
 export default function NavBar() {
   const [open, setOpen] = useState(false)
-  const { theme, toggle } = useTheme()
+  const { isDark, toggle } = useTheme()
 
   return (
-    <header className="sticky top-0 z-50 border-b border-zinc-200 bg-white/80 backdrop-blur dark:border-zinc-800 dark:bg-zinc-900/80">
+    <header className="sticky top-0 z-50 border-b border-zinc-200 bg-white/80 backdrop-blur transition-colors dark:border-zinc-800 dark:bg-zinc-900/80">
       <div className="mx-auto max-w-6xl px-4 py-3">
         <div className="flex items-center justify-between">
           <a href="#home" className="text-lg font-semibold tracking-tight text-zinc-900 dark:text-white">Vivek Singh Nagra</a>
@@ -21,10 +21,10 @@ export default function NavBar() {
             <button
               aria-label="Toggle dark mode"
               onClick={toggle}
-              className="rounded-md border border-zinc-200 bg-white px-3 py-1.5 text-sm text-zinc-700 shadow-sm hover:bg-zinc-50 active:scale-[0.98] dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-200 dark:hover:bg-zinc-700"
-              style={{ boxShadow: '0 0 0 2px color-mix(in oklab, var(--color-brand), transparent 85%)' }}
+              className="rounded-md border border-zinc-200 bg-white px-3 py-1.5 text-sm text-zinc-700 shadow-sm ring-[--color-brand]/40 transition hover:bg-zinc-50 active:scale-[0.98] dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-200 dark:hover:bg-zinc-700"
+              style={{ boxShadow: isDark ? '0 0 0 2px color-mix(in oklab, var(--color-brand), transparent 60%)' : '0 0 0 2px color-mix(in oklab, var(--color-brand), transparent 85%)' }}
             >
-              {theme === 'dark' ? 'Light' : 'Dark'}
+              {isDark ? 'Light' : 'Dark'}
             </button>
             <button
               className="md:hidden rounded-md border border-zinc-200 p-2 dark:border-zinc-700"
