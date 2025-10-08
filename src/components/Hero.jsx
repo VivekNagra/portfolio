@@ -1,3 +1,5 @@
+import profileUrl from '../assets/profile.jpg'
+
 export default function Hero() {
   return (
     <section id="home" className="mx-auto max-w-6xl px-4 pt-16 pb-10">
@@ -13,7 +15,17 @@ export default function Hero() {
           </div>
         </div>
         <div className="relative flex justify-center md:justify-end">
-          <div className="h-40 w-40 rounded-full bg-gradient-to-br from-[--color-brand] to-fuchsia-500/70 shadow-[0_0_50px_-10px_color-mix(in_oklab,var(--color-brand),transparent_60%)] md:h-56 md:w-56" />
+          <div className="relative h-40 w-40 overflow-hidden rounded-full shadow-[0_0_50px_-10px_color-mix(in_oklab,var(--color-brand),transparent_60%)] md:h-56 md:w-56">
+            <img
+              src={profileUrl}
+              alt="Vivek Singh Nagra"
+              className="h-full w-full object-cover object-[50%_20%] scale-105"
+              draggable={false}
+              loading="eager"
+              decoding="async"
+            />
+            <div className="pointer-events-none absolute inset-0 rounded-full bg-gradient-to-br from-[--color-brand]/12 to-fuchsia-500/10" />
+          </div>
           <div className="pointer-events-none absolute inset-0 -z-10 animate-[blobShift_12s_ease-in-out_infinite] rounded-full bg-gradient-to-tr from-fuchsia-500/40 to-[--color-brand]/40 blur-2xl" />
         </div>
       </div>
