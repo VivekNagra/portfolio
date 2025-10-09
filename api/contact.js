@@ -35,6 +35,7 @@ export default async function handler(req, res) {
 
     const RESEND_API_KEY = process.env.RESEND_API_KEY
     const CONTACT_TO_EMAIL = process.env.CONTACT_TO_EMAIL || process.env.TO_EMAIL
+    const RESEND_FROM_EMAIL = process.env.RESEND_FROM_EMAIL || 'onboarding@resend.dev'
 
     if (!RESEND_API_KEY || !CONTACT_TO_EMAIL) {
       return res.status(500).json({ ok: false, error: 'Server not configured' })
@@ -56,7 +57,7 @@ export default async function handler(req, res) {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        from: 'onboarding@resend.dev',
+        from: RESEND_FROM_EMAIL,
         to: CONTACT_TO_EMAIL,
         subject,
         html,
