@@ -22,7 +22,7 @@ export default function Hero() {
             <img
               src={profileUrl}
               alt="Vivek Singh Nagra"
-              className="h-full w-full object-cover object-[50%_20%] scale-105"
+              className="h-full w-full object-cover object-[50%_10%] scale-105"
               draggable={false}
               loading="eager"
               decoding="async"
