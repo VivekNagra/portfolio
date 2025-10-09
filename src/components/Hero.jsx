@@ -11,6 +11,7 @@ export default function Hero() {
             From dashboards to full-stack apps, my focus is on clarity, performance, and precision.
           </p>
           <br></br>
+          <br></br>
             <a href="#projects" className="link-underline rounded-md bg-[--color-brand] px-5 py-2.5 text-white shadow hover:opacity-90">
               View Projects
             </a>
