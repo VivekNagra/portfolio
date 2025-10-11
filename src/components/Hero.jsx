@@ -139,15 +139,20 @@ export default function Hero() {
         </div>
 
         <div className="relative flex justify-center md:justify-end">
-          <div className="relative h-40 w-40 overflow-hidden rounded-full shadow-[0_0_80px_-12px_color-mix(in_oklab,var(--color-brand),transparent_40%)] md:h-56 md:w-56">
+          <div
+            className="relative h-40 w-40 overflow-hidden rounded-full shadow-[0_0_80px_-12px_color-mix(in_oklab,var(--color-brand),transparent_40%)] md:h-56 md:w-56"
+            onContextMenu={(e) => e.preventDefault()}
+          >
             <img
               src={profileUrl}
               alt="Vivek Singh Nagra"
-              className="h-full w-full object-cover object-[50%_10%] scale-105"
+              className="h-full w-full select-none pointer-events-none object-cover object-[50%_10%] scale-105"
               draggable={false}
               loading="eager"
               decoding="async"
             />
+            {/* Invisible overlay to intercept interactions */}
+            <span className="absolute inset-0 z-10" />
             <div className="pointer-events-none absolute inset-0 rounded-full bg-gradient-to-br from-[--color-brand]/25 to-fuchsia-500/20" />
             <div className="pointer-events-none absolute inset-0 rounded-full ring-1 ring-[--color-brand]/30" />
             <div
