@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { useTheme } from '../hooks/useTheme'
 
 export default function NavBar() {
@@ -18,14 +18,7 @@ export default function NavBar() {
           </nav>
 
           <div className="flex items-center gap-2">
-            <button
-              aria-label="Toggle dark mode"
-              onClick={toggle}
-              className="rounded-md border border-zinc-200 bg-white px-3 py-1.5 text-sm text-zinc-700 shadow-sm ring-[--color-brand]/40 transition hover:bg-zinc-50 active:scale-[0.98] dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-200 dark:hover:bg-zinc-700"
-              style={{ boxShadow: isDark ? '0 0 0 2px color-mix(in oklab, var(--color-brand), transparent 60%)' : '0 0 0 2px color-mix(in oklab, var(--color-brand), transparent 85%)' }}
-            >
-              {isDark ? 'Light' : 'Dark'}
-            </button>
+            <ThemeToggle isDark={isDark} onToggle={toggle} />
             <button
               className="md:hidden rounded-md border border-zinc-200 p-2 dark:border-zinc-700"
               aria-label="Open menu"
@@ -47,6 +40,65 @@ export default function NavBar() {
         )}
       </div>
     </header>
+  )
+}
+
+function ThemeToggle({ isDark, onToggle }) {
+  const [showNote, setShowNote] = useState(false)
+  const timerRef = useRef(null)
+
+  useEffect(() => () => clearTimeout(timerRef.current), [])
+
+  function handleClick() {
+    onToggle()
+    setShowNote(true)
+    clearTimeout(timerRef.current)
+    timerRef.current = setTimeout(() => setShowNote(false), 2000)
+  }
+
+  return (
+    <div className="relative">
+      <button
+        aria-label="Toggle dark mode"
+        onClick={handleClick}
+        className="group inline-flex items-center gap-2 rounded-md border border-zinc-200 bg-white px-3 py-1.5 text-sm text-zinc-700 shadow-sm ring-[--color-brand]/40 transition hover:bg-zinc-50 active:scale-[0.98] dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-200 dark:hover:bg-zinc-700"
+        style={{ boxShadow: isDark ? '0 0 0 2px color-mix(in oklab, var(--color-brand), transparent 60%)' : '0 0 0 2px color-mix(in oklab, var(--color-brand), transparent 85%)' }}
+      >
+        {isDark ? (
+          <>
+            <MoonIcon className="h-4 w-4" />
+            <span>Light</span>
+          </>
+        ) : (
+          <>
+            <SunIcon className="h-4 w-4" />
+            <span>Dark</span>
+          </>
+        )}
+      </button>
+      <div
+        className={`absolute left-0 right-0 translate-y-1 text-center text-[11px] text-zinc-600 transition-opacity dark:text-zinc-300 ${showNote ? 'opacity-100' : 'opacity-0'}`}
+        aria-live="polite"
+      >
+        coming soon
+      </div>
+    </div>
+  )
+}
+
+function SunIcon(props) {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" {...props}>
+      <path d="M12 5.25a.75.75 0 0 0 .75-.75V3a.75.75 0 0 0-1.5 0v1.5c0 .414.336.75.75.75Zm0 15a.75.75 0 0 0-.75.75V22a.75.75 0 0 0 1.5 0v-1.5a.75.75 0 0 0-.75-.75ZM5.25 12a.75.75 0 0 0-.75-.75H3a.75.75 0 0 0 0 1.5h1.5A.75.75 0 0 0 5.25 12ZM22 12a.75.75 0 0 0-.75-.75H19.75a.75.75 0 0 0 0 1.5H21.25A.75.75 0 0 0 22 12ZM5.47 5.47a.75.75 0 0 0 0 1.06l1.06 1.06a.75.75 0 1 0 1.06-1.06L6.53 5.47a.75.75 0 0 0-1.06 0Zm10.94 10.94a.75.75 0 0 0 0 1.06l1.06 1.06a.75.75 0 1 0 1.06-1.06l-1.06-1.06a.75.75 0 0 0-1.06 0ZM5.47 18.53a.75.75 0 0 0 1.06 0l1.06-1.06a.75.75 0 1 0-1.06-1.06l-1.06 1.06a.75.75 0 0 0 0 1.06Zm10.94-10.94a.75.75 0 0 0 1.06 0l1.06-1.06a.75.75 0 1 0-1.06-1.06l-1.06 1.06a.75.75 0 0 0 0 1.06ZM12 7.5a4.5 4.5 0 1 0 0 9 4.5 4.5 0 0 0 0-9Z"/>
+    </svg>
+  )
+}
+
+function MoonIcon(props) {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" {...props}>
+      <path d="M21.752 15.002a8.25 8.25 0 0 1-11.255-11.255.75.75 0 0 0-1.072-.914 9.75 9.75 0 1 0 13.241 13.24.75.75 0 0 0-.914-1.071Z"/>
+    </svg>
   )
 }
 

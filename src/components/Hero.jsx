@@ -100,21 +100,46 @@ export default function Hero() {
           <div className="mt-8 flex flex-wrap items-center gap-3">
             <a
               href="#projects"
-              className="link-underline rounded-md bg-[--color-brand] px-5 py-2.5 text-white shadow hover:opacity-90"
+              aria-label="View projects"
+              className="group relative inline-flex items-center gap-2 rounded-md px-5 py-2.5 font-semibold text-white shadow-sm transition hover:shadow-[0_12px_30px_-10px_color-mix(in_oklab,var(--color-brand),transparent_60%)] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[--color-brand]/40 active:translate-y-[0.5px] btn-ambient btn-pulse"
+              style={{ boxShadow: '0 0 0 2px color-mix(in oklab, var(--color-brand), transparent 80%)' }}
             >
-              View Projects
+              <span className="relative">View Projects</span>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                className="h-4 w-4 translate-x-0 transition-transform duration-200 group-hover:translate-x-0.5"
+                aria-hidden="true"
+              >
+                <path d="M13.25 4.5a.75.75 0 0 1 .75-.75h5.5a.75.75 0 0 1 .75.75v5.5a.75.75 0 0 1-1.5 0V6.31l-8.47 8.47a.75.75 0 1 1-1.06-1.06l8.47-8.47h-3.69a.75.75 0 0 1-.75-.75Z"/>
+                <path d="M6.75 5.25a.75.75 0 0 1 .75.75v10.5h10.5a.75.75 0 0 1 0 1.5H6.75A2.25 2.25 0 0 1 4.5 15.75V6a.75.75 0 0 1 .75-.75Z"/>
+              </svg>
+              <span className="pointer-events-none absolute inset-0 rounded-md bg-gradient-to-r from-white/0 via-white/10 to-white/0 opacity-0 transition-opacity group-hover:opacity-20" />
             </a>
             <a
               href="#contact"
-              className="link-underline rounded-md border border-zinc-300 px-5 py-2.5 text-zinc-800 hover:bg-zinc-50 dark:border-zinc-700 dark:text-zinc-200 dark:hover:bg-zinc-800"
+              aria-label="Contact"
+              className="group relative inline-flex items-center gap-2 rounded-md px-5 py-2.5 font-semibold text-white shadow-sm transition hover:shadow-[0_12px_30px_-10px_color-mix(in_oklab,var(--color-brand),transparent_60%)] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[--color-brand]/40 active:translate-y-[0.5px] btn-ambient btn-pulse"
+              style={{ boxShadow: '0 0 0 2px color-mix(in oklab, var(--color-brand), transparent 80%)' }}
             >
-              Contact
+              <span className="relative">Contact</span>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                className="h-4 w-4 translate-x-0 transition-transform duration-200 group-hover:translate-x-0.5"
+                aria-hidden="true"
+              >
+                <path d="M1.5 6.75A2.25 2.25 0 0 1 3.75 4.5h16.5a2.25 2.25 0 0 1 2.25 2.25v10.5A2.25 2.25 0 0 1 20.25 19.5H3.75A2.25 2.25 0 0 1 1.5 17.25V6.75Zm2.658-.75a.75.75 0 0 0-.53 1.28l7.092 7.092a.75.75 0 0 0 1.06 0l7.092-7.092a.75.75 0 0 0-.53-1.28H4.158Z"/>
+              </svg>
+              <span className="pointer-events-none absolute inset-0 rounded-md bg-gradient-to-r from-white/0 via-white/10 to-white/0 opacity-0 transition-opacity group-hover:opacity-20" />
             </a>
           </div>
         </div>
 
         <div className="relative flex justify-center md:justify-end">
-          <div className="relative h-40 w-40 overflow-hidden rounded-full shadow-[0_0_50px_-10px_color-mix(in_oklab,var(--color-brand),transparent_60%)] md:h-56 md:w-56">
+          <div className="relative h-40 w-40 overflow-hidden rounded-full shadow-[0_0_80px_-12px_color-mix(in_oklab,var(--color-brand),transparent_40%)] md:h-56 md:w-56">
             <img
               src={profileUrl}
               alt="Vivek Singh Nagra"
@@ -123,7 +148,16 @@ export default function Hero() {
               loading="eager"
               decoding="async"
             />
-            <div className="pointer-events-none absolute inset-0 rounded-full bg-gradient-to-br from-[--color-brand]/12 to-fuchsia-500/10" />
+            <div className="pointer-events-none absolute inset-0 rounded-full bg-gradient-to-br from-[--color-brand]/25 to-fuchsia-500/20" />
+            <div className="pointer-events-none absolute inset-0 rounded-full ring-1 ring-[--color-brand]/30" />
+            <div
+              aria-hidden
+              className="pointer-events-none absolute -inset-1 rounded-full opacity-35 mix-blend-screen"
+              style={{
+                background:
+                  'linear-gradient(130deg, rgba(255,255,255,0.38) 8%, rgba(255,255,255,0.14) 28%, rgba(255,255,255,0.03) 48%, rgba(255,255,255,0) 70%)'
+              }}
+            />
           </div>
           <div className="pointer-events-none absolute inset-0 -z-10 animate-[blobShift_12s_ease-in-out_infinite] rounded-full bg-gradient-to-tr from-fuchsia-500/40 to-[--color-brand]/40 blur-2xl" />
         </div>

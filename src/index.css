@@ -105,3 +105,12 @@ html.dark body {
   animation: blinkCaret 1s steps(1, end) infinite;
 }
 
+/* Sheen pass animation for cards */
+@keyframes sheen {
+  0% { transform: translateX(-20%); opacity: 0; }
+  30% { opacity: 1; }
+  100% { transform: translateX(140%); opacity: 0; }
+}
+
+/* (removed GradualBlur styles) */
+
