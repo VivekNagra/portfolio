@@ -15,7 +15,7 @@ const items = [
     title: 'F1 AI Prediction App',
     summary: 'A simple app that uses Supervised Learning and RAG-based Question Answering with LLaMA2',
     tech: ['Jupyter Notebook', 'Python'],
-    link: '#',
+    link: 'https://github.com/VivekNagra/f1-ai-exam-final',
   },
 ]
 
