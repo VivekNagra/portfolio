@@ -22,12 +22,14 @@ const experiences = [
 
 export default function Experience() {
   return (
-    <section id="experience" className="mx-auto max-w-6xl px-4 py-12">
+    <section id="experience" className="reveal reveal-delay-0 mx-auto max-w-6xl px-4 py-12">
       <h2 className="text-3xl font-bold tracking-tight text-zinc-900 dark:text-white">Experience</h2>
       <p className="mt-2 text-zinc-600 dark:text-zinc-300">Recent roles and responsibilities.</p>
       <div className="mt-6 grid gap-4 sm:grid-cols-2">
-        {experiences.map((exp) => (
-          <Card key={exp.title} {...exp} />
+        {experiences.map((exp, i) => (
+          <div key={exp.title} className={`reveal reveal-delay-${i % 3}`}>
+            <Card {...exp} />
+          </div>
         ))}
       </div>
     </section>

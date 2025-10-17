@@ -55,7 +55,7 @@ export default function Contact() {
   }
 
   return (
-    <section id="contact" className="mx-auto max-w-6xl px-4 py-12">
+    <section id="contact" className="reveal reveal-delay-0 mx-auto max-w-6xl px-4 py-12">
       <div className="rounded-xl border border-zinc-200 bg-white p-6 dark:border-zinc-800 dark:bg-zinc-900/60">
         <h2 className="text-3xl font-bold tracking-tight text-zinc-900 dark:text-white">Get in touch</h2>
         <p className="mt-2 text-zinc-600 dark:text-zinc-300">Have a question or want to work together? Send a message or email <a className="underline decoration-[--color-brand] underline-offset-4" href="mailto:vivek.nagra@gmail.com">vivek.nagra@gmail.com</a>.</p>

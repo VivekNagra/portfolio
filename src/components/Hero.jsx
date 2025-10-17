@@ -78,7 +78,7 @@ export default function Hero() {
   }, [])
 
   return (
-    <section id="home" className="mx-auto max-w-6xl px-4 pt-16 pb-10">
+    <section id="home" className="reveal reveal-delay-0 mx-auto max-w-6xl px-4 pt-16 pb-10">
       <div className="grid items-center gap-8 md:grid-cols-2">
         <div>
           <h1 className="text-4xl font-extrabold tracking-tight text-zinc-900 dark:text-white md:text-5xl">
@@ -140,9 +140,23 @@ export default function Hero() {
 
         <div className="relative flex justify-center md:justify-end">
           <div
-            className="relative h-40 w-40 overflow-hidden rounded-full shadow-[0_0_80px_-12px_color-mix(in_oklab,var(--color-brand),transparent_40%)] md:h-56 md:w-56"
+            className="relative h-40 w-40 overflow-hidden rounded-full shadow-[0_0_60px_-12px_color-mix(in_oklab,var(--color-brand),transparent_55%),_0_0_120px_-38px_color-mix(in_oklab,var(--color-brand),transparent_72%)] md:h-56 md:w-56"
             onContextMenu={(e) => e.preventDefault()}
           >
+            {/* Centered inner halo to avoid side skew */}
+            <div
+              className="pointer-events-none absolute -inset-3 -z-10 rounded-full blur-3xl"
+              style={{
+                background: 'radial-gradient(closest-side, color-mix(in oklab, var(--color-brand), transparent 60%), transparent 62%)'
+              }}
+            />
+            {/* Secondary soft halo for extra presence */}
+            <div
+              className="pointer-events-none absolute -inset-5 -z-20 rounded-full blur-[38px]"
+              style={{
+                background: 'radial-gradient(closest-side, color-mix(in oklab, var(--color-brand), transparent 82%), transparent 80%)'
+              }}
+            />
             <img
               src={profileUrl}
               alt="Vivek Singh Nagra"
@@ -153,18 +167,17 @@ export default function Hero() {
             />
             {/* Invisible overlay to intercept interactions */}
             <span className="absolute inset-0 z-10" />
-            <div className="pointer-events-none absolute inset-0 rounded-full bg-gradient-to-br from-[--color-brand]/25 to-fuchsia-500/20" />
-            <div className="pointer-events-none absolute inset-0 rounded-full ring-1 ring-[--color-brand]/30" />
+            <div className="pointer-events-none absolute inset-0 rounded-full bg-gradient-to-br from-[--color-brand]/20 to-fuchsia-500/14" />
+            <div className="pointer-events-none absolute inset-0 rounded-full ring-2 ring-[--color-brand]/35" />
             <div
               aria-hidden
-              className="pointer-events-none absolute -inset-1 rounded-full opacity-35 mix-blend-screen"
+              className="pointer-events-none absolute inset-0 rounded-full opacity-28 mix-blend-screen"
               style={{
                 background:
-                  'linear-gradient(130deg, rgba(255,255,255,0.38) 8%, rgba(255,255,255,0.14) 28%, rgba(255,255,255,0.03) 48%, rgba(255,255,255,0) 70%)'
+                  'radial-gradient(closest-side at 50% 38%, rgba(255,255,255,0.28), rgba(255,255,255,0.12) 55%, rgba(255,255,255,0) 76%)'
               }}
             />
           </div>
-          <div className="pointer-events-none absolute inset-0 -z-10 animate-[blobShift_12s_ease-in-out_infinite] rounded-full bg-gradient-to-tr from-fuchsia-500/40 to-[--color-brand]/40 blur-2xl" />
         </div>
       </div>
     </section>

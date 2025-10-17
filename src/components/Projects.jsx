@@ -21,15 +21,15 @@ const items = [
 
 export default function Projects() {
   return (
-    <section id="projects" className="mx-auto max-w-6xl px-4 py-12">
+    <section id="projects" className="reveal reveal-delay-0 mx-auto max-w-6xl px-4 py-12">
       <h2 className="text-3xl font-bold tracking-tight text-zinc-900 dark:text-white">Projects</h2>
       <p className="mt-2 text-zinc-600 dark:text-zinc-300">A selection of work demonstrating my abilities and skills.</p>
       <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {items.map((p) => (
+        {items.map((p, i) => (
           <a
             key={p.title}
             href={p.link}
-            className="group rounded-lg border border-zinc-200 bg-white p-5 transition will-change-transform dark:border-zinc-800 dark:bg-zinc-900/60"
+            className={`reveal reveal-delay-${i % 3} group rounded-lg border border-zinc-200 bg-white p-5 transition will-change-transform dark:border-zinc-800 dark:bg-zinc-900/60`}
             onMouseMove={(e) => {
               const el = e.currentTarget
               const r = el.getBoundingClientRect()
@@ -55,7 +55,7 @@ export default function Projects() {
           </a>
         ))}
       </div>
-      <div className="mt-8">
+      <div className="reveal reveal-delay-2 mt-8">
         <a
           href="https://github.com/VivekNagra"
           target="_blank"
