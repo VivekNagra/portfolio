@@ -3,11 +3,11 @@ const experiences = [
     title: 'Intern',
     org: 'Novo Nordisk',
     period: '2024 — 2025',
-    points: [
-      'Built and maintained Power BI dashboards.',
-      'Automated on-boarding related processes for new employees.',
-      'Collaborated accross teams on technical and non-technical projects.'
-    ],
+    description: (
+      <>
+        As an intern at <strong>Novo Nordisk</strong>, I worked across the <strong>BI Center of Excellence</strong>, <strong>AI/Automation & Analysis</strong>, and <strong>Platform Engineering</strong>. I coordinated internal <strong>BI training</strong> and helped organize an internal <strong>Data & AI conference</strong> with <strong>200+</strong> participants and speakers. I contributed <strong>Power BI dashboards</strong> and <strong>automation tools</strong> that supported <strong>data‑driven decision‑making</strong> and improved <strong>internal workflows</strong>, communicated technical topics clearly to <strong>non‑technical stakeholders</strong>, and managed <strong>complex cross‑team tasks</strong>. I was recognized as <strong>dedicated</strong>, <strong>proactive</strong>, and <strong>dependable</strong>, with a <strong>structured</strong>, <strong>solution‑oriented</strong> mindset.
+      </>
+    ),
   },
   {
     title: 'Teaching Assistant',
@@ -36,7 +36,7 @@ export default function Experience() {
   )
 }
 
-function Card({ title, org, period, points }) {
+function Card({ title, org, period, points, description }) {
   return (
     <article
       className="group relative overflow-hidden rounded-xl border border-zinc-200 bg-white p-4 shadow-sm ring-1 ring-[--color-brand]/10 transition duration-300 ease-out hover:-translate-y-1 hover:shadow-[0_18px_40px_-12px_color-mix(in_oklab,var(--color-brand),transparent_50%)] hover:ring-[--color-brand]/30 dark:border-zinc-800 dark:bg-zinc-900/60"
@@ -52,14 +52,20 @@ function Card({ title, org, period, points }) {
           </svg>
         </span>
       </div>
-      <ul className="mt-3 space-y-2 text-sm text-zinc-700 dark:text-zinc-300">
-        {points.map((p, i) => (
-          <li key={i} className="relative pl-4 transition-transform duration-200 group-hover:translate-x-0.5">
-            <span className="absolute left-0 top-[0.6em] h-[6px] w-[6px] -translate-y-1/2 rounded-full bg-[--color-brand] transition-transform duration-200 group-hover:scale-110" />
-            {p}
-          </li>
-        ))}
-      </ul>
+      {description ? (
+        <p className="mt-3 text-sm leading-relaxed text-zinc-700 dark:text-zinc-300">
+          {description}
+        </p>
+      ) : (
+        <ul className="mt-3 space-y-2 text-sm text-zinc-700 dark:text-zinc-300">
+          {points.map((p, i) => (
+            <li key={i} className="relative pl-4 transition-transform duration-200 group-hover:translate-x-0.5">
+              <span className="absolute left-0 top-[0.6em] h-[6px] w-[6px] -translate-y-1/2 rounded-full bg-[--color-brand] transition-transform duration-200 group-hover:scale-110" />
+              {p}
+            </li>
+          ))}
+        </ul>
+      )}
       {/* Subtle radial glow on hover */}
       <div
         className="pointer-events-none absolute inset-0 -z-10 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
