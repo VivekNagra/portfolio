@@ -138,7 +138,7 @@ export default function Hero() {
           </div>
         </div>
 
-        <div className="relative flex justify-center md:justify-end">
+        <div className="relative flex flex-col items-center md:items-center">
           <div
             className="relative h-40 w-40 overflow-hidden rounded-full shadow-[0_0_60px_-12px_color-mix(in_oklab,var(--color-brand),transparent_55%),_0_0_120px_-38px_color-mix(in_oklab,var(--color-brand),transparent_72%)] md:h-56 md:w-56"
             onContextMenu={(e) => e.preventDefault()}
@@ -177,6 +177,32 @@ export default function Hero() {
                   'radial-gradient(closest-side at 50% 38%, rgba(255,255,255,0.28), rgba(255,255,255,0.12) 55%, rgba(255,255,255,0) 76%)'
               }}
             />
+          </div>
+          <div className="mt-4 ml-1 md:ml-2 flex items-center justify-center gap-6">
+            <a
+              href="https://github.com/VivekNagra"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="GitHub"
+              className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-zinc-300 bg-white text-zinc-700 shadow-sm ring-1 ring-[--color-brand]/10 transition hover:scale-105 hover:ring-[--color-brand]/40 hover:shadow-[0_8px_20px_-8px_color-mix(in_oklab,var(--color-brand),transparent_60%)] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[--color-brand]/40 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-200 dark:hover:bg-zinc-700"
+              style={{ boxShadow: '0 0 0 2px color-mix(in oklab, var(--color-brand), transparent 85%)' }}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="h-4 w-4" aria-hidden>
+                <path fillRule="evenodd" d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.58.11.79-.25.79-.56 0-.27-.01-1.16-.02-2.11-3.2.7-3.87-1.36-3.87-1.36-.53-1.36-1.3-1.72-1.3-1.72-1.06-.72.08-.71.08-.71 1.17.08 1.78 1.2 1.78 1.2 1.04 1.78 2.73 1.26 3.39.97.11-.76.41-1.26.74-1.55-2.55-.29-5.23-1.28-5.23-5.7 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.46.11-3.05 0 0 .98-.31 3.2 1.18a11.1 11.1 0 0 1 2.91-.39c.99 0 1.98.13 2.91.39 2.22-1.49 3.2-1.18 3.2-1.18.63 1.59.23 2.76.12 3.05.74.81 1.19 1.84 1.19 3.1 0 4.43-2.68 5.41-5.24 5.7.42.36.79 1.07.79 2.16 0 1.56-.01 2.81-.01 3.19 0 .31.21.68.8.56A10.999 10.999 0 0 0 23.5 12C23.5 5.65 18.35.5 12 .5Z" clipRule="evenodd" />
+              </svg>
+            </a>
+            <a
+              href="https://www.linkedin.com/in/viveknagra"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="LinkedIn"
+              className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-zinc-300 bg-white text-zinc-700 shadow-sm ring-1 ring-[--color-brand]/10 transition hover:scale-105 hover:ring-[--color-brand]/40 hover:shadow-[0_8px_20px_-8px_color-mix(in_oklab,var(--color-brand),transparent_60%)] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[--color-brand]/40 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-200 dark:hover:bg-zinc-700"
+              style={{ boxShadow: '0 0 0 2px color-mix(in oklab, var(--color-brand), transparent 85%)' }}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="h-4 w-4" aria-hidden>
+                <path d="M4.98 3.5a2.5 2.5 0 1 0 .02 5.001 2.5 2.5 0 0 0-.02-5ZM3.75 9h2.5v11h-2.5V9Zm6 0h2.39v1.5h.03c.33-.62 1.15-1.27 2.37-1.27 2.53 0 3 1.66 3 3.82V20h-2.5v-5.4c0-1.29-.02-2.95-1.8-2.95-1.8 0-2.08 1.41-2.08 2.86V20h-2.5V9Z"/>
+              </svg>
+            </a>
           </div>
         </div>
       </div>
