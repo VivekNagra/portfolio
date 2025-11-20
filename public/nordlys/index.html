@@ -43,9 +43,9 @@
       .hero p { margin: 0; color: #f5d0e6; font-size: 18px; }
       .heart { display:inline-block; margin-left: 6px; color: #f472b6; filter: drop-shadow(0 4px 12px rgba(236,72,153,0.35)); }
       .since { margin-top: 12px; text-align:center; color:#ffd0e5; }
-      .since .label { font-size: 13px; letter-spacing: 0.4px; text-transform: uppercase; opacity: .85; margin-bottom: 4px; }
-      .since .row { display:inline-flex; gap:12px; padding: 12px 14px; border-radius: 18px; border: 1px solid rgba(255,192,203,0.25); box-shadow: 0 15px 28px -18px rgba(236,72,153,0.5); background: rgba(236,72,153,0.08); }
-      .since .chip { min-width:70px; padding:10px 0; border-radius:14px; background: linear-gradient(180deg, rgba(255,255,255,0.12), rgba(255,192,203,0.05)); border: 1px solid rgba(255,255,255,0.12); box-shadow: inset 0 1px 0 rgba(255,255,255,0.25); }
+      .since .label { font-size: 12px; letter-spacing: 0.4px; text-transform: uppercase; opacity: .85; margin-bottom: 4px; line-height: 1.3; }
+      .since .row { display:inline-flex; flex-wrap:wrap; justify-content:center; gap:10px; padding: 10px 12px; border-radius: 18px; border: 1px solid rgba(255,192,203,0.25); box-shadow: 0 15px 28px -18px rgba(236,72,153,0.5); background: rgba(236,72,153,0.08); max-width: min(420px, 100%); }
+      .since .chip { min-width:60px; padding:8px 0; border-radius:14px; background: linear-gradient(180deg, rgba(255,255,255,0.12), rgba(255,192,203,0.05)); border: 1px solid rgba(255,255,255,0.12); box-shadow: inset 0 1px 0 rgba(255,255,255,0.25); }
       .since .num { display:block; font-size: 24px; font-weight: 800; letter-spacing: 0.4px; background: linear-gradient(90deg, #fff, #ffd0e5); -webkit-background-clip: text; background-clip: text; color: transparent; }
       .since .unit { display:block; font-size: 11px; color: #ffd0e5; opacity: .9; letter-spacing: 0.4px; text-transform: uppercase; margin-top: 2px; }
       .timeline { margin-top: 14px; display: grid; gap: 10px; }
@@ -145,9 +145,9 @@ Altid din,
             { value: pad(mins), unit: 'min' },
             { value: pad(secs), unit: 'sek' }
           ]
-          const chips = parts.map(p => `<span class="chip"><span class="num">${p.value}</span><span class="unit">${p.unit}</span></span>`).join('<span class="sep">•</span>')
+          const chips = parts.map(p => `<span class="chip"><span class="num">${p.value}</span><span class="unit">${p.unit}</span></span>`).join('')
           el.innerHTML = `
-            <div class="label">SÅDAN HAR VI ELSKET SIDEN 21. NOVEMBER 2023</div>
+            <div class="label">DAYS SINCE I FELL IN LOVE WITH YOU ON 21. NOVEMBER 2023</div>
             <div class="row" aria-live="polite">
               ${chips}
             </div>`
