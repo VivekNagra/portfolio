@@ -39,11 +39,11 @@
       .hero h2 { font-size: 24px; margin: 0 0 6px; letter-spacing: 0.2px; }
       .hero p { margin: 0; color: #f5d0e6; }
       .heart { display:inline-block; margin-left: 6px; color: #f472b6; filter: drop-shadow(0 4px 12px rgba(236,72,153,0.35)); }
-      .since { margin-top: 10px; text-align:center; color:#ffd0e5; }
-      .since .row { display:inline-flex; align-items:baseline; gap:10px; background: rgba(236,72,153,0.08); padding: 10px 12px; border-radius: 999px; border: 1px solid rgba(236,72,153,0.18); box-shadow: 0 10px 24px -16px rgba(236,72,153,0.4); }
-      .since .num { font-size: 22px; font-weight: 800; letter-spacing: 0.5px; background: linear-gradient(90deg, #fff, #ffd0e5); -webkit-background-clip: text; background-clip: text; color: transparent; }
-      .since .unit { font-size: 12px; color: #ffd0e5; margin-left: 2px; opacity: .9; }
-      .since .sep { color: #f9a8d4; font-size: 18px; margin: 0 2px; }
+      .since { margin-top: 12px; text-align:center; color:#ffd0e5; }
+      .since .row { display:inline-flex; gap:12px; padding: 12px 14px; border-radius: 18px; border: 1px solid rgba(255,192,203,0.25); box-shadow: 0 15px 28px -18px rgba(236,72,153,0.5); background: rgba(236,72,153,0.08); }
+      .since .chip { min-width:70px; padding:10px 0; border-radius:14px; background: linear-gradient(180deg, rgba(255,255,255,0.12), rgba(255,192,203,0.05)); border: 1px solid rgba(255,255,255,0.12); box-shadow: inset 0 1px 0 rgba(255,255,255,0.25); }
+      .since .num { display:block; font-size: 24px; font-weight: 800; letter-spacing: 0.4px; background: linear-gradient(90deg, #fff, #ffd0e5); -webkit-background-clip: text; background-clip: text; color: transparent; }
+      .since .unit { display:block; font-size: 11px; color: #ffd0e5; opacity: .9; letter-spacing: 0.4px; text-transform: uppercase; margin-top: 2px; }
       .timeline { margin-top: 14px; display: grid; gap: 10px; }
       .tl-item { display:flex; gap:10px; align-items:flex-start; }
       .tl-dot { flex:0 0 10px; height:10px; width:10px; border-radius:999px; background: var(--brand); margin-top:6px; box-shadow: 0 0 0 4px rgba(236,72,153,0.12); }
@@ -127,7 +127,7 @@
         if (petalsStarted) return; petalsStarted = true
         const container = document.getElementById('bg3d')
         const DPR = Math.min(window.devicePixelRatio || 1, 1.25)
-        const { Scene, PerspectiveCamera, WebGLRenderer, Color, PlaneGeometry, MeshBasicMaterial, Mesh, Vector3, Clock, Group } =
+        const { Scene, PerspectiveCamera, WebGLRenderer, Color, MeshBasicMaterial, Mesh, Vector3, Clock, Group, Shape, ShapeGeometry } =
           await import('https://unpkg.com/three@0.160.0/build/three.module.js')
         const scene = new Scene()
         scene.background = null
@@ -148,16 +148,16 @@
         // Petals (grouped to allow subtle global sway)
         const petalGroup = new Group()
         scene.add(petalGroup)
-        const count = 20
+        const count = 18
         const petals = []
-        const geo = new PlaneGeometry(0.22, 0.30)
-        const palette = ['#f9a8d4', '#f472b6', '#fb7185', '#fda4af']
-        function mat(idx) {
+        const petalGeo = createHeartGeometry()
+        const palette = ['#f9a8d4', '#f472b6', '#fb7185', '#fda4af', '#fecdd3']
+        function mat(idx, depthFade = 1) {
           const c = new Color(palette[idx % palette.length])
-          return new MeshBasicMaterial({ color: c, transparent: true, opacity: 0.85 })
+          return new MeshBasicMaterial({ color: c, transparent: true, opacity: 0.85 * depthFade })
         }
         for (let i = 0; i < count; i++) {
-          const m = new Mesh(geo, mat(i))
+          const m = new Mesh(petalGeo, mat(i))
           resetPetal(m, true, i)
           petalGroup.add(m); petals.push(m)
         }
@@ -166,12 +166,12 @@
           const z = (Math.random()*2-1) * 0.8
           m.position.set((Math.random()*2-1)*xRange, yStart, z)
           m.rotation.z = Math.random()*Math.PI
-          m.userData.v = new Vector3((Math.random()*0.2-0.1)*0.18, -(0.18+Math.random()*0.55)*0.32, 0)
-          m.userData.sway = (Math.random()*2-1) * 0.35
-          m.userData.spin = 0.004 + Math.random()*0.006
-          const baseOpacity = 0.75 + Math.random()*0.2
-          m.material.opacity = baseOpacity * (0.7 + (z+0.8)/1.6 * 0.3) // fade with depth
-          const s = 0.6 + Math.random()*0.7
+          m.userData.v = new Vector3((Math.random()*0.2-0.1)*0.12, -(0.12+Math.random()*0.4)*0.22, 0)
+          m.userData.sway = (Math.random()*2-1) * 0.25
+          m.userData.spin = 0.002 + Math.random()*0.004
+          const baseOpacity = 0.85 + Math.random()*0.1
+          m.material.opacity = baseOpacity * (0.65 + (z+0.8)/1.6 * 0.35)
+          const s = 0.5 + Math.random()*0.5
           m.scale.set(s*(0.9+(z+0.8)/1.6*0.2), s, 1)
         }
         const clock = new Clock()
@@ -188,6 +188,18 @@
           requestAnimationFrame(animate)
         }
         animate()
+
+        function createHeartGeometry() {
+          const shape = new Shape()
+          const top = 0.35
+          shape.moveTo(0, -0.6)
+          shape.bezierCurveTo(0, -0.8, -0.4, -0.8, -0.45, -0.3)
+          shape.bezierCurveTo(-0.5, 0.15, 0, top, 0, top)
+          shape.bezierCurveTo(0, top, 0.5, 0.15, 0.45, -0.3)
+          shape.bezierCurveTo(0.4, -0.8, 0, -0.8, 0, -0.6)
+          const geo = new ShapeGeometry(shape, 3)
+          return geo
+        }
       }
       async function loadContent() {
         const r = await fetch('/api/nordlys-content')
