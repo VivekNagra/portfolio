@@ -5,11 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Nordlys</title>
     <meta name="robots" content="noindex,nofollow" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
       :root { --brand: #ec4899; /* pink-500 */ --brand2: #f472b6; }
       body {
         margin: 0;
-        font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+        font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
         background: radial-gradient(900px 500px at 80% -10%, rgba(236,72,153,0.22), transparent), radial-gradient(700px 400px at 10% 10%, rgba(244,114,182,0.18), transparent), #0b0b0b;
         color: #e5e7eb;
       }
@@ -36,8 +39,8 @@
       .actions { margin-top: 12px; text-align: right; }
       .link { color: #f9a8d4; }
       .hero { text-align: center; padding: 12px 8px 6px; }
-      .hero h2 { font-size: 24px; margin: 0 0 6px; letter-spacing: 0.2px; }
-      .hero p { margin: 0; color: #f5d0e6; }
+      .hero h2 { font-family: 'Great Vibes', cursive; font-size: clamp(32px, 8vw, 44px); margin: 0 0 6px; letter-spacing: 0.2px; color: #ffe4f1; }
+      .hero p { margin: 0; color: #f5d0e6; font-size: 15px; }
       .heart { display:inline-block; margin-left: 6px; color: #f472b6; filter: drop-shadow(0 4px 12px rgba(236,72,153,0.35)); }
       .since { margin-top: 12px; text-align:center; color:#ffd0e5; }
       .since .label { font-size: 13px; letter-spacing: 0.4px; text-transform: uppercase; opacity: .85; margin-bottom: 4px; }
@@ -112,20 +115,25 @@
         function tick() {
           const now = new Date()
           let diff = Math.max(0, now - start)
-          const days = Math.floor(diff / (1000*60*60*24)); diff -= days*(1000*60*60*24)
+          const totalDays = Math.floor(diff / (1000*60*60*24))
+          const years = Math.floor(totalDays / 365)
+          const days = totalDays - years * 365
+          diff -= totalDays*(1000*60*60*24)
           const hours = Math.floor(diff / (1000*60*60)); diff -= hours*(1000*60*60)
           const mins = Math.floor(diff / (1000*60)); diff -= mins*(1000*60)
           const secs = Math.floor(diff / 1000)
+          const parts = [
+            { value: years, unit: 'år' },
+            { value: days, unit: 'dage' },
+            { value: pad(hours), unit: 'timer' },
+            { value: pad(mins), unit: 'min' },
+            { value: pad(secs), unit: 'sek' }
+          ]
+          const chips = parts.map(p => `<span class="chip"><span class="num">${p.value}</span><span class="unit">${p.unit}</span></span>`).join('<span class="sep">•</span>')
           el.innerHTML = `
             <div class="label">SÅDAN HAR VI ELSKET SIDEN 21. NOVEMBER 2023</div>
             <div class="row" aria-live="polite">
-              <span class="num">${days}</span><span class="unit">dage</span>
-              <span class="sep">•</span>
-              <span class="num">${pad(hours)}</span><span class="unit">timer</span>
-              <span class="sep">:</span>
-              <span class="num">${pad(mins)}</span><span class="unit">min</span>
-              <span class="sep">:</span>
-              <span class="num">${pad(secs)}</span><span class="unit">sek</span>
+              ${chips}
             </div>`
         }
         tick()
@@ -151,9 +159,9 @@
         container.innerHTML = ''
         container.appendChild(renderer.domElement)
         const heartShape = new Shape()
-        heartShape.moveTo(0, -6)
-        heartShape.bezierCurveTo(-10, -14, -16, -2, 0, 10)
-        heartShape.bezierCurveTo(16, -2, 10, -14, 0, -6)
+        heartShape.moveTo(0, 6)
+        heartShape.bezierCurveTo(-10, 14, -16, 2, 0, -10)
+        heartShape.bezierCurveTo(16, 2, 10, 14, 0, 6)
         heartShape.closePath()
         const geometry = new ExtrudeGeometry(heartShape, { depth: 3, bevelEnabled: true, bevelSegments: 2, steps: 2, bevelSize: 0.8, bevelThickness: 0.8 })
         geometry.center()
