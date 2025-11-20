@@ -8,9 +8,9 @@
     <style>
       :root { --brand: #8b5cf6; }
       body { margin: 0; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji"; background: #0b0b0b; color: #e5e7eb; }
-      .wrap { max-width: 720px; margin: 40px auto; padding: 0 16px; }
-      .card { background: #111214; border: 1px solid #27272a; border-radius: 12px; padding: 20px; }
-      h1 { margin: 0 0 12px; font-size: 28px; }
+      .wrap { max-width: 720px; margin: 24px auto; padding: 0 16px; }
+      .card { background: #111214; border: 1px solid #27272a; border-radius: 14px; padding: 18px; }
+      h1 { margin: 0 0 10px; font-size: 26px; }
       p { color: #cbd5e1; }
       .field { margin-top: 12px; }
       input[type="password"] { width: 100%; padding: 10px 12px; background:#0b0b0b; color:#e5e7eb; border:1px solid #3f3f46; border-radius:8px; }
@@ -20,6 +20,18 @@
       .content { white-space: pre-wrap; }
       .actions { margin-top: 12px; text-align: right; }
       .link { color: #c4b5fd; }
+      .hero { text-align: center; padding: 12px 8px 6px; }
+      .hero h2 { font-size: 22px; margin: 0 0 6px; }
+      .hero p { margin: 0; color: #d1d5db; }
+      .timeline { margin-top: 14px; display: grid; gap: 10px; }
+      .tl-item { display:flex; gap:10px; align-items:flex-start; }
+      .tl-dot { flex:0 0 10px; height:10px; width:10px; border-radius:999px; background: var(--brand); margin-top:6px; }
+      .tl-body { font-size:14px; color:#e5e7eb; }
+      .tl-date { font-size:12px; color:#a3a3a3; }
+      .gallery { margin-top: 14px; display:grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap:8px; }
+      .ph { position: relative; aspect-ratio: 1 / 1; border-radius: 10px; overflow: hidden; background: #0b0b0b; border:1px solid #27272a; }
+      .ph img { width: 100%; height: 100%; object-fit: cover; display:block; }
+      .ph figcaption { position:absolute; left:0; right:0; bottom:0; font-size: 11px; color:#e5e7eb; background: linear-gradient(180deg, rgba(0,0,0,0), rgba(0,0,0,.55)); padding: 10px 8px 6px; }
     </style>
   </head>
   <body>
@@ -37,7 +49,12 @@
           </form>
         </div>
         <div id="auth" style="display:none;">
-          <div class="content" id="data"></div>
+          <div class="hero">
+            <h2 id="hero-heading"></h2>
+            <p id="hero-body"></p>
+          </div>
+          <div id="timeline" class="timeline"></div>
+          <div id="gallery" class="gallery"></div>
           <div class="actions">
             <button id="logout" style="width:auto;padding:8px 12px;margin-top:16px;background:#27272a;border:1px solid #3f3f46;">Log out</button>
           </div>
@@ -54,8 +71,32 @@
         const r = await fetch('/api/nordlys-content')
         if (!r.ok) throw new Error('Unauthorized')
         const j = await r.json()
-        const el = document.getElementById('data')
-        el.textContent = j?.data?.message || 'Loaded.'
+        const d = j?.data || {}
+        document.title = d.title || 'Nordlys'
+        document.getElementById('hero-heading').textContent = d.hero?.heading || ''
+        document.getElementById('hero-body').textContent = d.hero?.body || ''
+        // timeline
+        const tl = document.getElementById('timeline'); tl.innerHTML = ''
+        ;(d.timeline || []).forEach(item => {
+          const div = document.createElement('div'); div.className = 'tl-item'
+          div.innerHTML = '<span class=\"tl-dot\"></span><div class=\"tl-body\"><div class=\"tl-date\"></div><div class=\"tl-text\"></div></div>'
+          div.querySelector('.tl-date').textContent = item.date || ''
+          div.querySelector('.tl-text').textContent = item.text || ''
+          tl.appendChild(div)
+        })
+        // gallery
+        const g = document.getElementById('gallery'); g.innerHTML = ''
+        ;(d.gallery || []).forEach(item => {
+          const fig = document.createElement('figure'); fig.className = 'ph'
+          const img = document.createElement('img')
+          img.alt = item.caption || 'Photo'
+          img.loading = 'lazy'
+          img.decoding = 'async'
+          img.src = '/api/nordlys-photo?id=' + encodeURIComponent(item.id)
+          img.onerror = () => { fig.style.display = 'none' } // hide if missing
+          const cap = document.createElement('figcaption'); cap.textContent = item.caption || ''
+          fig.appendChild(img); fig.appendChild(cap); g.appendChild(fig)
+        })
       }
       async function show(state) {
         document.getElementById('unauth').style.display = state === 'unauth' ? '' : 'none'

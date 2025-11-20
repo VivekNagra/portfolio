@@ -1,4 +1,6 @@
 import crypto from 'node:crypto'
+import fs from 'node:fs'
+import path from 'node:path'
 
 export default async function handler(req, res) {
   if (req.method !== 'GET') return res.status(405).json({ ok: false, error: 'Method Not Allowed' })
@@ -6,29 +8,38 @@ export default async function handler(req, res) {
   if (!SECRET) return res.status(500).json({ ok: false, error: 'Server not configured' })
   const token = readCookie(req.headers.cookie || '', 'nla')
   if (!verify(token, SECRET)) return res.status(401).json({ ok: false, error: 'Unauthorized' })
-  // Return protected content meta (keep sensitive data here, not in client bundle)
-  return res.status(200).json({
-    ok: true,
-    data: {
-      title: 'Two Years of Us',
-      subtitle: 'Forever grateful for you.',
-      hero: {
-        heading: 'Two years, my love',
-        body: 'Two years of laughter, growth, and countless tiny moments that mean everything. Thank you for choosing me—every day, again and again.',
-      },
-      timeline: [
-        { date: 'Year 1', text: 'From strangers to best friends—every day felt new.' },
-        { date: 'Year 2', text: 'We learned, loved, and built a life that feels like home.' },
-        { date: 'Today', text: 'Engaged—and excited for all the days to come.' },
-      ],
-      gallery: [
-        // Add more ids as you add photos to /api/_nordlys_assets
-        { id: '01', caption: 'Us, smiling like the sun.' },
-        { id: '02', caption: 'You, stealing my heart (again).' },
-        { id: '03', caption: 'A quiet moment I’ll never forget.' },
-      ],
-    },
-  })
+
+  const id = String(req.query?.id || '').replace(/[^0-9a-zA-Z_-]/g, '')
+  if (!id) return res.status(400).json({ ok: false, error: 'Missing id' })
+
+  // Allowed extensions to try in order
+  const exts = ['.jpg', '.jpeg', '.png', '.webp']
+  let found = null
+  for (const ext of exts) {
+    const candidate = path.join(process.cwd(), 'api', '_nordlys_assets', `${id}${ext}`)
+    if (fs.existsSync(candidate)) { found = candidate; break }
+  }
+  if (!found) return res.status(404).json({ ok: false, error: 'Not found' })
+
+  try {
+    const ext = path.extname(found).toLowerCase()
+    const ct = contentType(ext)
+    res.setHeader('Content-Type', ct)
+    res.setHeader('Cache-Control', 'private, max-age=0, no-store')
+    fs.createReadStream(found).pipe(res)
+  } catch {
+    return res.status(500).json({ ok: false, error: 'Failed to read image' })
+  }
+}
+
+function contentType(ext) {
+  switch (ext) {
+    case '.jpg':
+    case '.jpeg': return 'image/jpeg'
+    case '.png': return 'image/png'
+    case '.webp': return 'image/webp'
+    default: return 'application/octet-stream'
+  }
 }
 
 function readCookie(header, name) {

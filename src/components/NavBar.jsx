@@ -15,7 +15,6 @@ export default function NavBar() {
             <a href="#projects" className="text-zinc-700 hover:text-[--color-brand] dark:text-zinc-300">Projects</a>
             <a href="#skills" className="text-zinc-700 hover:text-[--color-brand] dark:text-zinc-300">Skills</a>
             <a href="#contact" className="text-zinc-700 hover:text-[--color-brand] dark:text-zinc-300">Contact</a>
-            <a href="/nordlys" className="text-zinc-700 hover:text-[--color-brand] dark:text-zinc-300">Nordlys</a>
           </nav>
 
           <div className="flex items-center gap-2">
@@ -37,7 +36,6 @@ export default function NavBar() {
             <a href="#projects" className="rounded-md px-2 py-2 text-zinc-700 hover:bg-[--color-brand]/10 dark:text-zinc-300">Projects</a>
             <a href="#skills" className="rounded-md px-2 py-2 text-zinc-700 hover:bg-[--color-brand]/10 dark:text-zinc-300">Skills</a>
             <a href="#contact" className="rounded-md px-2 py-2 text-zinc-700 hover:bg-[--color-brand]/10 dark:text-zinc-300">Contact</a>
-            <a href="/nordlys" className="rounded-md px-2 py-2 text-zinc-700 hover:bg-[--color-brand]/10 dark:text-zinc-300">Nordlys</a>
           </div>
         )}
       </div>
