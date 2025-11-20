@@ -39,7 +39,11 @@
       .hero h2 { font-size: 24px; margin: 0 0 6px; letter-spacing: 0.2px; }
       .hero p { margin: 0; color: #f5d0e6; }
       .heart { display:inline-block; margin-left: 6px; color: #f472b6; filter: drop-shadow(0 4px 12px rgba(236,72,153,0.35)); }
-      .since { margin-top: 8px; text-align:center; color:#ffd0e5; font-size:14px; }
+      .since { margin-top: 10px; text-align:center; color:#ffd0e5; }
+      .since .row { display:inline-flex; align-items:baseline; gap:10px; background: rgba(236,72,153,0.08); padding: 10px 12px; border-radius: 999px; border: 1px solid rgba(236,72,153,0.18); box-shadow: 0 10px 24px -16px rgba(236,72,153,0.4); }
+      .since .num { font-size: 22px; font-weight: 800; letter-spacing: 0.5px; background: linear-gradient(90deg, #fff, #ffd0e5); -webkit-background-clip: text; background-clip: text; color: transparent; }
+      .since .unit { font-size: 12px; color: #ffd0e5; margin-left: 2px; opacity: .9; }
+      .since .sep { color: #f9a8d4; font-size: 18px; margin: 0 2px; }
       .timeline { margin-top: 14px; display: grid; gap: 10px; }
       .tl-item { display:flex; gap:10px; align-items:flex-start; }
       .tl-dot { flex:0 0 10px; height:10px; width:10px; border-radius:999px; background: var(--brand); margin-top:6px; box-shadow: 0 0 0 4px rgba(236,72,153,0.12); }
@@ -103,7 +107,16 @@
           const hours = Math.floor(diff / (1000*60*60)); diff -= hours*(1000*60*60)
           const mins = Math.floor(diff / (1000*60)); diff -= mins*(1000*60)
           const secs = Math.floor(diff / 1000)
-          el.textContent = `Sammen i: ${days} dage, ${pad(hours)}:${pad(mins)}:${pad(secs)}`
+          el.innerHTML = `
+            <div class="row" aria-live="polite">
+              <span class="num">${days}</span><span class="unit">dage</span>
+              <span class="sep">•</span>
+              <span class="num">${pad(hours)}</span><span class="unit">timer</span>
+              <span class="sep">:</span>
+              <span class="num">${pad(mins)}</span><span class="unit">min</span>
+              <span class="sep">:</span>
+              <span class="num">${pad(secs)}</span><span class="unit">sek</span>
+            </div>`
         }
         tick()
         sinceTimer = setInterval(tick, 1000)
@@ -113,8 +126,8 @@
       async function startFlowers() {
         if (petalsStarted) return; petalsStarted = true
         const container = document.getElementById('bg3d')
-        const DPR = Math.min(window.devicePixelRatio || 1, 1.5)
-        const { Scene, PerspectiveCamera, WebGLRenderer, Color, PlaneGeometry, MeshBasicMaterial, Mesh, Vector3, Clock } =
+        const DPR = Math.min(window.devicePixelRatio || 1, 1.25)
+        const { Scene, PerspectiveCamera, WebGLRenderer, Color, PlaneGeometry, MeshBasicMaterial, Mesh, Vector3, Clock, Group } =
           await import('https://unpkg.com/three@0.160.0/build/three.module.js')
         const scene = new Scene()
         scene.background = null
@@ -132,32 +145,43 @@
           camera.updateProjectionMatrix()
         }
         resize(); window.addEventListener('resize', resize)
-        // Petals
-        const count = 18
+        // Petals (grouped to allow subtle global sway)
+        const petalGroup = new Group()
+        scene.add(petalGroup)
+        const count = 20
         const petals = []
-        const geo = new PlaneGeometry(0.18, 0.26)
-        function mat() { return new MeshBasicMaterial({ color: new Color('#f9a8d4'), transparent: true, opacity: 0.9 }) }
+        const geo = new PlaneGeometry(0.22, 0.30)
+        const palette = ['#f9a8d4', '#f472b6', '#fb7185', '#fda4af']
+        function mat(idx) {
+          const c = new Color(palette[idx % palette.length])
+          return new MeshBasicMaterial({ color: c, transparent: true, opacity: 0.85 })
+        }
         for (let i = 0; i < count; i++) {
-          const m = new Mesh(geo, mat())
+          const m = new Mesh(geo, mat(i))
           resetPetal(m, true, i)
-          scene.add(m); petals.push(m)
+          petalGroup.add(m); petals.push(m)
         }
         function resetPetal(m, initial = false, idx = 0) {
-          const xRange = 3.2, yStart = initial ? (Math.random()*4 - 2) : 3.2
-          m.position.set((Math.random()*2-1)*xRange, yStart, (Math.random()*2-1)*0.6)
+          const xRange = 3.0, yStart = initial ? (Math.random()*3 - 1.5) : 3.2
+          const z = (Math.random()*2-1) * 0.8
+          m.position.set((Math.random()*2-1)*xRange, yStart, z)
           m.rotation.z = Math.random()*Math.PI
-          m.userData.v = new Vector3((Math.random()*0.2-0.1)*0.2, -(0.2+Math.random()*0.6)*0.35, 0)
-          m.userData.sway = (Math.random()*2-1) * 0.3
-          m.material.opacity = 0.75 + Math.random()*0.25
-          m.scale.setScalar(0.7 + Math.random()*0.6)
+          m.userData.v = new Vector3((Math.random()*0.2-0.1)*0.18, -(0.18+Math.random()*0.55)*0.32, 0)
+          m.userData.sway = (Math.random()*2-1) * 0.35
+          m.userData.spin = 0.004 + Math.random()*0.006
+          const baseOpacity = 0.75 + Math.random()*0.2
+          m.material.opacity = baseOpacity * (0.7 + (z+0.8)/1.6 * 0.3) // fade with depth
+          const s = 0.6 + Math.random()*0.7
+          m.scale.set(s*(0.9+(z+0.8)/1.6*0.2), s, 1)
         }
         const clock = new Clock()
         function animate() {
           const t = clock.getElapsedTime()
+          petalGroup.position.x = Math.sin(t*0.2)*0.03
           petals.forEach((m, i) => {
             m.position.add(m.userData.v)
-            m.position.x += Math.sin(t*0.8 + i)*0.002 + m.userData.sway*0.002
-            m.rotation.z += 0.006
+            m.position.x += Math.sin(t*0.8 + i)*0.003 + m.userData.sway*0.002
+            m.rotation.z += m.userData.spin
             if (m.position.y < -3.2) resetPetal(m, false, i)
           })
           renderer.render(scene, camera)
