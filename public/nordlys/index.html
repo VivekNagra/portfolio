@@ -95,7 +95,7 @@
           </div>
         </div>
       </div>
-      <p style="margin-top:12px;"><a class="link" href="/">← Tilbage til forsiden</a></p>
+      
     </div>
     <script>
       async function check() {
@@ -151,11 +151,12 @@
         container.innerHTML = ''
         container.appendChild(renderer.domElement)
         const heartShape = new Shape()
-        heartShape.moveTo(0, 4)
-        heartShape.bezierCurveTo(0, 4, -4, 6, -4, 9)
-        heartShape.bezierCurveTo(-4, 12, -1, 13.5, 0, 12)
-        heartShape.bezierCurveTo(1, 13.5, 4, 12, 4, 9)
-        heartShape.bezierCurveTo(4, 6, 0, 4, 0, 4)
+        heartShape.moveTo(0, 6)
+        heartShape.bezierCurveTo(0, 8, -4.5, 9.5, -4.5, 12.5)
+        heartShape.bezierCurveTo(-4.5, 16.5, -0.6, 18.5, 0, 20)
+        heartShape.bezierCurveTo(0.6, 18.5, 4.5, 16.5, 4.5, 12.5)
+        heartShape.bezierCurveTo(4.5, 9.5, 0, 8, 0, 6)
+        heartShape.closePath()
         const geometry = new ExtrudeGeometry(heartShape, { depth: 3, bevelEnabled: true, bevelSegments: 2, steps: 2, bevelSize: 0.8, bevelThickness: 0.8 })
         geometry.center()
         const material = new MeshPhongMaterial({ color: 0xe11d48, shininess: 120, specular: 0xffb4d0, emissive: 0x1f0308 })
