@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Nordlys</title>
+    <meta name="robots" content="noindex,nofollow" />
+    <style>
+      :root { --brand: #8b5cf6; }
+      body { margin: 0; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji"; background: #0b0b0b; color: #e5e7eb; }
+      .wrap { max-width: 720px; margin: 40px auto; padding: 0 16px; }
+      .card { background: #111214; border: 1px solid #27272a; border-radius: 12px; padding: 20px; }
+      h1 { margin: 0 0 12px; font-size: 28px; }
+      p { color: #cbd5e1; }
+      .field { margin-top: 12px; }
+      input[type="password"] { width: 100%; padding: 10px 12px; background:#0b0b0b; color:#e5e7eb; border:1px solid #3f3f46; border-radius:8px; }
+      button { margin-top: 12px; width: 100%; padding: 10px 12px; border-radius: 8px; font-weight: 600; color: white; background: linear-gradient(90deg, var(--brand), #a855f7, var(--brand)); background-size: 200% 100%; border: 0; cursor: pointer; }
+      button:disabled { opacity: .6; cursor: not-allowed; }
+      .error { margin-top: 10px; color: #fecaca; }
+      .content { white-space: pre-wrap; }
+      .actions { margin-top: 12px; text-align: right; }
+      .link { color: #c4b5fd; }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <div class="card">
+        <h1>Nordlys</h1>
+        <div id="unauth">
+          <p>Enter password to continue.</p>
+          <form id="login">
+            <div class="field">
+              <input id="pw" type="password" placeholder="Password" autocomplete="current-password" />
+            </div>
+            <button id="btn" type="submit">Unlock</button>
+            <div id="err" class="error" role="alert" style="display:none;"></div>
+          </form>
+        </div>
+        <div id="auth" style="display:none;">
+          <div class="content" id="data"></div>
+          <div class="actions">
+            <button id="logout" style="width:auto;padding:8px 12px;margin-top:16px;background:#27272a;border:1px solid #3f3f46;">Log out</button>
+          </div>
+        </div>
+      </div>
+      <p style="margin-top:12px;"><a class="link" href="/">← Back to site</a></p>
+    </div>
+    <script>
+      async function check() {
+        const r = await fetch('/api/nordlys-session')
+        return r.ok
+      }
+      async function loadContent() {
+        const r = await fetch('/api/nordlys-content')
+        if (!r.ok) throw new Error('Unauthorized')
+        const j = await r.json()
+        const el = document.getElementById('data')
+        el.textContent = j?.data?.message || 'Loaded.'
+      }
+      async function show(state) {
+        document.getElementById('unauth').style.display = state === 'unauth' ? '' : 'none'
+        document.getElementById('auth').style.display = state === 'auth' ? '' : 'none'
+      }
+      document.getElementById('login').addEventListener('submit', async (e) => {
+        e.preventDefault()
+        const pw = document.getElementById('pw').value
+        const btn = document.getElementById('btn')
+        const err = document.getElementById('err')
+        err.style.display='none'; err.textContent = ''
+        btn.disabled = true
+        try {
+          const r = await fetch('/api/nordlys-login', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ password: pw, redirect: '/nordlys' }) })
+          const j = await r.json().catch(()=>({}))
+          if (!r.ok || !j.ok) throw new Error(j.error || 'Invalid password')
+          await show('auth'); await loadContent()
+        } catch (ex) {
+          err.textContent = ex.message || 'Failed'; err.style.display='block'
+        } finally {
+          btn.disabled = false
+        }
+      })
+      document.getElementById('logout').addEventListener('click', async () => {
+        await fetch('/api/nordlys-logout',{ method:'POST' })
+        await show('unauth')
+      })
+      ;(async () => { if (await check()) { await show('auth'); await loadContent() } })()
+    </script>
+  </body>
+</html>
+
+
