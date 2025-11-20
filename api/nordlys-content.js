@@ -13,18 +13,18 @@ export default async function handler(req, res) {
       title: 'To år med os',
       subtitle: 'For evigt taknemmelig for dig.',
       hero: {
-        heading: 'To år, min elskede',
-        body: 'To år med grin, vækst og utallige små øjeblikke, der betyder alting. Tak fordi du vælger mig—hver dag, igen og igen.',
+        heading: 'To år, min elskede Manice',
+        body: 'To år med min mest elskede og yndlings person i hele verden. Tak fordi du vælger mig hver dag igen og igen.',
       },
       timeline: [
-        { date: 'År 1', text: 'Fra fremmede til bedste venner—hver dag føltes ny.' },
-        { date: 'År 2', text: 'Vi lærte, elskede og byggede et liv, der føles som hjem.' },
-        { date: 'I dag', text: 'Forlovede—og spændte på alle dagene, der kommer.' },
+        { date: 'År 1', text: 'Fra vores første møde sammen har jeg ikke andet end elsket hvert øjeblik med dig. At gå fra at lære dig at kende til at du bliver den vigtigste person i mit liv har været det bedste der nogensinde er sket for mig.' },
+        { date: 'År 2', text: 'Vi går fra at være bedste venner til at blive ét og til at forlove os og gøre vores kærlighed officiel.' },
+        
       ],
       gallery: [
-        { id: '01', caption: 'Os to—smil som solen.' },
+        { id: '01', caption: 'synes det her billede beskriver os godt' },
         { id: '02', caption: 'Dig, der stjal mit hjerte (igen).' },
-        { id: '03', caption: 'Et stille øjeblik, jeg aldrig glemmer.' },
+        { id: '03', caption: 'Mit livs mest glædelige øjeblik indtil nu' },
       ],
     },
   })
