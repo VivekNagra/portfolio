@@ -1,50 +1,71 @@
 <!doctype html>
-<html lang="en">
+<html lang="da">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Nordlys</title>
     <meta name="robots" content="noindex,nofollow" />
     <style>
-      :root { --brand: #8b5cf6; }
-      body { margin: 0; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji"; background: #0b0b0b; color: #e5e7eb; }
+      :root { --brand: #ec4899; /* pink-500 */ --brand2: #f472b6; }
+      body {
+        margin: 0;
+        font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+        background: radial-gradient(900px 500px at 80% -10%, rgba(236,72,153,0.22), transparent), radial-gradient(700px 400px at 10% 10%, rgba(244,114,182,0.18), transparent), #0b0b0b;
+        color: #e5e7eb;
+      }
       .wrap { max-width: 720px; margin: 24px auto; padding: 0 16px; }
-      .card { background: #111214; border: 1px solid #27272a; border-radius: 14px; padding: 18px; }
+      .card {
+        background: linear-gradient(180deg, rgba(17,18,20,0.9), rgba(17,18,20,0.95));
+        border: 1px solid rgba(244,114,182,0.22);
+        border-radius: 16px;
+        padding: 18px;
+        box-shadow: 0 18px 50px -24px rgba(236,72,153,0.35);
+      }
       h1 { margin: 0 0 10px; font-size: 26px; }
       p { color: #cbd5e1; }
       .field { margin-top: 12px; }
       input[type="password"] { width: 100%; padding: 10px 12px; background:#0b0b0b; color:#e5e7eb; border:1px solid #3f3f46; border-radius:8px; }
-      button { margin-top: 12px; width: 100%; padding: 10px 12px; border-radius: 8px; font-weight: 600; color: white; background: linear-gradient(90deg, var(--brand), #a855f7, var(--brand)); background-size: 200% 100%; border: 0; cursor: pointer; }
+      button {
+        margin-top: 12px; width: 100%; padding: 10px 12px; border-radius: 10px; font-weight: 700; color: white;
+        background: linear-gradient(90deg, var(--brand), var(--brand2), var(--brand));
+        background-size: 200% 100%; border: 0; cursor: pointer; box-shadow: 0 10px 30px -12px rgba(236,72,153,0.5);
+      }
       button:disabled { opacity: .6; cursor: not-allowed; }
       .error { margin-top: 10px; color: #fecaca; }
       .content { white-space: pre-wrap; }
       .actions { margin-top: 12px; text-align: right; }
-      .link { color: #c4b5fd; }
+      .link { color: #f9a8d4; }
       .hero { text-align: center; padding: 12px 8px 6px; }
-      .hero h2 { font-size: 22px; margin: 0 0 6px; }
-      .hero p { margin: 0; color: #d1d5db; }
+      .hero h2 { font-size: 24px; margin: 0 0 6px; letter-spacing: 0.2px; }
+      .hero p { margin: 0; color: #f5d0e6; }
+      .heart { display:inline-block; margin-left: 6px; color: #f472b6; filter: drop-shadow(0 4px 12px rgba(236,72,153,0.35)); }
+      .since { margin-top: 8px; text-align:center; color:#ffd0e5; font-size:14px; }
       .timeline { margin-top: 14px; display: grid; gap: 10px; }
       .tl-item { display:flex; gap:10px; align-items:flex-start; }
-      .tl-dot { flex:0 0 10px; height:10px; width:10px; border-radius:999px; background: var(--brand); margin-top:6px; }
+      .tl-dot { flex:0 0 10px; height:10px; width:10px; border-radius:999px; background: var(--brand); margin-top:6px; box-shadow: 0 0 0 4px rgba(236,72,153,0.12); }
       .tl-body { font-size:14px; color:#e5e7eb; }
-      .tl-date { font-size:12px; color:#a3a3a3; }
+      .tl-date { font-size:12px; color:#f9a8d4; }
       .gallery { margin-top: 14px; display:grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap:8px; }
-      .ph { position: relative; aspect-ratio: 1 / 1; border-radius: 10px; overflow: hidden; background: #0b0b0b; border:1px solid #27272a; }
+      .ph { position: relative; aspect-ratio: 1 / 1; border-radius: 12px; overflow: hidden; background: #0b0b0b; border:1px solid rgba(244,114,182,0.18); box-shadow: 0 12px 30px -16px rgba(244,114,182,0.25); }
       .ph img { width: 100%; height: 100%; object-fit: cover; display:block; }
-      .ph figcaption { position:absolute; left:0; right:0; bottom:0; font-size: 11px; color:#e5e7eb; background: linear-gradient(180deg, rgba(0,0,0,0), rgba(0,0,0,.55)); padding: 10px 8px 6px; }
+      .ph figcaption { position:absolute; left:0; right:0; bottom:0; font-size: 11px; color:#ffe4f1; background: linear-gradient(180deg, rgba(0,0,0,0), rgba(236,72,153,.45)); padding: 10px 8px 6px; }
+      /* Three.js background */
+      .bg3d { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
+      .wrap, .card { position: relative; z-index: 1; }
     </style>
   </head>
   <body>
+    <div id="bg3d" class="bg3d" aria-hidden="true"></div>
     <div class="wrap">
       <div class="card">
-        <h1>Nordlys</h1>
+        <h1>Nordlys <span class="heart">❤</span></h1>
         <div id="unauth">
-          <p>Enter password to continue.</p>
+          <p>Indtast adgangskode for at fortsætte.</p>
           <form id="login">
             <div class="field">
-              <input id="pw" type="password" placeholder="Password" autocomplete="current-password" />
+              <input id="pw" type="password" placeholder="Adgangskode" autocomplete="current-password" />
             </div>
-            <button id="btn" type="submit">Unlock</button>
+            <button id="btn" type="submit">Lås op</button>
             <div id="err" class="error" role="alert" style="display:none;"></div>
           </form>
         </div>
@@ -53,19 +74,96 @@
             <h2 id="hero-heading"></h2>
             <p id="hero-body"></p>
           </div>
+          <div id="since" class="since"></div>
           <div id="timeline" class="timeline"></div>
           <div id="gallery" class="gallery"></div>
           <div class="actions">
-            <button id="logout" style="width:auto;padding:8px 12px;margin-top:16px;background:#27272a;border:1px solid #3f3f46;">Log out</button>
+            <button id="logout" style="width:auto;padding:8px 12px;margin-top:16px;background:#27272a;border:1px solid #3f3f46;">Log ud</button>
           </div>
         </div>
       </div>
-      <p style="margin-top:12px;"><a class="link" href="/">← Back to site</a></p>
+      <p style="margin-top:12px;"><a class="link" href="/">← Tilbage til forsiden</a></p>
     </div>
     <script>
       async function check() {
         const r = await fetch('/api/nordlys-session')
         return r.ok
+      }
+      // Countdown since 21 Nov 2023 (local time)
+      let sinceTimer = null
+      function startSince() {
+        if (sinceTimer) return
+        const start = new Date(2023, 10, 21, 0, 0, 0) // 10 = November
+        const el = document.getElementById('since')
+        function pad(n){ return n.toString().padStart(2,'0') }
+        function tick() {
+          const now = new Date()
+          let diff = Math.max(0, now - start)
+          const days = Math.floor(diff / (1000*60*60*24)); diff -= days*(1000*60*60*24)
+          const hours = Math.floor(diff / (1000*60*60)); diff -= hours*(1000*60*60)
+          const mins = Math.floor(diff / (1000*60)); diff -= mins*(1000*60)
+          const secs = Math.floor(diff / 1000)
+          el.textContent = `Sammen i: ${days} dage, ${pad(hours)}:${pad(mins)}:${pad(secs)}`
+        }
+        tick()
+        sinceTimer = setInterval(tick, 1000)
+      }
+      // Three.js floating petals (lightweight, mobile-friendly)
+      let petalsStarted = false
+      async function startFlowers() {
+        if (petalsStarted) return; petalsStarted = true
+        const container = document.getElementById('bg3d')
+        const DPR = Math.min(window.devicePixelRatio || 1, 1.5)
+        const { Scene, PerspectiveCamera, WebGLRenderer, Color, PlaneGeometry, MeshBasicMaterial, Mesh, Vector3, Clock } =
+          await import('https://unpkg.com/three@0.160.0/build/three.module.js')
+        const scene = new Scene()
+        scene.background = null
+        const camera = new PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 100)
+        camera.position.z = 5
+        const renderer = new WebGLRenderer({ antialias: true, alpha: true })
+        container.innerHTML = ''
+        container.appendChild(renderer.domElement)
+        function resize() {
+          const w = container.clientWidth || window.innerWidth
+          const h = container.clientHeight || window.innerHeight
+          renderer.setPixelRatio(DPR)
+          renderer.setSize(w, h, false)
+          camera.aspect = w / h
+          camera.updateProjectionMatrix()
+        }
+        resize(); window.addEventListener('resize', resize)
+        // Petals
+        const count = 18
+        const petals = []
+        const geo = new PlaneGeometry(0.18, 0.26)
+        function mat() { return new MeshBasicMaterial({ color: new Color('#f9a8d4'), transparent: true, opacity: 0.9 }) }
+        for (let i = 0; i < count; i++) {
+          const m = new Mesh(geo, mat())
+          resetPetal(m, true, i)
+          scene.add(m); petals.push(m)
+        }
+        function resetPetal(m, initial = false, idx = 0) {
+          const xRange = 3.2, yStart = initial ? (Math.random()*4 - 2) : 3.2
+          m.position.set((Math.random()*2-1)*xRange, yStart, (Math.random()*2-1)*0.6)
+          m.rotation.z = Math.random()*Math.PI
+          m.userData.v = new Vector3((Math.random()*0.2-0.1)*0.2, -(0.2+Math.random()*0.6)*0.35, 0)
+          m.userData.sway = (Math.random()*2-1) * 0.3
+          m.material.opacity = 0.75 + Math.random()*0.25
+          m.scale.setScalar(0.7 + Math.random()*0.6)
+        }
+        const clock = new Clock()
+        function animate() {
+          const t = clock.getElapsedTime()
+          petals.forEach((m, i) => {
+            m.position.add(m.userData.v)
+            m.position.x += Math.sin(t*0.8 + i)*0.002 + m.userData.sway*0.002
+            m.rotation.z += 0.006
+            if (m.position.y < -3.2) resetPetal(m, false, i)
+          })
+          renderer.render(scene, camera)
+          requestAnimationFrame(animate)
+        }
+        animate()
       }
       async function loadContent() {
         const r = await fetch('/api/nordlys-content')
@@ -75,6 +173,8 @@
         document.title = d.title || 'Nordlys'
         document.getElementById('hero-heading').textContent = d.hero?.heading || ''
         document.getElementById('hero-body').textContent = d.hero?.body || ''
+        startSince()
+        startFlowers()
         // timeline
         const tl = document.getElementById('timeline'); tl.innerHTML = ''
         ;(d.timeline || []).forEach(item => {
@@ -112,10 +212,10 @@
         try {
           const r = await fetch('/api/nordlys-login', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ password: pw, redirect: '/nordlys' }) })
           const j = await r.json().catch(()=>({}))
-          if (!r.ok || !j.ok) throw new Error(j.error || 'Invalid password')
+          if (!r.ok || !j.ok) throw new Error(j.error || 'Ugyldig adgangskode')
           await show('auth'); await loadContent()
         } catch (ex) {
-          err.textContent = ex.message || 'Failed'; err.style.display='block'
+          err.textContent = ex.message || 'Noget gik galt'; err.style.display='block'
         } finally {
           btn.disabled = false
         }

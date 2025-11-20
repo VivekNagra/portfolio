@@ -10,22 +10,22 @@ export default async function handler(req, res) {
   return res.status(200).json({
     ok: true,
     data: {
-      title: 'Two Years of Us',
-      subtitle: 'Forever grateful for you.',
+      title: 'To år med os',
+      subtitle: 'For evigt taknemmelig for dig.',
       hero: {
-        heading: 'Two years, my love',
-        body: 'Two years of laughter, growth, and countless tiny moments that mean everything. Thank you for choosing me—every day, again and again.',
+        heading: 'To år, min elskede',
+        body: 'To år med grin, vækst og utallige små øjeblikke, der betyder alting. Tak fordi du vælger mig—hver dag, igen og igen.',
       },
       timeline: [
-        { date: 'Year 1', text: 'From strangers to best friends—every day felt new.' },
-        { date: 'Year 2', text: 'We learned, loved, and built a life that feels like home.' },
-        { date: 'Today', text: 'Engaged—and excited for all the days to come.' },
+        { date: 'År 1', text: 'Fra fremmede til bedste venner—hver dag føltes ny.' },
+        { date: 'År 2', text: 'Vi lærte, elskede og byggede et liv, der føles som hjem.' },
+        { date: 'I dag', text: 'Forlovede—og spændte på alle dagene, der kommer.' },
       ],
       gallery: [
         // Add more ids as you add photos to /api/_nordlys_assets
-        { id: '01', caption: 'Us, smiling like the sun.' },
-        { id: '02', caption: 'You, stealing my heart (again).' },
-        { id: '03', caption: 'A quiet moment I’ll never forget.' },
+        { id: '01', caption: 'Os to—smil som solen.' },
+        { id: '02', caption: 'Dig, der stjal mit hjerte (igen).' },
+        { id: '03', caption: 'Et stille øjeblik, jeg aldrig glemmer.' },
       ],
     },
   })
