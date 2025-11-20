@@ -22,7 +22,6 @@ export default async function handler(req, res) {
         { date: 'I dag', text: 'Forlovede—og spændte på alle dagene, der kommer.' },
       ],
       gallery: [
-        // Add more ids as you add photos to /api/_nordlys_assets
         { id: '01', caption: 'Os to—smil som solen.' },
         { id: '02', caption: 'Dig, der stjal mit hjerte (igen).' },
         { id: '03', caption: 'Et stille øjeblik, jeg aldrig glemmer.' },
