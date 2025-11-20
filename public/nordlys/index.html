@@ -59,6 +59,8 @@
       .ph figcaption { position:absolute; left:0; right:0; bottom:0; font-size: 11px; color:#ffe4f1; background: linear-gradient(180deg, rgba(0,0,0,0), rgba(236,72,153,.45)); padding: 10px 8px 6px; }
       /* Three.js background */
       .bg3d { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
+      .heart3d-container { margin-top: 18px; border-radius: 16px; border: 1px solid rgba(244,114,182,0.25); background: rgba(12,12,14,0.65); padding: 10px; box-shadow: inset 0 1px 0 rgba(255,255,255,0.06); }
+      #heart3d { width: 100%; min-height: 220px; height: clamp(220px, 35vw, 320px); border-radius: 12px; overflow: hidden; }
       .wrap, .card { position: relative; z-index: 1; }
     </style>
   </head>
@@ -85,6 +87,9 @@
           <div id="since" class="since"></div>
           <div id="timeline" class="timeline"></div>
           <div id="gallery" class="gallery"></div>
+          <div class="heart3d-container">
+            <div id="heart3d"></div>
+          </div>
           <div class="actions">
             <button id="logout" style="width:auto;padding:8px 12px;margin-top:16px;background:#27272a;border:1px solid #3f3f46;">Log ud</button>
           </div>
@@ -126,83 +131,68 @@
         tick()
         sinceTimer = setInterval(tick, 1000)
       }
-      // Three.js floating petals (romantic hearts)
-      let petalsStarted = false
-      async function startFlowers() {
-        if (petalsStarted) return; petalsStarted = true
-        const container = document.getElementById('bg3d')
-        const DPR = Math.min(window.devicePixelRatio || 1, 1.25)
-        const { Scene, PerspectiveCamera, WebGLRenderer, Color, MeshBasicMaterial, Mesh, Vector3, Clock, Group, Shape, ShapeGeometry } =
+      // 3D beating heart using Three.js
+      let heartStarted = false
+      async function startHeart3D() {
+        if (heartStarted) return; heartStarted = true
+        const container = document.getElementById('heart3d')
+        if (!container) return
+        const DPR = Math.min(window.devicePixelRatio || 1, 1.6)
+        const { Scene, PerspectiveCamera, WebGLRenderer, MeshPhongMaterial, Mesh, Shape, ExtrudeGeometry, AmbientLight, PointLight, Clock, LineSegments, LineBasicMaterial, WireframeGeometry, MathUtils } =
           await import('https://unpkg.com/three@0.160.0/build/three.module.js')
+        const { OrbitControls } = await import('https://unpkg.com/three@0.160.0/examples/jsm/controls/OrbitControls.js?module')
+
         const scene = new Scene()
-        scene.background = null
-        const camera = new PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 100)
-        camera.position.z = 5
+        const camera = new PerspectiveCamera(60, container.clientWidth / container.clientHeight, 0.1, 100)
+        camera.position.set(0, 0, 26)
         const renderer = new WebGLRenderer({ antialias: true, alpha: true })
+        renderer.setPixelRatio(DPR)
+        renderer.setSize(container.clientWidth, container.clientHeight)
         container.innerHTML = ''
         container.appendChild(renderer.domElement)
+        const heartShape = new Shape()
+        heartShape.moveTo(0, 4)
+        heartShape.bezierCurveTo(0, 4, -4, 6, -4, 9)
+        heartShape.bezierCurveTo(-4, 12, -1, 13.5, 0, 12)
+        heartShape.bezierCurveTo(1, 13.5, 4, 12, 4, 9)
+        heartShape.bezierCurveTo(4, 6, 0, 4, 0, 4)
+        const geometry = new ExtrudeGeometry(heartShape, { depth: 3, bevelEnabled: true, bevelSegments: 2, steps: 2, bevelSize: 0.8, bevelThickness: 0.8 })
+        geometry.center()
+        const material = new MeshPhongMaterial({ color: 0xe11d48, shininess: 120, specular: 0xffb4d0, emissive: 0x1f0308 })
+        const heart = new Mesh(geometry, material)
+        scene.add(heart)
+        const wire = new LineSegments(new WireframeGeometry(geometry), new LineBasicMaterial({ color: 0xffffff, opacity: 0.25, transparent: true }))
+        heart.add(wire)
+        const ambient = new AmbientLight(0x402020, 0.6)
+        const point = new PointLight(0xffffff, 0.85)
+        point.position.set(-10, 12, 18)
+        scene.add(ambient, point)
+        const controls = new OrbitControls(camera, renderer.domElement)
+        controls.enablePan = false
+        controls.enableZoom = false
+        controls.enableDamping = true
+        controls.dampingFactor = 0.05
+        const clock = new Clock()
         function resize() {
-          const w = container.clientWidth || window.innerWidth
-          const h = container.clientHeight || window.innerHeight
-          renderer.setPixelRatio(DPR)
-          renderer.setSize(w, h, false)
-          camera.aspect = w / h
+          const cw = container.clientWidth
+          const ch = container.clientHeight
+          renderer.setSize(cw, ch)
+          camera.aspect = cw / ch
           camera.updateProjectionMatrix()
         }
-        resize(); window.addEventListener('resize', resize)
-        const petalGroup = new Group()
-        scene.add(petalGroup)
-        const count = 18
-        const petals = []
-        const petalGeo = createHeartGeometry()
-        const palette = ['#f9a8d4', '#f472b6', '#fb7185', '#fda4af', '#fecdd3']
-        function mat(idx, depthFade = 1) {
-          const c = new Color(palette[idx % palette.length])
-          return new MeshBasicMaterial({ color: c, transparent: true, opacity: 0.85 * depthFade })
-        }
-        for (let i = 0; i < count; i++) {
-          const m = new Mesh(petalGeo, mat(i))
-          resetPetal(m, true, i)
-          petalGroup.add(m); petals.push(m)
-        }
-        function resetPetal(m, initial = false, idx = 0) {
-          const xRange = 3.0, yStart = initial ? (Math.random()*3 - 1.5) : 3.2
-          const z = (Math.random()*2-1) * 0.8
-          m.position.set((Math.random()*2-1)*xRange, yStart, z)
-          m.rotation.z = Math.random()*Math.PI
-          m.userData.v = new Vector3((Math.random()*0.2-0.1)*0.12, -(0.12+Math.random()*0.4)*0.22, 0)
-          m.userData.sway = (Math.random()*2-1) * 0.25
-          m.userData.spin = 0.002 + Math.random()*0.004
-          const baseOpacity = 0.85 + Math.random()*0.1
-          m.material.opacity = baseOpacity * (0.65 + (z+0.8)/1.6 * 0.35)
-          const s = 0.5 + Math.random()*0.5
-          m.scale.set(s*(0.9+(z+0.8)/1.6*0.2), s, 1)
-        }
-        const clock = new Clock()
+        resize()
+        window.addEventListener('resize', resize)
         function animate() {
-          const t = clock.getElapsedTime()
-          petalGroup.position.x = Math.sin(t*0.2)*0.03
-          petals.forEach((m, i) => {
-            m.position.add(m.userData.v)
-            m.position.x += Math.sin(t*0.8 + i)*0.003 + m.userData.sway*0.002
-            m.rotation.z += m.userData.spin
-            if (m.position.y < -3.2) resetPetal(m, false, i)
-          })
-          renderer.render(scene, camera)
           requestAnimationFrame(animate)
+          const t = clock.getElapsedTime()
+          const beat = 1 + Math.sin(t*2) * 0.04
+          heart.scale.setScalar(beat)
+          heart.rotation.y = MathUtils.lerp(heart.rotation.y, -0.6 + Math.sin(t*0.4)*0.2, 0.05)
+          heart.rotation.x = Math.sin(t*0.2)*0.08
+          controls.update()
+          renderer.render(scene, camera)
         }
         animate()
-
-        function createHeartGeometry() {
-          const shape = new Shape()
-          const top = 0.35
-          shape.moveTo(0, -0.6)
-          shape.bezierCurveTo(0, -0.8, -0.4, -0.8, -0.45, -0.3)
-          shape.bezierCurveTo(-0.5, 0.15, 0, top, 0, top)
-          shape.bezierCurveTo(0, top, 0.5, 0.15, 0.45, -0.3)
-          shape.bezierCurveTo(0.4, -0.8, 0, -0.8, 0, -0.6)
-          return new ShapeGeometry(shape, 3)
-        }
       }
       async function loadContent() {
         const r = await fetch('/api/nordlys-content')
@@ -213,7 +203,7 @@
         document.getElementById('hero-heading').textContent = d.hero?.heading || ''
         document.getElementById('hero-body').textContent = d.hero?.body || ''
         startSince()
-        startFlowers()
+        startHeart3D()
         // timeline
         const tl = document.getElementById('timeline'); tl.innerHTML = ''
         ;(d.timeline || []).forEach(item => {
