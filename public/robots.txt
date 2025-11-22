@@ -1,8 +1,5 @@
 User-agent: *
 Allow: /
-Disallow: /nordlys
-Disallow: /nordlys/
-Disallow: /api/nordlys*
 
 Sitemap: https://www.viveknagra.dev/sitemap.xml
 
