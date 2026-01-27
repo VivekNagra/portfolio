@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
+import { useCursorLight } from '../hooks/useCursorLight'
 
 const experiences = [
   {
@@ -133,6 +134,8 @@ function Card({ exp, expanded, onToggle }) {
   const controlsId = `${exp.id}-details`
   const cardRef = useRef(null)
 
+  useCursorLight(cardRef, { radius: 620, max: 0.95 })
+
   useEffect(() => {
     if (!expanded) return
     // Move focus to the expanded card for keyboard users (and to make it obvious).
@@ -144,7 +147,7 @@ function Card({ exp, expanded, onToggle }) {
       ref={cardRef}
       tabIndex={-1}
       className={[
-        'group relative overflow-hidden rounded-xl border border-zinc-200 bg-white p-4 shadow-sm ring-1 ring-[--color-brand]/10 transition-all duration-300 ease-out dark:border-zinc-800 dark:bg-zinc-900/60',
+        'cursor-light group relative overflow-hidden rounded-xl border border-zinc-200 bg-white p-4 shadow-sm ring-1 ring-[--color-brand]/10 transition-all duration-300 ease-out dark:border-zinc-800 dark:bg-zinc-900/60',
         expanded
           ? 'z-20 ring-[--color-brand]/35 shadow-[0_26px_70px_-18px_color-mix(in_oklab,var(--color-brand),transparent_45%)]'
           : 'hover:-translate-y-1 hover:shadow-[0_18px_40px_-12px_color-mix(in_oklab,var(--color-brand),transparent_50%)] hover:ring-[--color-brand]/30',

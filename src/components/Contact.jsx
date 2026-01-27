@@ -1,13 +1,17 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useRef } from 'react'
+import { useCursorLight } from '../hooks/useCursorLight'
 
 export default function Contact() {
   const [status, setStatus] = useState('idle') // idle | loading | success | error
   const [form, setForm] = useState({ name: '', email: '', message: '' })
   const [errors, setErrors] = useState({})
   const [serverError, setServerError] = useState('')
+  const wrapRef = useRef(null)
 
   const isDisabled = useMemo(() => status === 'loading', [status])
   const isDev = import.meta.env && import.meta.env.DEV
+
+  useCursorLight(wrapRef, { radius: 760, max: 0.85 })
 
   function validate(values) {
     const next = {}
@@ -56,7 +60,10 @@ export default function Contact() {
 
   return (
     <section id="contact" className="reveal reveal-delay-0 mx-auto max-w-6xl px-4 py-12">
-      <div className="rounded-xl border border-zinc-200 bg-white p-6 dark:border-zinc-800 dark:bg-zinc-900/60">
+      <div
+        ref={wrapRef}
+        className="cursor-light rounded-xl border border-zinc-200 bg-white p-6 dark:border-zinc-800 dark:bg-zinc-900/60"
+      >
         <h2 className="text-3xl font-bold tracking-tight text-zinc-900 dark:text-white">Get in touch</h2>
         <p className="mt-2 text-zinc-600 dark:text-zinc-300">Have a question or want to work together? Send a message below and I’ll get back to you soon.</p>
         {status==='success' && (

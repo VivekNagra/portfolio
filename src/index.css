@@ -20,6 +20,43 @@ section[id] {
   scroll-margin-top: var(--scroll-offset);
 }
 
+/* Cursor light (cards "shine" towards the cursor and fade by distance) */
+.cursor-light {
+  position: relative;
+  isolation: isolate;
+}
+.cursor-light::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  opacity: var(--glow-a, 0);
+  transition: opacity 160ms ease;
+  background:
+    radial-gradient(
+      520px circle at var(--glow-x, 50%) var(--glow-y, 50%),
+      rgba(139, 92, 246, 0.28),
+      rgba(139, 92, 246, 0.12) 28%,
+      transparent 62%
+    );
+  mix-blend-mode: screen;
+}
+.cursor-light::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  opacity: 1;
+  box-shadow:
+    0 0 0 1px rgba(139, 92, 246, calc(var(--glow-a, 0) * 0.55)),
+    0 18px 48px -22px rgba(139, 92, 246, calc(var(--glow-a, 0) * 0.7));
+}
+@media (prefers-reduced-motion: reduce) {
+  .cursor-light::before { transition: none; }
+}
+
 /* Improve text rendering */
 * {
   -webkit-font-smoothing: antialiased;
