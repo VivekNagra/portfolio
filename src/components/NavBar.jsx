@@ -72,23 +72,12 @@ export default function NavBar() {
 }
 
 function ThemeToggle({ isDark, onToggle }) {
-  const [showNote, setShowNote] = useState(false)
-  const timerRef = useRef(null)
-
-  useEffect(() => () => clearTimeout(timerRef.current), [])
-
-  function handleClick() {
-    onToggle()
-    setShowNote(true)
-    clearTimeout(timerRef.current)
-    timerRef.current = setTimeout(() => setShowNote(false), 2000)
-  }
-
   return (
     <div className="relative">
       <button
         aria-label="Toggle dark mode"
-        onClick={handleClick}
+        type="button"
+        onClick={onToggle}
         className="group inline-flex items-center gap-2 rounded-md border border-zinc-200 bg-white px-3 py-1.5 text-sm text-zinc-700 shadow-sm ring-[--color-brand]/40 transition hover:bg-zinc-50 active:scale-[0.98] dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-200 dark:hover:bg-zinc-700"
         style={{ boxShadow: isDark ? '0 0 0 2px color-mix(in oklab, var(--color-brand), transparent 60%)' : '0 0 0 2px color-mix(in oklab, var(--color-brand), transparent 85%)' }}
       >
@@ -104,12 +93,6 @@ function ThemeToggle({ isDark, onToggle }) {
           </>
         )}
       </button>
-      <div
-        className={`absolute left-0 right-0 translate-y-1 text-center text-[11px] text-zinc-600 transition-opacity dark:text-zinc-300 ${showNote ? 'opacity-100' : 'opacity-0'}`}
-        aria-live="polite"
-      >
-        coming soon
-      </div>
     </div>
   )
 }
