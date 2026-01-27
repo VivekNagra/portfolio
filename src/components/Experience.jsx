@@ -96,8 +96,8 @@ export default function Experience() {
 
   return (
     <section ref={sectionRef} id="experience" className="reveal reveal-delay-0 mx-auto max-w-6xl px-4 py-12">
-      <h2 className="text-3xl font-bold tracking-tight text-zinc-900 dark:text-white">Experience</h2>
-      <p className="mt-2 text-zinc-600 dark:text-zinc-300">Recent roles and responsibilities.</p>
+      <h2 className="text-3xl font-bold tracking-tight text-[var(--page-text)]">Experience</h2>
+      <p className="mt-2 text-[var(--muted-text)]">Recent roles and responsibilities.</p>
 
       {/* Expanded card gets its own "foreground" area so the rest naturally move below it */}
       {expanded && (
@@ -229,7 +229,7 @@ function Card({ exp, expanded, onToggle }) {
         </button>
 
         {expanded && (
-          <span className="text-xs text-zinc-500 dark:text-zinc-400">
+          <span className="text-xs text-[var(--muted-text-2)]">
             Tip: click Collapse to return to the grid.
           </span>
         )}

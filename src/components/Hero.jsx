@@ -81,7 +81,7 @@ export default function Hero() {
     <section id="home" className="reveal reveal-delay-0 mx-auto max-w-6xl px-4 pt-16 pb-10">
       <div className="grid items-center gap-8 md:grid-cols-2">
         <div>
-          <h1 className="text-4xl font-extrabold tracking-tight text-zinc-900 dark:text-white md:text-5xl">
+          <h1 className="text-4xl font-extrabold tracking-tight text-[var(--page-text)] md:text-5xl">
             <Typewriter
               as="span"
               text="Hi, I’m Vivek Singh Nagra"
@@ -184,7 +184,7 @@ export default function Hero() {
               target="_blank"
               rel="noopener noreferrer"
               aria-label="GitHub"
-              className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-zinc-300 bg-white text-zinc-700 shadow-sm ring-1 ring-[--color-brand]/10 transition hover:scale-105 hover:ring-[--color-brand]/40 hover:shadow-[0_8px_20px_-8px_color-mix(in_oklab,var(--color-brand),transparent_60%)] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[--color-brand]/40 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-200 dark:hover:bg-zinc-700"
+              className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-[color:var(--surface-border)] bg-[var(--surface-bg)] text-[var(--muted-text)] shadow-sm ring-1 ring-[--color-brand]/10 transition hover:scale-105 hover:ring-[--color-brand]/40 hover:shadow-[0_8px_20px_-8px_color-mix(in_oklab,var(--color-brand),transparent_60%)] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[--color-brand]/40"
               style={{ boxShadow: '0 0 0 2px color-mix(in oklab, var(--color-brand), transparent 85%)' }}
             >
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="h-4 w-4" aria-hidden>
@@ -196,7 +196,7 @@ export default function Hero() {
               target="_blank"
               rel="noopener noreferrer"
               aria-label="LinkedIn"
-              className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-zinc-300 bg-white text-zinc-700 shadow-sm ring-1 ring-[--color-brand]/10 transition hover:scale-105 hover:ring-[--color-brand]/40 hover:shadow-[0_8px_20px_-8px_color-mix(in_oklab,var(--color-brand),transparent_60%)] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[--color-brand]/40 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-200 dark:hover:bg-zinc-700"
+              className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-[color:var(--surface-border)] bg-[var(--surface-bg)] text-[var(--muted-text)] shadow-sm ring-1 ring-[--color-brand]/10 transition hover:scale-105 hover:ring-[--color-brand]/40 hover:shadow-[0_8px_20px_-8px_color-mix(in_oklab,var(--color-brand),transparent_60%)] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[--color-brand]/40"
               style={{ boxShadow: '0 0 0 2px color-mix(in oklab, var(--color-brand), transparent 85%)' }}
             >
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="h-4 w-4" aria-hidden>
@@ -234,7 +234,7 @@ function ParagraphType({ start }) {
     >
       <Typewriter
         as="p"
-        className="mt-4 text-lg text-zinc-700 dark:text-zinc-300"
+        className="mt-4 text-lg text-[var(--muted-text)]"
         text={paragraph}
         start={start}
         speed={18}

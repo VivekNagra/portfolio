@@ -35,8 +35,8 @@ function SkillGroupCard({ group, gi }) {
 export default function Skills() {
   return (
     <section id="skills" className="reveal reveal-delay-0 mx-auto max-w-6xl px-4 py-12">
-      <h2 className="text-3xl font-bold tracking-tight text-zinc-900 dark:text-white">Skills</h2>
-      <p className="mt-2 text-zinc-600 dark:text-zinc-300">Technologies I’m most comfortable with, plus areas I’m exploring.</p>
+      <h2 className="text-3xl font-bold tracking-tight text-[var(--page-text)]">Skills</h2>
+      <p className="mt-2 text-[var(--muted-text)]">Technologies I’m most comfortable with, plus areas I’m exploring.</p>
       <div className="mt-6 grid gap-4 sm:grid-cols-2">
         {skillGroups.map((group, gi) => (
           <SkillGroupCard key={group.title} group={group} gi={gi} />
