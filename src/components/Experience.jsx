@@ -5,11 +5,11 @@ const experiences = [
   {
     id: 'student-python-dev',
     title: 'Student Python Developer',
-    org: 'Company',
-    period: '2025 — Present',
+    org: 'Realview',
+    period: '2026 — Present',
     tags: ['Python', 'SQL', 'AI'],
     summary:
-      'Part of a development team on an ongoing software project, contributing to planning, development, testing, and integrations.',
+      'Part of a development team on an ongoing AI image analysis software project, contributing to planning, development, testing, and integrations.',
     bullets: [
       'Contribute to planning, development, project follow‑up, and quality assurance (testing).',
       'Build Python scripts that run AI on images to help analyze and understand them.',
