@@ -62,17 +62,18 @@ export default function Contact() {
     <section id="contact" className="reveal reveal-delay-0 mx-auto max-w-6xl px-4 py-12">
       <div
         ref={wrapRef}
-        className="cursor-light rounded-xl border border-[color:var(--surface-border)] bg-[var(--surface-bg)] p-6 text-[var(--page-text)]"
+        id="contact-form"
+        className="scroll-mt-[var(--scroll-offset)] cursor-light rounded-xl border border-[color:var(--surface-border)] bg-[var(--surface-bg)] p-6 text-[var(--page-text)]"
       >
         <h2 className="text-3xl font-bold tracking-tight">Get in touch</h2>
         <p className="mt-2 text-[var(--muted-text)]">Have a question or want to work together? Send a message below and I’ll get back to you soon.</p>
         {status==='success' && (
-          <div className="mt-4 rounded-md border border-green-300 bg-green-50 px-4 py-3 text-sm text-green-800 dark:border-0 dark:bg-green-500/15 dark:text-green-200">
+          <div className="mt-4 rounded-md border border-green-300 bg-green-100 px-4 py-3 text-sm text-green-950 dark:border-0 dark:bg-green-500/15 dark:text-green-100">
             Your message has been sent. I’ll get back to you shortly.
           </div>
         )}
         {serverError && (
-          <div className="mt-4 rounded-md border border-red-300 bg-red-50 px-4 py-3 text-sm text-red-800 dark:border-0 dark:bg-red-500/15 dark:text-red-200">
+          <div className="mt-4 rounded-md border border-red-300 bg-red-100 px-4 py-3 text-sm text-red-950 dark:border-0 dark:bg-red-500/15 dark:text-red-100">
             {serverError}
           </div>
         )}

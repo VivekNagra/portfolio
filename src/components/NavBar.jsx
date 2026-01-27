@@ -55,7 +55,7 @@ export default function NavBar() {
             <a href="#projects" className="text-[var(--muted-text)] hover:text-[--color-brand]">Projects</a>
             <a href="#experience" className="text-[var(--muted-text)] hover:text-[--color-brand]">Experience</a>
             <a href="#skills" className="text-[var(--muted-text)] hover:text-[--color-brand]">Skills</a>
-            <a href="#contact" className="text-[var(--muted-text)] hover:text-[--color-brand]">Contact</a>
+            <a href="#contact-form" className="text-[var(--muted-text)] hover:text-[--color-brand]">Contact</a>
           </nav>
 
           <div className="flex items-center gap-2">
@@ -80,7 +80,7 @@ export default function NavBar() {
             <a href="#projects" onClick={closeMenu} className="rounded-md px-2 py-2 text-[var(--muted-text)] hover:bg-[--color-brand]/10">Projects</a>
             <a href="#experience" onClick={closeMenu} className="rounded-md px-2 py-2 text-[var(--muted-text)] hover:bg-[--color-brand]/10">Experience</a>
             <a href="#skills" onClick={closeMenu} className="rounded-md px-2 py-2 text-[var(--muted-text)] hover:bg-[--color-brand]/10">Skills</a>
-            <a href="#contact" onClick={closeMenu} className="rounded-md px-2 py-2 text-[var(--muted-text)] hover:bg-[--color-brand]/10">Contact</a>
+            <a href="#contact-form" onClick={closeMenu} className="rounded-md px-2 py-2 text-[var(--muted-text)] hover:bg-[--color-brand]/10">Contact</a>
           </div>
         )}
       </div>
