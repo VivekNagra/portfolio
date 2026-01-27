@@ -34,8 +34,12 @@ const experiences = [
 ]
 
 export default function Experience() {
-  const [expandedId, setExpandedId] = useState(null)
-  const [pendingScrollToId, setPendingScrollToId] = useState(null)
+  // "topId" is the card currently rendered in the foreground slot.
+  // "openId" controls whether the foreground card is expanded (details visible).
+  // This lets us animate: expanded -> collapsed -> swap.
+  const [topId, setTopId] = useState(null)
+  const [openId, setOpenId] = useState(null)
+  const animTimerRef = useRef(null)
   const expandedWrapRef = useRef(null)
   const sectionRef = useRef(null)
 
@@ -45,53 +49,62 @@ export default function Experience() {
     return Number.isFinite(parsed) ? parsed : 96
   }
 
-  const expanded = useMemo(
-    () => experiences.find(e => e.id === expandedId) || null,
-    [expandedId]
-  )
-  const collapsed = useMemo(
-    () => experiences.filter(e => e.id !== expandedId),
-    [expandedId]
-  )
+  const top = useMemo(() => experiences.find(e => e.id === topId) || null, [topId])
+  const collapsed = useMemo(() => experiences.filter(e => e.id !== topId), [topId])
+  const isTopExpanded = Boolean(topId && openId === topId)
 
   // When a card is expanded from the grid, it renders "above" the grid.
   // Smooth-scroll to the Experience header so the context (section title) is always visible.
   useEffect(() => {
-    if (!expandedId) return
+    if (!openId) return
     const el = sectionRef.current
     if (!el) return
 
     const headerOffset = getHeaderOffset()
     const top = el.getBoundingClientRect().top + window.scrollY - headerOffset
     window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' })
-  }, [expandedId])
+  }, [openId])
 
-  // When collapsing an expanded card, scroll to where it re-appears in the grid.
   useEffect(() => {
-    if (!pendingScrollToId) return
-    if (expandedId !== null) return
+    return () => clearTimeout(animTimerRef.current)
+  }, [])
 
-    // Scroll back to the Experience header for consistent context.
-    const el = sectionRef.current
-    if (!el) return
+  function collapseThen(nextId) {
+    clearTimeout(animTimerRef.current)
 
-    const headerOffset = getHeaderOffset()
-    const top = el.getBoundingClientRect().top + window.scrollY - headerOffset
-    window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' })
-    setPendingScrollToId(null)
-  }, [pendingScrollToId, expandedId])
+    // Trigger the in-card collapse animation first (details max-height/opacity).
+    setOpenId(null)
+
+    // Duration should match the Card's details transition (duration-300).
+    const COLLAPSE_MS = 320
+    animTimerRef.current = setTimeout(() => {
+      if (nextId) {
+        // Swap: move next card into the foreground and expand it.
+        setTopId(nextId)
+        setOpenId(nextId)
+      } else {
+        // Fully collapse: remove foreground slot and return all cards to grid.
+        setTopId(null)
+      }
+    }, COLLAPSE_MS)
+  }
 
   function toggleExpanded(id) {
-    setExpandedId(prev => {
-      // Collapse
-      if (prev === id) {
-        setPendingScrollToId('experience')
-        return null
-      }
-      // Swap / Expand
-      setPendingScrollToId(null)
-      return id
-    })
+    // No foreground card yet: expand immediately.
+    if (!topId) {
+      setTopId(id)
+      setOpenId(id)
+      return
+    }
+
+    // Clicking the same foreground card: collapse back into grid (animated).
+    if (topId === id) {
+      collapseThen(null)
+      return
+    }
+
+    // Clicking another card while one is expanded: collapse first, then expand the new one.
+    collapseThen(id)
   }
 
   return (
@@ -100,12 +113,12 @@ export default function Experience() {
       <p className="mt-2 text-[var(--muted-text)]">Recent roles and responsibilities.</p>
 
       {/* Expanded card gets its own "foreground" area so the rest naturally move below it */}
-      {expanded && (
+      {top && (
         <div ref={expandedWrapRef} className="reveal reveal-delay-0 mt-6 scroll-mt-32">
           <Card
-            exp={expanded}
-            expanded
-            onToggle={() => toggleExpanded(expanded.id)}
+            exp={top}
+            expanded={isTopExpanded}
+            onToggle={() => toggleExpanded(top.id)}
           />
         </div>
       )}
