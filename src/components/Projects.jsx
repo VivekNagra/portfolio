@@ -43,7 +43,7 @@ function ProjectCard({ p, i }) {
         el.style.transform = ''
       }}
     >
-      <div className="h-36 w-full rounded-md bg-gradient-to-br from-[--color-brand]/15 to-fuchsia-500/10 transition group-hover:from-[--color-brand]/25 group-hover:to-fuchsia-500/20 dark:from-[--color-brand]/20 dark:to-fuchsia-500/20" />
+      <div className="h-36 w-full rounded-md bg-gradient-to-br from-[--color-brand]/15 to-[color:var(--color-brand-2)]/10 transition group-hover:from-[--color-brand]/25 group-hover:to-[color:var(--color-brand-2)]/20" />
       <h3 className="mt-4 text-xl font-semibold">{p.title}</h3>
       <p className="mt-2 text-sm text-[var(--muted-text)]">{p.summary}</p>
       <div className="mt-3 flex flex-wrap gap-2">
