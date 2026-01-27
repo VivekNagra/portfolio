@@ -1,11 +1,33 @@
 const experiences = [
   {
+    title: 'Student Python Developer',
+    org: 'Company',
+    period: '2025 — Present',
+    description: (
+      <>
+        I’m part of the development team on an ongoing software project, contributing to{' '}
+        <strong>planning</strong>, <strong>development</strong>, <strong>project follow‑up</strong>, and{' '}
+        <strong>quality assurance</strong> (testing). My work primarily uses <strong>Python</strong> and{' '}
+        <strong>SQL</strong>, including building scripts that run <strong>AI</strong> on images to help{' '}
+        analyze and understand them, and supporting <strong>integrations</strong> with other systems.
+      </>
+    ),
+  },
+  {
     title: 'Intern',
     org: 'Novo Nordisk',
     period: '2024 — 2025',
     description: (
       <>
-        As an intern at <strong>Novo Nordisk</strong>, I worked across the <strong>BI Center of Excellence</strong>, <strong>AI/Automation & Analysis</strong>, and <strong>Platform Engineering</strong>. I coordinated internal <strong>BI training</strong> and helped organize an internal <strong>Data & AI conference</strong> with <strong>200+</strong> participants and speakers. I contributed <strong>Power BI dashboards</strong> and <strong>automation tools</strong> that supported <strong>data‑driven decision‑making</strong> and improved <strong>internal workflows</strong>, communicated technical topics clearly to <strong>non‑technical stakeholders</strong>, and managed <strong>complex cross‑team tasks</strong>. I was recognized as <strong>dedicated</strong>, <strong>proactive</strong>, and <strong>dependable</strong>, with a <strong>structured</strong>, <strong>solution‑oriented</strong> mindset.
+        As an intern at <strong>Novo Nordisk</strong>, I worked across the <strong>BI Center of Excellence</strong>,{' '}
+        <strong>AI/Automation & Analysis</strong>, and <strong>Platform Engineering</strong>. I coordinated internal{' '}
+        <strong>BI training</strong> and helped organize an internal <strong>Data & AI conference</strong> with{' '}
+        <strong>200+</strong> participants and speakers. I contributed <strong>Power BI dashboards</strong> and{' '}
+        <strong>automation tools</strong> that supported <strong>data‑driven decision‑making</strong> and improved{' '}
+        <strong>internal workflows</strong>, communicated technical topics clearly to <strong>non‑technical stakeholders</strong>,{' '}
+        and managed <strong>complex cross‑team tasks</strong>. I was recognized as <strong>dedicated</strong>,{' '}
+        <strong>proactive</strong>, and <strong>dependable</strong>, with a <strong>structured</strong>,{' '}
+        <strong>solution‑oriented</strong> mindset.
       </>
     ),
   },
@@ -15,7 +37,7 @@ const experiences = [
     period: '2023 — 2024',
     points: [
       'Supported students with algorithms and data structures.',
-      'Reviewed assignments and held weekly office hours.'
+      'Reviewed assignments and held weekly office hours.',
     ],
   },
 ]
