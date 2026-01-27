@@ -15,14 +15,14 @@ function SkillGroupCard({ group, gi }) {
   return (
     <div
       ref={ref}
-      className={`cursor-light reveal reveal-delay-${gi % 3} rounded-lg border border-zinc-200 bg-white p-4 ring-1 ring-[--color-brand]/15 dark:border-zinc-800 dark:bg-zinc-900/60`}
+      className={`cursor-light reveal reveal-delay-${gi % 3} rounded-lg border border-[color:var(--surface-border)] bg-[var(--surface-bg)] p-4 text-[var(--page-text)] ring-1 ring-[--color-brand]/15`}
     >
-      <h3 className="text-sm font-semibold text-zinc-800 dark:text-zinc-100">{group.title}</h3>
+      <h3 className="text-sm font-semibold">{group.title}</h3>
       <div className="mt-2 flex flex-wrap gap-2">
         {group.items.map(item => (
           <span
             key={item}
-            className="rounded-md border border-zinc-200 bg-white px-3 py-1 text-sm text-zinc-700 ring-1 ring-[--color-brand]/20 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-300"
+            className="rounded-md border border-[color:var(--surface-border)] bg-[var(--surface-bg-strong)] px-3 py-1 text-sm text-[var(--muted-text)] ring-1 ring-[--color-brand]/20"
           >
             {item}
           </span>

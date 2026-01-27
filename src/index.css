@@ -9,7 +9,10 @@
 :root {
   --page-bg: #ffffff;
   --page-text: #18181b; /* zinc-900 */
+  --muted-text: #52525b; /* zinc-600 */
+  --muted-text-2: #71717a; /* zinc-500 */
   --surface-bg: rgba(255, 255, 255, 0.92);
+  --surface-bg-strong: #ffffff;
   --surface-border: rgba(24, 24, 27, 0.10);
 }
 
@@ -19,7 +22,10 @@ html.dark {
   --color-brand-2: #d946ef; /* fuchsia-500 */
   --page-bg: #0b0b0b;
   --page-text: #f4f4f5; /* zinc-100 */
+  --muted-text: #d4d4d8; /* zinc-300 */
+  --muted-text-2: #a1a1aa; /* zinc-400 */
   --surface-bg: rgba(24, 24, 27, 0.68);
+  --surface-bg-strong: #18181b; /* zinc-900 */
   --surface-border: rgba(244, 244, 245, 0.10);
 }
 
