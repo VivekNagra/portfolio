@@ -210,9 +210,21 @@ export default function Hero() {
   )
 }
 
+function getAge(birthDate, now = new Date()) {
+  const yearDiff = now.getFullYear() - birthDate.getFullYear()
+  const hadBirthdayThisYear =
+    now.getMonth() > birthDate.getMonth() ||
+    (now.getMonth() === birthDate.getMonth() && now.getDate() >= birthDate.getDate())
+  return yearDiff - (hadBirthdayThisYear ? 0 : 1)
+}
+
 function ParagraphType({ start }) {
+  // Birthdate: 14 November 1998 (month is 0-based in JS Date)
+  const age = getAge(new Date(1998, 10, 14))
   const paragraph =
-    '27-year-old computer science / Software development student shaping futuristic, data-driven web experiences. I build with C#, .NET, React and Tailwind—blending minimal design with real functionality. From dashboards to full-stack apps, my focus is on clarity, performance, and precision.'
+    `${age}-year-old computer science / Software development student shaping futuristic, data-driven web experiences. ` +
+    'I build with Python, Java, C#, and React—blending minimal design with real functionality. ' +
+    'From dashboards to full-stack apps, my focus is on clarity, performance, and precision.'
 
   return (
     <div
