@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
+import { AnimatePresence, LayoutGroup, motion } from 'motion/react'
 import { useCursorLight } from '../hooks/useCursorLight'
 
 const experiences = [
@@ -34,10 +35,8 @@ const experiences = [
 ]
 
 export default function Experience() {
-  const [expandedId, setExpandedId] = useState(null)
-  const [pendingScrollToId, setPendingScrollToId] = useState(null)
-  const expandedWrapRef = useRef(null)
   const sectionRef = useRef(null)
+  const [selectedId, setSelectedId] = useState(null)
 
   function getHeaderOffset() {
     const raw = getComputedStyle(document.documentElement).getPropertyValue('--scroll-offset')
@@ -45,53 +44,25 @@ export default function Experience() {
     return Number.isFinite(parsed) ? parsed : 96
   }
 
-  const expanded = useMemo(
-    () => experiences.find(e => e.id === expandedId) || null,
-    [expandedId]
-  )
-  const collapsed = useMemo(
-    () => experiences.filter(e => e.id !== expandedId),
-    [expandedId]
+  const selected = useMemo(
+    () => experiences.find(e => e.id === selectedId) || null,
+    [selectedId]
   )
 
   // When a card is expanded from the grid, it renders "above" the grid.
   // Smooth-scroll to the Experience header so the context (section title) is always visible.
   useEffect(() => {
-    if (!expandedId) return
+    if (!selectedId) return
     const el = sectionRef.current
     if (!el) return
 
     const headerOffset = getHeaderOffset()
     const top = el.getBoundingClientRect().top + window.scrollY - headerOffset
     window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' })
-  }, [expandedId])
+  }, [selectedId])
 
-  // When collapsing an expanded card, scroll to where it re-appears in the grid.
-  useEffect(() => {
-    if (!pendingScrollToId) return
-    if (expandedId !== null) return
-
-    // Scroll back to the Experience header for consistent context.
-    const el = sectionRef.current
-    if (!el) return
-
-    const headerOffset = getHeaderOffset()
-    const top = el.getBoundingClientRect().top + window.scrollY - headerOffset
-    window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' })
-    setPendingScrollToId(null)
-  }, [pendingScrollToId, expandedId])
-
-  function toggleExpanded(id) {
-    setExpandedId(prev => {
-      // Collapse
-      if (prev === id) {
-        setPendingScrollToId('experience')
-        return null
-      }
-      // Swap / Expand
-      setPendingScrollToId(null)
-      return id
-    })
+  function toggle(id) {
+    setSelectedId(prev => (prev === id ? null : id))
   }
 
   return (
@@ -99,37 +70,56 @@ export default function Experience() {
       <h2 className="text-3xl font-bold tracking-tight text-[var(--page-text)]">Experience</h2>
       <p className="mt-2 text-[var(--muted-text)]">Recent roles and responsibilities.</p>
 
-      {/* Expanded card gets its own "foreground" area so the rest naturally move below it */}
-      {expanded && (
-        <div ref={expandedWrapRef} className="reveal reveal-delay-0 mt-6 scroll-mt-32">
-          <Card
-            exp={expanded}
-            expanded
-            onToggle={() => toggleExpanded(expanded.id)}
-          />
-        </div>
-      )}
+      <LayoutGroup>
+        {/* Foreground slot */}
+        <AnimatePresence initial={false}>
+          {selected && (
+            <motion.div
+              key={`top-${selected.id}`}
+              className="mt-6 scroll-mt-32"
+              layout
+              transition={{ type: 'spring', stiffness: 520, damping: 44, mass: 0.9 }}
+            >
+              <Card
+                exp={selected}
+                expanded
+                onToggle={() => toggle(selected.id)}
+                layoutId={`exp-${selected.id}`}
+              />
+            </motion.div>
+          )}
+        </AnimatePresence>
 
-      <div className="mt-6 grid gap-4 sm:grid-cols-2">
-        {collapsed.map((exp, i) => (
-          <div
-            key={exp.id}
-            id={`exp-grid-${exp.id}`}
-            className={`reveal reveal-delay-${i % 3}`}
-          >
-            <Card
-              exp={exp}
-              expanded={false}
-              onToggle={() => toggleExpanded(exp.id)}
-            />
-          </div>
-        ))}
-      </div>
+        {/* Grid */}
+        <motion.div
+          layout
+          className="mt-6 grid gap-4 sm:grid-cols-2"
+          transition={{ type: 'spring', stiffness: 520, damping: 44, mass: 0.9 }}
+        >
+          {experiences
+            .filter((e) => e.id !== selectedId)
+            .map((exp) => (
+              <motion.div
+                key={exp.id}
+                id={`exp-grid-${exp.id}`}
+                layout
+                transition={{ type: 'spring', stiffness: 520, damping: 44, mass: 0.9 }}
+              >
+                <Card
+                  exp={exp}
+                  expanded={false}
+                  onToggle={() => toggle(exp.id)}
+                  layoutId={`exp-${exp.id}`}
+                />
+              </motion.div>
+            ))}
+        </motion.div>
+      </LayoutGroup>
     </section>
   )
 }
 
-function Card({ exp, expanded, onToggle }) {
+function Card({ exp, expanded, onToggle, layoutId }) {
   const { title, org, period, tags = [], summary, bullets = [] } = exp
   const controlsId = `${exp.id}-details`
   const cardRef = useRef(null)
@@ -143,9 +133,11 @@ function Card({ exp, expanded, onToggle }) {
   }, [expanded])
 
   return (
-    <article
+    <motion.article
       ref={cardRef}
       tabIndex={-1}
+      layout
+      layoutId={layoutId}
       className={[
         'cursor-light group relative overflow-hidden rounded-xl border border-[color:var(--surface-border)] bg-[var(--surface-bg)] p-4 text-[var(--page-text)] shadow-sm ring-1 ring-[--color-brand]/10 transition-all duration-300 ease-out',
         expanded
@@ -247,7 +239,7 @@ function Card({ exp, expanded, onToggle }) {
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
         <div className="absolute top-0 bottom-0 left-[-50%] w-[60%] -skew-x-12 bg-gradient-to-r from-white/0 via-white/25 to-white/0 opacity-0 transition-opacity duration-200 group-hover:opacity-100 animate-[sheen_900ms_ease]" />
       </div>
-    </article>
+    </motion.article>
   )
 }
 
