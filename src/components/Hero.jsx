@@ -212,7 +212,7 @@ export default function Hero() {
 
 function ParagraphType({ start }) {
   const paragraph =
-    '26-year-old computer science / Software development student shaping futuristic, data-driven web experiences. I build with React and Tailwind, blending minimal design with real functionality. From dashboards to full-stack apps, my focus is on clarity, performance, and precision.'
+    '27-year-old computer science / Software development student shaping futuristic, data-driven web experiences. I build with C#, .NET, React and Tailwind—blending minimal design with real functionality. From dashboards to full-stack apps, my focus is on clarity, performance, and precision.'
 
   return (
     <div

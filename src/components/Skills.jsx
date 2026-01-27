@@ -1,5 +1,5 @@
 const skillGroups = [
-  { title: 'Core', items: ['Java', 'Python', 'JavaScript', 'React'] },
+  { title: 'Core', items: ['C#', '.NET', 'Java', 'Python', 'JavaScript', 'React'] },
   { title: 'Backend & Data', items: ['PostgreSQL', 'REST APIs', 'Node.js'] },
   { title: 'Collaboration', items: ['Git', 'GitHub'] },
   { title: 'Exploring', items: ['Rust', 'Power BI', 'Python Notebook'] },
