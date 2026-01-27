@@ -30,6 +30,18 @@ export default function NavBar() {
     }
   }, [])
 
+  // Prevent background scroll while the mobile menu is open.
+  useEffect(() => {
+    if (!open) return
+    const prev = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    return () => { document.body.style.overflow = prev }
+  }, [open])
+
+  function closeMenu() {
+    setOpen(false)
+  }
+
   return (
     <header
       ref={headerRef}
@@ -41,6 +53,7 @@ export default function NavBar() {
 
           <nav className="hidden gap-6 md:flex">
             <a href="#projects" className="text-[var(--muted-text)] hover:text-[--color-brand]">Projects</a>
+            <a href="#experience" className="text-[var(--muted-text)] hover:text-[--color-brand]">Experience</a>
             <a href="#skills" className="text-[var(--muted-text)] hover:text-[--color-brand]">Skills</a>
             <a href="#contact" className="text-[var(--muted-text)] hover:text-[--color-brand]">Contact</a>
           </nav>
@@ -50,6 +63,8 @@ export default function NavBar() {
             <button
               className="md:hidden rounded-md border border-[color:var(--surface-border)] p-2"
               aria-label="Open menu"
+              aria-expanded={open}
+              aria-controls="mobile-nav"
               onClick={() => setOpen(v => !v)}
             >
               <span className="block h-0.5 w-5 bg-[var(--page-text)]" />
@@ -60,10 +75,12 @@ export default function NavBar() {
         </div>
 
         {open && (
-          <div className="mt-3 flex flex-col gap-2 md:hidden">
-            <a href="#projects" className="rounded-md px-2 py-2 text-[var(--muted-text)] hover:bg-[--color-brand]/10">Projects</a>
-            <a href="#skills" className="rounded-md px-2 py-2 text-[var(--muted-text)] hover:bg-[--color-brand]/10">Skills</a>
-            <a href="#contact" className="rounded-md px-2 py-2 text-[var(--muted-text)] hover:bg-[--color-brand]/10">Contact</a>
+          <div id="mobile-nav" className="mt-3 flex flex-col gap-2 md:hidden">
+            <a href="#home" onClick={closeMenu} className="rounded-md px-2 py-2 text-[var(--muted-text)] hover:bg-[--color-brand]/10">Home</a>
+            <a href="#projects" onClick={closeMenu} className="rounded-md px-2 py-2 text-[var(--muted-text)] hover:bg-[--color-brand]/10">Projects</a>
+            <a href="#experience" onClick={closeMenu} className="rounded-md px-2 py-2 text-[var(--muted-text)] hover:bg-[--color-brand]/10">Experience</a>
+            <a href="#skills" onClick={closeMenu} className="rounded-md px-2 py-2 text-[var(--muted-text)] hover:bg-[--color-brand]/10">Skills</a>
+            <a href="#contact" onClick={closeMenu} className="rounded-md px-2 py-2 text-[var(--muted-text)] hover:bg-[--color-brand]/10">Contact</a>
           </div>
         )}
       </div>

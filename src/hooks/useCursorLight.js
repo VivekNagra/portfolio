@@ -8,6 +8,7 @@ let listening = false
 let pointerX = 0
 let pointerY = 0
 let pointerActive = false
+let pointerKind = 'mouse' // 'mouse' | 'touch' | 'pen' | ''
 
 function clamp(n, min, max) {
   return Math.max(min, Math.min(max, n))
@@ -60,6 +61,13 @@ function ensureListeners() {
   listening = true
 
   const onMove = (e) => {
+    pointerKind = e.pointerType || ''
+    // On touch devices there isn't really a "cursor". Also prevents perf hit while scrolling.
+    if (pointerKind === 'touch') {
+      pointerActive = false
+      scheduleUpdate()
+      return
+    }
     pointerX = e.clientX
     pointerY = e.clientY
     pointerActive = true
@@ -73,6 +81,8 @@ function ensureListeners() {
 
   window.addEventListener('pointermove', onMove, { passive: true })
   window.addEventListener('pointerdown', onMove, { passive: true })
+  window.addEventListener('pointerup', onLeave, { passive: true })
+  window.addEventListener('pointercancel', onLeave, { passive: true })
   window.addEventListener('pointerleave', onLeave, { passive: true })
   window.addEventListener('blur', onLeave, { passive: true })
 }
