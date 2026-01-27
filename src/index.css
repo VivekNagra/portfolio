@@ -20,7 +20,7 @@ html.dark {
   /* Dark mode = purple */
   --color-brand: #8b5cf6;   /* purple-500 */
   --color-brand-2: #d946ef; /* fuchsia-500 */
-  --page-bg: #0b0b0b;
+  --page-bg: #0f1115; /* modern deep gray */
   --page-text: #f4f4f5; /* zinc-100 */
   --muted-text: #d4d4d8; /* zinc-300 */
   --muted-text-2: #a1a1aa; /* zinc-400 */
