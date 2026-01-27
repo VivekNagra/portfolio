@@ -39,6 +39,7 @@ export default function Experience() {
   // This lets us animate: expanded -> collapsed -> swap.
   const [topId, setTopId] = useState(null)
   const [openId, setOpenId] = useState(null)
+  const [isAnimating, setIsAnimating] = useState(false)
   const animTimerRef = useRef(null)
   const expandedWrapRef = useRef(null)
   const sectionRef = useRef(null)
@@ -69,6 +70,128 @@ export default function Experience() {
     return () => clearTimeout(animTimerRef.current)
   }, [])
 
+  function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms))
+  }
+
+  function getTopEl() {
+    return expandedWrapRef.current?.querySelector?.('[data-exp-card]') || null
+  }
+
+  function getGridEl(id) {
+    return document.getElementById(`exp-grid-${id}`)?.querySelector?.('[data-exp-card]') || null
+  }
+
+  function createFlyClone(el, fromRect, toRect) {
+    const clone = el.cloneNode(true)
+    clone.style.position = 'fixed'
+    clone.style.left = `${fromRect.left}px`
+    clone.style.top = `${fromRect.top}px`
+    clone.style.width = `${fromRect.width}px`
+    clone.style.height = `${fromRect.height}px`
+    clone.style.margin = '0'
+    clone.style.pointerEvents = 'none'
+    clone.style.zIndex = '9999'
+    clone.style.transformOrigin = 'top left'
+    document.body.appendChild(clone)
+
+    const dx = toRect.left - fromRect.left
+    const dy = toRect.top - fromRect.top
+    const sx = toRect.width / Math.max(1, fromRect.width)
+    const sy = toRect.height / Math.max(1, fromRect.height)
+
+    const anim = clone.animate(
+      [
+        { transform: 'translate(0px, 0px) scale(1, 1)', opacity: 1 },
+        { transform: `translate(${dx}px, ${dy}px) scale(${sx}, ${sy})`, opacity: 1 },
+      ],
+      { duration: 420, easing: 'cubic-bezier(0.22, 1, 0.36, 1)', fill: 'forwards' }
+    )
+    anim.finished.finally(() => clone.remove())
+    return anim.finished
+  }
+
+  async function animateSwap(nextId) {
+    if (isAnimating) return
+    if (!topId || !nextId || nextId === topId) return
+
+    setIsAnimating(true)
+
+    // Step 1: collapse details so the flying card matches the collapsed size.
+    setOpenId(null)
+    await sleep(320)
+
+    const topEl = getTopEl()
+    const fromGridEl = getGridEl(nextId)
+    const toGridEl = getGridEl(topId) // invisible placeholder spot in the grid
+
+    if (!topEl || !fromGridEl || !toGridEl) {
+      // Fallback: no fancy animation, just swap.
+      setTopId(nextId)
+      setOpenId(nextId)
+      setIsAnimating(false)
+      return
+    }
+
+    const topFrom = topEl.getBoundingClientRect()
+    const topTo = toGridEl.getBoundingClientRect()
+    const gridFrom = fromGridEl.getBoundingClientRect()
+    const gridTo = topFrom
+
+    // Hide originals while clones fly.
+    const prevTopVis = topEl.style.visibility
+    const prevGridVis = fromGridEl.style.visibility
+    topEl.style.visibility = 'hidden'
+    fromGridEl.style.visibility = 'hidden'
+
+    try {
+      await Promise.all([
+        createFlyClone(topEl, topFrom, topTo),
+        createFlyClone(fromGridEl, gridFrom, gridTo),
+      ])
+    } finally {
+      // Restore (in case elements still exist) before rerender.
+      if (topEl.isConnected) topEl.style.visibility = prevTopVis
+      if (fromGridEl.isConnected) fromGridEl.style.visibility = prevGridVis
+    }
+
+    // Step 2: swap foreground, then expand the new one.
+    setTopId(nextId)
+    setOpenId(nextId)
+    setIsAnimating(false)
+  }
+
+  async function animateCollapseToGrid() {
+    if (isAnimating) return
+    if (!topId) return
+
+    setIsAnimating(true)
+    setOpenId(null)
+    await sleep(320)
+
+    const topEl = getTopEl()
+    const toGridEl = getGridEl(topId)
+    if (!topEl || !toGridEl) {
+      setTopId(null)
+      setIsAnimating(false)
+      return
+    }
+
+    const from = topEl.getBoundingClientRect()
+    const to = toGridEl.getBoundingClientRect()
+
+    const prevVis = topEl.style.visibility
+    topEl.style.visibility = 'hidden'
+    try {
+      await createFlyClone(topEl, from, to)
+    } finally {
+      if (topEl.isConnected) topEl.style.visibility = prevVis
+    }
+
+    setTopId(null)
+    setIsAnimating(false)
+  }
+
   function collapseThen(nextId) {
     clearTimeout(animTimerRef.current)
 
@@ -90,6 +213,7 @@ export default function Experience() {
   }
 
   function toggleExpanded(id) {
+    if (isAnimating) return
     // No foreground card yet: expand immediately.
     if (!topId) {
       setTopId(id)
@@ -99,12 +223,12 @@ export default function Experience() {
 
     // Clicking the same foreground card: collapse back into grid (animated).
     if (topId === id) {
-      collapseThen(null)
+      void animateCollapseToGrid()
       return
     }
 
     // Clicking another card while one is expanded: collapse first, then expand the new one.
-    collapseThen(id)
+    void animateSwap(id)
   }
 
   return (
@@ -119,30 +243,36 @@ export default function Experience() {
             exp={top}
             expanded={isTopExpanded}
             onToggle={() => toggleExpanded(top.id)}
+            disabled={isAnimating}
           />
         </div>
       )}
 
       <div className="mt-6 grid gap-4 sm:grid-cols-2">
-        {collapsed.map((exp, i) => (
-          <div
-            key={exp.id}
-            id={`exp-grid-${exp.id}`}
-            className={`reveal reveal-delay-${i % 3}`}
-          >
-            <Card
-              exp={exp}
-              expanded={false}
-              onToggle={() => toggleExpanded(exp.id)}
-            />
-          </div>
-        ))}
+        {experiences.map((exp, i) => {
+          const isTop = exp.id === topId
+          return (
+            <div
+              key={exp.id}
+              id={`exp-grid-${exp.id}`}
+              className={`reveal reveal-delay-${i % 3} ${isTop ? 'invisible' : ''}`}
+              aria-hidden={isTop || undefined}
+            >
+              <Card
+                exp={exp}
+                expanded={false}
+                onToggle={() => toggleExpanded(exp.id)}
+                disabled={isAnimating || isTop}
+              />
+            </div>
+          )
+        })}
       </div>
     </section>
   )
 }
 
-function Card({ exp, expanded, onToggle }) {
+function Card({ exp, expanded, onToggle, disabled }) {
   const { title, org, period, tags = [], summary, bullets = [] } = exp
   const controlsId = `${exp.id}-details`
   const cardRef = useRef(null)
@@ -159,6 +289,7 @@ function Card({ exp, expanded, onToggle }) {
     <article
       ref={cardRef}
       tabIndex={-1}
+      data-exp-card={exp.id}
       className={[
         'cursor-light group relative overflow-hidden rounded-xl border border-[color:var(--surface-border)] bg-[var(--surface-bg)] p-4 text-[var(--page-text)] shadow-sm ring-1 ring-[--color-brand]/10 transition-all duration-300 ease-out',
         expanded
@@ -227,6 +358,7 @@ function Card({ exp, expanded, onToggle }) {
         <button
           type="button"
           onClick={onToggle}
+          disabled={disabled}
           className="inline-flex items-center gap-2 rounded-md border border-[color:var(--surface-border)] bg-[var(--surface-bg-strong)] px-3 py-2 text-sm font-semibold text-[var(--page-text)] shadow-sm ring-1 ring-[--color-brand]/10 transition hover:bg-[color:color-mix(in_oklab,var(--surface-bg-strong),black_3%)] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[--color-brand]/40"
           aria-expanded={expanded}
           aria-controls={controlsId}
