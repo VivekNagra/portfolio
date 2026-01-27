@@ -31,8 +31,11 @@ export function useTheme() {
 
 function applyTheme(isDark) {
   const root = document.documentElement
-  if (isDark) root.classList.add('dark')
-  else root.classList.remove('dark')
+  const body = document.body
+  root.classList.toggle('dark', isDark)
+  body?.classList?.toggle('dark', isDark)
+  // Helps form controls / scrollbars match the theme in supporting browsers.
+  root.style.colorScheme = isDark ? 'dark' : 'light'
 }
 
 
