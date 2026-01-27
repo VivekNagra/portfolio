@@ -4,9 +4,37 @@ import { useTheme } from '../hooks/useTheme'
 export default function NavBar() {
   const [open, setOpen] = useState(false)
   const { isDark, toggle } = useTheme()
+  const headerRef = useRef(null)
+
+  // Keep a CSS variable in sync with the sticky header height so anchor links
+  // (e.g. #experience) don't get clipped under the navbar.
+  useEffect(() => {
+    const headerEl = headerRef.current
+    if (!headerEl) return
+
+    const update = () => {
+      const h = headerEl.getBoundingClientRect().height || 0
+      const offset = Math.ceil(h) + 16 // extra breathing room
+      document.documentElement.style.setProperty('--scroll-offset', `${offset}px`)
+    }
+
+    update()
+
+    const ro = new ResizeObserver(() => update())
+    ro.observe(headerEl)
+    window.addEventListener('resize', update)
+
+    return () => {
+      ro.disconnect()
+      window.removeEventListener('resize', update)
+    }
+  }, [])
 
   return (
-    <header className="sticky top-0 z-50 border-b border-zinc-200 bg-white/80 backdrop-blur transition-colors dark:border-zinc-800 dark:bg-zinc-900/80">
+    <header
+      ref={headerRef}
+      className="sticky top-0 z-50 border-b border-zinc-200 bg-white/80 backdrop-blur transition-colors dark:border-zinc-800 dark:bg-zinc-900/80"
+    >
       <div className="mx-auto max-w-6xl px-4 py-3">
         <div className="flex items-center justify-between">
           <a href="#home" className="text-lg font-semibold tracking-tight text-zinc-900 dark:text-white">Vivek Singh Nagra</a>

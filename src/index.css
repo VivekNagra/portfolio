@@ -9,6 +9,17 @@ html, body, #root {
   height: 100%;
 }
 
+/* Anchor scroll offset for sticky navbar (kept in sync by NavBar via CSS var) */
+:root {
+  --scroll-offset: 96px;
+}
+html {
+  scroll-padding-top: var(--scroll-offset);
+}
+section[id] {
+  scroll-margin-top: var(--scroll-offset);
+}
+
 /* Improve text rendering */
 * {
   -webkit-font-smoothing: antialiased;
@@ -111,8 +122,11 @@ html.dark body {
 
 /* Scroll reveal */
 .reveal { opacity: 0; transform: translateY(16px); will-change: opacity, transform; }
+.reveal[data-revealed="true"],
 .reveal-visible { opacity: 1; transform: translateY(0); }
-.reveal, .reveal-visible { transition: opacity 600ms ease, transform 600ms ease; }
+.reveal,
+.reveal[data-revealed="true"],
+.reveal-visible { transition: opacity 600ms ease, transform 600ms ease; }
 .reveal-delay-0 { transition-delay: 0ms; }
 .reveal-delay-1 { transition-delay: 100ms; }
 .reveal-delay-2 { transition-delay: 200ms; }
