@@ -14,6 +14,10 @@
   --surface-bg: rgba(255, 255, 255, 0.92);
   --surface-bg-strong: #ffffff;
   --surface-border: rgba(24, 24, 27, 0.10);
+  /* Cursor glow tuning (light mode) */
+  --cursor-glow-mul: 1.25;
+  --cursor-glow-hi: 78%;
+  --cursor-glow-mid: 90%;
 }
 
 html.dark {
@@ -27,6 +31,10 @@ html.dark {
   --surface-bg: rgba(24, 24, 27, 0.68);
   --surface-bg-strong: #18181b; /* zinc-900 */
   --surface-border: rgba(244, 244, 245, 0.10);
+  /* Cursor glow tuning (dark mode) */
+  --cursor-glow-mul: 1;
+  --cursor-glow-hi: 82%;
+  --cursor-glow-mid: 93%;
 }
 
 /* Base element styling to ensure full-height layout and sensible defaults */
@@ -56,13 +64,13 @@ section[id] {
   inset: 0;
   pointer-events: none;
   border-radius: inherit;
-  opacity: var(--glow-a, 0);
+  opacity: min(1, calc(var(--glow-a, 0) * var(--cursor-glow-mul, 1)));
   transition: opacity 160ms ease;
   background:
     radial-gradient(
       520px circle at var(--glow-x, 50%) var(--glow-y, 50%),
-      color-mix(in oklab, var(--color-brand), transparent 82%),
-      color-mix(in oklab, var(--color-brand), transparent 93%) 28%,
+      color-mix(in oklab, var(--color-brand), transparent var(--cursor-glow-hi, 82%)),
+      color-mix(in oklab, var(--color-brand), transparent var(--cursor-glow-mid, 93%)) 28%,
       transparent 62%
     );
   mix-blend-mode: screen;
@@ -73,7 +81,7 @@ section[id] {
   inset: 0;
   pointer-events: none;
   border-radius: inherit;
-  opacity: var(--glow-a, 0);
+  opacity: min(1, calc(var(--glow-a, 0) * var(--cursor-glow-mul, 1)));
   box-shadow:
     0 0 0 1px color-mix(in oklab, var(--color-brand), transparent 55%),
     0 18px 48px -22px color-mix(in oklab, var(--color-brand), transparent 62%);
