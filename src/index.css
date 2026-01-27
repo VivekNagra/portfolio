@@ -6,10 +6,21 @@
   --color-brand-2: #0ea5e9; /* sky-500 */
 }
 
+:root {
+  --page-bg: #ffffff;
+  --page-text: #18181b; /* zinc-900 */
+  --surface-bg: rgba(255, 255, 255, 0.92);
+  --surface-border: rgba(24, 24, 27, 0.10);
+}
+
 html.dark {
   /* Dark mode = purple */
   --color-brand: #8b5cf6;   /* purple-500 */
   --color-brand-2: #d946ef; /* fuchsia-500 */
+  --page-bg: #0b0b0b;
+  --page-text: #f4f4f5; /* zinc-100 */
+  --surface-bg: rgba(24, 24, 27, 0.68);
+  --surface-border: rgba(244, 244, 245, 0.10);
 }
 
 /* Base element styling to ensure full-height layout and sensible defaults */
@@ -73,7 +84,7 @@ section[id] {
 
 /* Subtle futuristic background */
 body {
-  background-color: #ffffff;
+  background-color: var(--page-bg);
   /* subtle "ice" glow in light mode */
   background-image:
     radial-gradient(1000px 520px at 85% -10%, color-mix(in oklab, var(--color-brand), transparent 84%), transparent),
@@ -83,7 +94,7 @@ body {
 
 html.dark body,
 body.dark {
-  background-color: #0b0b0b;
+  background-color: var(--page-bg);
   background-image: radial-gradient(1200px 600px at 80% -10%, color-mix(in oklab, var(--color-brand), transparent 78%), transparent),
     radial-gradient(900px 450px at 10% 10%, color-mix(in oklab, var(--color-brand), transparent 85%), transparent);
 }
