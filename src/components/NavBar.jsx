@@ -33,37 +33,37 @@ export default function NavBar() {
   return (
     <header
       ref={headerRef}
-      className="sticky top-0 z-50 border-b border-zinc-200 bg-white/80 backdrop-blur transition-colors dark:border-zinc-800 dark:bg-zinc-900/80"
+      className="sticky top-0 z-50 border-b border-[color:var(--surface-border)] bg-[var(--surface-bg)] backdrop-blur transition-colors"
     >
       <div className="mx-auto max-w-6xl px-4 py-3">
         <div className="flex items-center justify-between">
-          <a href="#home" className="text-lg font-semibold tracking-tight text-zinc-900 dark:text-white">Vivek Singh Nagra</a>
+          <a href="#home" className="text-lg font-semibold tracking-tight text-[var(--page-text)]">Vivek Singh Nagra</a>
 
           <nav className="hidden gap-6 md:flex">
-            <a href="#projects" className="text-zinc-700 hover:text-[--color-brand] dark:text-zinc-300">Projects</a>
-            <a href="#skills" className="text-zinc-700 hover:text-[--color-brand] dark:text-zinc-300">Skills</a>
-            <a href="#contact" className="text-zinc-700 hover:text-[--color-brand] dark:text-zinc-300">Contact</a>
+            <a href="#projects" className="text-[var(--muted-text)] hover:text-[--color-brand]">Projects</a>
+            <a href="#skills" className="text-[var(--muted-text)] hover:text-[--color-brand]">Skills</a>
+            <a href="#contact" className="text-[var(--muted-text)] hover:text-[--color-brand]">Contact</a>
           </nav>
 
           <div className="flex items-center gap-2">
             <ThemeToggle isDark={isDark} onToggle={toggle} />
             <button
-              className="md:hidden rounded-md border border-zinc-200 p-2 dark:border-zinc-700"
+              className="md:hidden rounded-md border border-[color:var(--surface-border)] p-2"
               aria-label="Open menu"
               onClick={() => setOpen(v => !v)}
             >
-              <span className="block h-0.5 w-5 bg-zinc-900 dark:bg-zinc-100" />
-              <span className="mt-1 block h-0.5 w-5 bg-zinc-900 dark:bg-zinc-100" />
-              <span className="mt-1 block h-0.5 w-5 bg-zinc-900 dark:bg-zinc-100" />
+              <span className="block h-0.5 w-5 bg-[var(--page-text)]" />
+              <span className="mt-1 block h-0.5 w-5 bg-[var(--page-text)]" />
+              <span className="mt-1 block h-0.5 w-5 bg-[var(--page-text)]" />
             </button>
           </div>
         </div>
 
         {open && (
           <div className="mt-3 flex flex-col gap-2 md:hidden">
-            <a href="#projects" className="rounded-md px-2 py-2 text-zinc-700 hover:bg-[--color-brand]/10 dark:text-zinc-300">Projects</a>
-            <a href="#skills" className="rounded-md px-2 py-2 text-zinc-700 hover:bg-[--color-brand]/10 dark:text-zinc-300">Skills</a>
-            <a href="#contact" className="rounded-md px-2 py-2 text-zinc-700 hover:bg-[--color-brand]/10 dark:text-zinc-300">Contact</a>
+            <a href="#projects" className="rounded-md px-2 py-2 text-[var(--muted-text)] hover:bg-[--color-brand]/10">Projects</a>
+            <a href="#skills" className="rounded-md px-2 py-2 text-[var(--muted-text)] hover:bg-[--color-brand]/10">Skills</a>
+            <a href="#contact" className="rounded-md px-2 py-2 text-[var(--muted-text)] hover:bg-[--color-brand]/10">Contact</a>
           </div>
         )}
       </div>
@@ -72,24 +72,13 @@ export default function NavBar() {
 }
 
 function ThemeToggle({ isDark, onToggle }) {
-  const [showNote, setShowNote] = useState(false)
-  const timerRef = useRef(null)
-
-  useEffect(() => () => clearTimeout(timerRef.current), [])
-
-  function handleClick() {
-    onToggle()
-    setShowNote(true)
-    clearTimeout(timerRef.current)
-    timerRef.current = setTimeout(() => setShowNote(false), 2000)
-  }
-
   return (
     <div className="relative">
       <button
         aria-label="Toggle dark mode"
-        onClick={handleClick}
-        className="group inline-flex items-center gap-2 rounded-md border border-zinc-200 bg-white px-3 py-1.5 text-sm text-zinc-700 shadow-sm ring-[--color-brand]/40 transition hover:bg-zinc-50 active:scale-[0.98] dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-200 dark:hover:bg-zinc-700"
+        type="button"
+        onClick={onToggle}
+        className="group inline-flex items-center gap-2 rounded-md border border-[color:var(--surface-border)] bg-[var(--surface-bg-strong)] px-3 py-1.5 text-sm text-[var(--muted-text)] shadow-sm ring-[--color-brand]/40 transition hover:bg-[color:color-mix(in_oklab,var(--surface-bg-strong),black_3%)] active:scale-[0.98]"
         style={{ boxShadow: isDark ? '0 0 0 2px color-mix(in oklab, var(--color-brand), transparent 60%)' : '0 0 0 2px color-mix(in oklab, var(--color-brand), transparent 85%)' }}
       >
         {isDark ? (
@@ -104,12 +93,6 @@ function ThemeToggle({ isDark, onToggle }) {
           </>
         )}
       </button>
-      <div
-        className={`absolute left-0 right-0 translate-y-1 text-center text-[11px] text-zinc-600 transition-opacity dark:text-zinc-300 ${showNote ? 'opacity-100' : 'opacity-0'}`}
-        aria-live="polite"
-      >
-        coming soon
-      </div>
     </div>
   )
 }

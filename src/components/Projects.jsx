@@ -30,7 +30,7 @@ function ProjectCard({ p, i }) {
     <a
       ref={ref}
       href={p.link}
-      className={`cursor-light reveal reveal-delay-${i % 3} group rounded-lg border border-zinc-200 bg-white p-5 transition will-change-transform dark:border-zinc-800 dark:bg-zinc-900/60`}
+      className={`cursor-light reveal reveal-delay-${i % 3} group rounded-lg border border-[color:var(--surface-border)] bg-[var(--surface-bg)] p-5 text-[var(--page-text)] transition will-change-transform`}
       onMouseMove={(e) => {
         const el = e.currentTarget
         const r = el.getBoundingClientRect()
@@ -43,12 +43,12 @@ function ProjectCard({ p, i }) {
         el.style.transform = ''
       }}
     >
-      <div className="h-36 w-full rounded-md bg-gradient-to-br from-[--color-brand]/15 to-fuchsia-500/10 transition group-hover:from-[--color-brand]/25 group-hover:to-fuchsia-500/20 dark:from-[--color-brand]/20 dark:to-fuchsia-500/20" />
-      <h3 className="mt-4 text-xl font-semibold text-zinc-900 dark:text-white">{p.title}</h3>
-      <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-300">{p.summary}</p>
+      <div className="h-36 w-full rounded-md bg-gradient-to-br from-[--color-brand]/15 to-[color:var(--color-brand-2)]/10 transition group-hover:from-[--color-brand]/25 group-hover:to-[color:var(--color-brand-2)]/20" />
+      <h3 className="mt-4 text-xl font-semibold">{p.title}</h3>
+      <p className="mt-2 text-sm text-[var(--muted-text)]">{p.summary}</p>
       <div className="mt-3 flex flex-wrap gap-2">
         {p.tech.map(t => (
-          <span key={t} className="rounded-md bg-[--color-brand]/10 px-2 py-1 text-xs text-zinc-700 ring-1 ring-[--color-brand]/25 dark:text-zinc-200">{t}</span>
+          <span key={t} className="rounded-md bg-[--color-brand]/10 px-2 py-1 text-xs text-[var(--muted-text)] ring-1 ring-[--color-brand]/25">{t}</span>
         ))}
       </div>
     </a>
@@ -58,8 +58,8 @@ function ProjectCard({ p, i }) {
 export default function Projects() {
   return (
     <section id="projects" className="reveal reveal-delay-0 mx-auto max-w-6xl px-4 py-12">
-      <h2 className="text-3xl font-bold tracking-tight text-zinc-900 dark:text-white">Projects</h2>
-      <p className="mt-2 text-zinc-600 dark:text-zinc-300">A selection of work demonstrating my abilities and skills.</p>
+      <h2 className="text-3xl font-bold tracking-tight text-[var(--page-text)]">Projects</h2>
+      <p className="mt-2 text-[var(--muted-text)]">A selection of work demonstrating my abilities and skills.</p>
       <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {items.map((p, i) => (
           <ProjectCard key={p.title} p={p} i={i} />

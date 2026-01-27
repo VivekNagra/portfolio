@@ -1,7 +1,32 @@
 @import "tailwindcss";
 
 @theme {
-  --color-brand: #8b5cf6; /* purple-500 */
+  /* Light mode = ice blue */
+  --color-brand: #7dd3fc;   /* sky-300 */
+  --color-brand-2: #0ea5e9; /* sky-500 */
+}
+
+:root {
+  --page-bg: #ffffff;
+  --page-text: #18181b; /* zinc-900 */
+  --muted-text: #52525b; /* zinc-600 */
+  --muted-text-2: #71717a; /* zinc-500 */
+  --surface-bg: rgba(255, 255, 255, 0.92);
+  --surface-bg-strong: #ffffff;
+  --surface-border: rgba(24, 24, 27, 0.10);
+}
+
+html.dark {
+  /* Dark mode = purple */
+  --color-brand: #8b5cf6;   /* purple-500 */
+  --color-brand-2: #d946ef; /* fuchsia-500 */
+  --page-bg: #0b0b0b;
+  --page-text: #f4f4f5; /* zinc-100 */
+  --muted-text: #d4d4d8; /* zinc-300 */
+  --muted-text-2: #a1a1aa; /* zinc-400 */
+  --surface-bg: rgba(24, 24, 27, 0.68);
+  --surface-bg-strong: #18181b; /* zinc-900 */
+  --surface-border: rgba(244, 244, 245, 0.10);
 }
 
 /* Base element styling to ensure full-height layout and sensible defaults */
@@ -36,8 +61,8 @@ section[id] {
   background:
     radial-gradient(
       520px circle at var(--glow-x, 50%) var(--glow-y, 50%),
-      rgba(139, 92, 246, 0.18),
-      rgba(139, 92, 246, 0.07) 28%,
+      color-mix(in oklab, var(--color-brand), transparent 82%),
+      color-mix(in oklab, var(--color-brand), transparent 93%) 28%,
       transparent 62%
     );
   mix-blend-mode: screen;
@@ -48,10 +73,10 @@ section[id] {
   inset: 0;
   pointer-events: none;
   border-radius: inherit;
-  opacity: 1;
+  opacity: var(--glow-a, 0);
   box-shadow:
-    0 0 0 1px rgba(139, 92, 246, calc(var(--glow-a, 0) * 0.35)),
-    0 18px 48px -22px rgba(139, 92, 246, calc(var(--glow-a, 0) * 0.45));
+    0 0 0 1px color-mix(in oklab, var(--color-brand), transparent 55%),
+    0 18px 48px -22px color-mix(in oklab, var(--color-brand), transparent 62%);
 }
 @media (prefers-reduced-motion: reduce) {
   .cursor-light::before { transition: none; }
@@ -65,13 +90,17 @@ section[id] {
 
 /* Subtle futuristic background */
 body {
-  background-color: #ffffff;
-  background-image: none;
+  background-color: var(--page-bg);
+  /* subtle "ice" glow in light mode */
+  background-image:
+    radial-gradient(1000px 520px at 85% -10%, color-mix(in oklab, var(--color-brand), transparent 84%), transparent),
+    radial-gradient(900px 460px at 10% 10%, color-mix(in oklab, var(--color-brand-2), transparent 92%), transparent);
   transition: background-color 250ms ease;
 }
 
-html.dark body {
-  background-color: #0b0b0b;
+html.dark body,
+body.dark {
+  background-color: var(--page-bg);
   background-image: radial-gradient(1200px 600px at 80% -10%, color-mix(in oklab, var(--color-brand), transparent 78%), transparent),
     radial-gradient(900px 450px at 10% 10%, color-mix(in oklab, var(--color-brand), transparent 85%), transparent);
 }
@@ -87,7 +116,7 @@ html.dark body {
   bottom: -2px;
   height: 2px;
   width: 100%;
-  background: linear-gradient(90deg, var(--color-brand), #d946ef, var(--color-brand));
+  background: linear-gradient(90deg, var(--color-brand), var(--color-brand-2), var(--color-brand));
   background-size: 200% 100%;
   transform: scaleX(0);
   transform-origin: left;
@@ -113,7 +142,7 @@ html.dark body {
   100% { background-position: 0% 50%; }
 }
 .btn-ambient {
-  background-image: linear-gradient(90deg, var(--color-brand), #a855f7, var(--color-brand));
+  background-image: linear-gradient(90deg, var(--color-brand), var(--color-brand-2), var(--color-brand));
   background-size: 200% 100%;
   animation: gradientShift 12s ease-in-out infinite;
 }

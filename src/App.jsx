@@ -10,7 +10,7 @@ import BackgroundFX from './components/BackgroundFX'
 
 function App() {
   return (
-    <div className="relative min-h-full bg-white text-zinc-900 antialiased dark:bg-zinc-900 dark:text-zinc-100">
+    <div className="relative min-h-full bg-[var(--page-bg)] text-[var(--page-text)] antialiased">
       <BackgroundFX />
       <NavBar />
       <main>

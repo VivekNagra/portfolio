@@ -96,8 +96,8 @@ export default function Experience() {
 
   return (
     <section ref={sectionRef} id="experience" className="reveal reveal-delay-0 mx-auto max-w-6xl px-4 py-12">
-      <h2 className="text-3xl font-bold tracking-tight text-zinc-900 dark:text-white">Experience</h2>
-      <p className="mt-2 text-zinc-600 dark:text-zinc-300">Recent roles and responsibilities.</p>
+      <h2 className="text-3xl font-bold tracking-tight text-[var(--page-text)]">Experience</h2>
+      <p className="mt-2 text-[var(--muted-text)]">Recent roles and responsibilities.</p>
 
       {/* Expanded card gets its own "foreground" area so the rest naturally move below it */}
       {expanded && (
@@ -147,7 +147,7 @@ function Card({ exp, expanded, onToggle }) {
       ref={cardRef}
       tabIndex={-1}
       className={[
-        'cursor-light group relative overflow-hidden rounded-xl border border-zinc-200 bg-white p-4 shadow-sm ring-1 ring-[--color-brand]/10 transition-all duration-300 ease-out dark:border-zinc-800 dark:bg-zinc-900/60',
+        'cursor-light group relative overflow-hidden rounded-xl border border-[color:var(--surface-border)] bg-[var(--surface-bg)] p-4 text-[var(--page-text)] shadow-sm ring-1 ring-[--color-brand]/10 transition-all duration-300 ease-out',
         expanded
           ? 'z-20 ring-[--color-brand]/35 shadow-[0_26px_70px_-18px_color-mix(in_oklab,var(--color-brand),transparent_45%)]'
           : 'hover:-translate-y-1 hover:shadow-[0_18px_40px_-12px_color-mix(in_oklab,var(--color-brand),transparent_50%)] hover:ring-[--color-brand]/30',
@@ -155,8 +155,8 @@ function Card({ exp, expanded, onToggle }) {
     >
       <div className="flex items-start justify-between gap-3">
         <div>
-          <h3 className="text-lg font-semibold text-zinc-900 dark:text-zinc-100">{title}</h3>
-          <p className="text-sm text-zinc-600 dark:text-zinc-400">{org} · {period}</p>
+          <h3 className="text-lg font-semibold">{title}</h3>
+          <p className="text-sm text-[var(--muted-text-2)]">{org} · {period}</p>
         </div>
         <span className="inline-flex h-8 w-8 items-center justify-center rounded-md bg-[--color-brand]/15 text-[--color-brand] ring-1 ring-[--color-brand]/20">
           <svg viewBox="0 0 24 24" fill="currentColor" className="h-4 w-4" aria-hidden>
@@ -169,7 +169,7 @@ function Card({ exp, expanded, onToggle }) {
       <div className={expanded ? 'mt-3' : 'mt-3 min-h-[7.25rem]'}>
         <p
           className={[
-            'text-sm leading-relaxed text-zinc-700 dark:text-zinc-300',
+            'text-sm leading-relaxed text-[var(--muted-text)]',
             expanded ? '' : 'h-[4.5rem] overflow-hidden',
           ].join(' ')}
         >
@@ -181,7 +181,7 @@ function Card({ exp, expanded, onToggle }) {
             {tags.map(t => (
               <span
                 key={t}
-                className="rounded-md bg-[--color-brand]/10 px-2 py-1 text-xs text-zinc-700 ring-1 ring-[--color-brand]/25 dark:text-zinc-200"
+                className="rounded-md bg-[--color-brand]/10 px-2 py-1 text-xs text-[var(--muted-text)] ring-1 ring-[--color-brand]/25"
               >
                 {t}
               </span>
@@ -199,7 +199,7 @@ function Card({ exp, expanded, onToggle }) {
         aria-hidden={!expanded}
       >
         {bullets.length > 0 && (
-          <ul className="space-y-2 text-sm text-zinc-700 dark:text-zinc-300">
+          <ul className="space-y-2 text-sm text-[var(--muted-text)]">
             {bullets.map((p, i) => (
               <li key={i} className="relative pl-4">
                 <span className="absolute left-0 top-[0.6em] h-[6px] w-[6px] -translate-y-1/2 rounded-full bg-[--color-brand]" />
@@ -214,7 +214,7 @@ function Card({ exp, expanded, onToggle }) {
         <button
           type="button"
           onClick={onToggle}
-          className="inline-flex items-center gap-2 rounded-md border border-zinc-200 bg-white px-3 py-2 text-sm font-semibold text-zinc-800 shadow-sm ring-1 ring-[--color-brand]/10 transition hover:bg-zinc-50 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[--color-brand]/40 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-200 dark:hover:bg-zinc-800"
+          className="inline-flex items-center gap-2 rounded-md border border-[color:var(--surface-border)] bg-[var(--surface-bg-strong)] px-3 py-2 text-sm font-semibold text-[var(--page-text)] shadow-sm ring-1 ring-[--color-brand]/10 transition hover:bg-[color:color-mix(in_oklab,var(--surface-bg-strong),black_3%)] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[--color-brand]/40"
           aria-expanded={expanded}
           aria-controls={controlsId}
         >
@@ -229,7 +229,7 @@ function Card({ exp, expanded, onToggle }) {
         </button>
 
         {expanded && (
-          <span className="text-xs text-zinc-500 dark:text-zinc-400">
+          <span className="text-xs text-[var(--muted-text-2)]">
             Tip: click Collapse to return to the grid.
           </span>
         )}
