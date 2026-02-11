@@ -1,41 +1,26 @@
 //
 // Required Vercel env vars:
 // - VAULT_PASSWORD
-// - VAULT_SESSION_SECRET
+//
+// This vault is configured to require the password on EVERY reload:
+// - GET always shows the password form
+// - Only a successful POST returns the secret page (no session cookie is set)
 
 import crypto from 'node:crypto'
-
-const COOKIE_NAME = '__Host-vault'
-const DEFAULT_MAX_AGE_SECONDS = 60 * 60 * 24 * 7 // 7 days
 
 export default async function handler(req, res) {
   try {
     setSecurityHeaders(res)
 
     const VAULT_PASSWORD = process.env.VAULT_PASSWORD
-    const VAULT_SESSION_SECRET = process.env.VAULT_SESSION_SECRET
 
-    if (!VAULT_PASSWORD || !VAULT_SESSION_SECRET) {
-      const missing = [
-        !VAULT_PASSWORD ? 'VAULT_PASSWORD' : null,
-        !VAULT_SESSION_SECRET ? 'VAULT_SESSION_SECRET' : null,
-      ].filter(Boolean)
-      console.error('[vault] misconfigured: missing env vars:', missing.join(', ') || '(unknown)')
+    if (!VAULT_PASSWORD) {
+      console.error('[vault] misconfigured: missing env var: VAULT_PASSWORD')
       return res.status(500).send('Vault is not configured.')
     }
 
-    // Logout: GET ?logout=1
-    if (req.method === 'GET' && String(req.query?.logout || '') === '1') {
-      clearCookie(res)
-      return res.status(200).send(renderPasswordPage({ message: 'Logged out.' }))
-    }
-
     if (req.method === 'GET') {
-      const isAuthed = verifySessionCookie(req, VAULT_SESSION_SECRET)
-      if (!isAuthed) {
-        return res.status(200).send(renderPasswordPage({}))
-      }
-      return res.status(200).send(renderSecretPage(req))
+      return res.status(200).send(renderPasswordPage({}))
     }
 
     if (req.method === 'POST') {
@@ -48,8 +33,7 @@ export default async function handler(req, res) {
         return res.status(401).send(renderPasswordPage({ error: 'Incorrect password.' }))
       }
 
-      // Success: set signed session cookie and show secret page
-      setSessionCookie(res, VAULT_SESSION_SECRET)
+      // Success: show secret page (no cookie, refresh requires password again)
       return res.status(200).send(renderSecretPage(req))
     }
 
@@ -62,11 +46,15 @@ export default async function handler(req, res) {
 
 function setSecurityHeaders(res) {
   res.setHeader('Content-Type', 'text/html; charset=utf-8')
+  // Prevent caching of both the login form and the unlocked page
+  res.setHeader('Cache-Control', 'no-store')
+  res.setHeader('Pragma', 'no-cache')
   res.setHeader('X-Content-Type-Options', 'nosniff')
   res.setHeader('Referrer-Policy', 'no-referrer')
   res.setHeader('X-Frame-Options', 'DENY')
   res.setHeader('Cross-Origin-Opener-Policy', 'same-origin')
   res.setHeader('Cross-Origin-Resource-Policy', 'same-origin')
+  res.setHeader('Permissions-Policy', 'camera=(), microphone=(), geolocation=()')
   res.setHeader(
     'Content-Security-Policy',
     [
