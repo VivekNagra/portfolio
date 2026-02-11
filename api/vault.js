@@ -9,45 +9,55 @@ const COOKIE_NAME = '__Host-vault'
 const DEFAULT_MAX_AGE_SECONDS = 60 * 60 * 24 * 7 // 7 days
 
 export default async function handler(req, res) {
-  const VAULT_PASSWORD = process.env.VAULT_PASSWORD
-  const VAULT_SESSION_SECRET = process.env.VAULT_SESSION_SECRET
+  try {
+    setSecurityHeaders(res)
 
-  if (!VAULT_PASSWORD || !VAULT_SESSION_SECRET) {
-    return res.status(500).send('Vault is not configured.')
-  }
+    const VAULT_PASSWORD = process.env.VAULT_PASSWORD
+    const VAULT_SESSION_SECRET = process.env.VAULT_SESSION_SECRET
 
-  setSecurityHeaders(res)
-
-  // Logout: GET ?logout=1
-  if (req.method === 'GET' && String(req.query?.logout || '') === '1') {
-    clearCookie(res)
-    return res.status(200).send(renderPasswordPage({ message: 'Logged out.' }))
-  }
-
-  if (req.method === 'GET') {
-    const isAuthed = verifySessionCookie(req, VAULT_SESSION_SECRET)
-    if (!isAuthed) {
-      return res.status(200).send(renderPasswordPage({}))
-    }
-    return res.status(200).send(renderSecretPage(req))
-  }
-
-  if (req.method === 'POST') {
-    const body = await readBody(req)
-    const password = (body?.password ?? '').toString()
-
-    // Constant-time compare (normalize to buffer)
-    const ok = timingSafeEqualStr(password, VAULT_PASSWORD)
-    if (!ok) {
-      return res.status(401).send(renderPasswordPage({ error: 'Incorrect password.' }))
+    if (!VAULT_PASSWORD || !VAULT_SESSION_SECRET) {
+      const missing = [
+        !VAULT_PASSWORD ? 'VAULT_PASSWORD' : null,
+        !VAULT_SESSION_SECRET ? 'VAULT_SESSION_SECRET' : null,
+      ].filter(Boolean)
+      console.error('[vault] misconfigured: missing env vars:', missing.join(', ') || '(unknown)')
+      return res.status(500).send('Vault is not configured.')
     }
 
-    // Success: set signed session cookie and show secret page
-    setSessionCookie(res, VAULT_SESSION_SECRET)
-    return res.status(200).send(renderSecretPage(req))
-  }
+    // Logout: GET ?logout=1
+    if (req.method === 'GET' && String(req.query?.logout || '') === '1') {
+      clearCookie(res)
+      return res.status(200).send(renderPasswordPage({ message: 'Logged out.' }))
+    }
 
-  return res.status(405).send('Method Not Allowed')
+    if (req.method === 'GET') {
+      const isAuthed = verifySessionCookie(req, VAULT_SESSION_SECRET)
+      if (!isAuthed) {
+        return res.status(200).send(renderPasswordPage({}))
+      }
+      return res.status(200).send(renderSecretPage(req))
+    }
+
+    if (req.method === 'POST') {
+      const body = await readBody(req)
+      const password = (body?.password ?? '').toString()
+
+      // Constant-time compare (normalize to buffer)
+      const ok = timingSafeEqualStr(password, VAULT_PASSWORD)
+      if (!ok) {
+        return res.status(401).send(renderPasswordPage({ error: 'Incorrect password.' }))
+      }
+
+      // Success: set signed session cookie and show secret page
+      setSessionCookie(res, VAULT_SESSION_SECRET)
+      return res.status(200).send(renderSecretPage(req))
+    }
+
+    return res.status(405).send('Method Not Allowed')
+  } catch (err) {
+    console.error('[vault] crashed:', err)
+    return res.status(500).send('Internal Server Error')
+  }
 }
 
 function setSecurityHeaders(res) {
