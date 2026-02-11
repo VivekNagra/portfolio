@@ -60,6 +60,7 @@ function setSecurityHeaders(res) {
     [
       "default-src 'none'",
       "img-src 'self' data: https://media.giphy.com https://i.giphy.com",
+      "media-src 'self'",
       "style-src 'unsafe-inline' https://fonts.googleapis.com",
       // Needed for the secret page interactions (no external scripts are allowed).
       "script-src 'unsafe-inline'",
@@ -185,6 +186,77 @@ function renderSecretContent() {
         100% { transform: translateY(110vh) translateX(var(--dx)) rotate(calc(var(--rot) + 720deg)); opacity: 0; }
       }
 
+      /* Music toggle */
+      .music-toggle {
+        position: fixed;
+        right: 14px;
+        bottom: 14px;
+        z-index: 20;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        border-radius: 999px;
+        padding: 10px 12px;
+        border: 1px solid hsl(var(--border));
+        background: hsl(var(--background));
+        color: hsl(var(--muted-foreground));
+        font-weight: 900;
+        font-size: 13px;
+        cursor: pointer;
+        box-shadow: 0 18px 60px rgba(0,0,0,.10);
+      }
+      .music-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 999px;
+        background: color-mix(in oklab, hsl(var(--primary)), transparent 35%);
+        box-shadow: 0 0 0 4px color-mix(in oklab, hsl(var(--primary)), transparent 85%);
+      }
+
+      /* Slideshow */
+      .slideshow {
+        width: 256px;
+        margin: 16px auto 0;
+        border-radius: 16px;
+        overflow: hidden;
+        border: 1px solid hsl(var(--border));
+        box-shadow: 0 18px 60px rgba(0,0,0,.12);
+        background: hsl(var(--background));
+      }
+      .slideshow img {
+        display: block;
+        width: 256px;
+        height: 256px;
+        object-fit: cover;
+        background: color-mix(in oklab, hsl(var(--primary)), transparent 95%);
+      }
+      .slideshow-bar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        padding: 10px 10px;
+      }
+      .slide-btn {
+        appearance: none;
+        border: 1px solid color-mix(in oklab, hsl(var(--primary)), transparent 70%);
+        background: transparent;
+        color: hsl(var(--muted-foreground));
+        border-radius: 999px;
+        padding: 8px 12px;
+        font-weight: 900;
+        font-size: 12px;
+        cursor: pointer;
+      }
+      .slide-btn:hover {
+        background: color-mix(in oklab, hsl(var(--primary)), transparent 92%);
+      }
+      .slide-count {
+        font-size: 12px;
+        font-weight: 800;
+        color: hsl(var(--muted-foreground));
+      }
+
       /* Animations */
       @keyframes bounceIn {
         0% { transform: scale(.88); opacity: 0; }
@@ -207,6 +279,11 @@ function renderSecretContent() {
 
     <div class="val-root" id="val-root">
       <div class="confetti" id="confetti" aria-hidden="true"></div>
+      <audio id="bg-audio" preload="none" loop></audio>
+      <button class="music-toggle" id="btn-music" type="button">
+        <span class="music-dot" aria-hidden="true"></span>
+        <span id="music-label">Music: Off</span>
+      </button>
 
       <!-- QUESTION VIEW -->
       <div class="val-card bounce-in" id="view-question">
@@ -235,12 +312,21 @@ function renderSecretContent() {
         <p class="val-muted font-script" style="font-size: clamp(20px, 3.2vw, 34px); margin: 0 0 6px; color: color-mix(in oklab, hsl(var(--primary)), black 8%);">Vivek &amp; Manice forever! 💕</p>
         <p class="val-muted font-body" style="font-size: 18px; margin: 12px 0 0;">I knew you'd say yes 🥰</p>
         <div class="bounce-in" style="margin-top: 18px; animation-delay:.25s;">
-          <div style="margin: 0 auto; width: 256px; border-radius: 16px; overflow: hidden; box-shadow: 0 18px 60px rgba(0,0,0,.12); border: 1px solid hsl(var(--border));">
+          <div id="gif-box" style="margin: 0 auto; width: 256px; border-radius: 16px; overflow: hidden; box-shadow: 0 18px 60px rgba(0,0,0,.12); border: 1px solid hsl(var(--border));">
             <img
               src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExcTJ5ZXRrOHhsMGx6Y2R0MnJ6OHJrcm1nNHF4a3BhYnU2MnRxdSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/M90mJvfWfd5mbUuULX/giphy.gif"
               alt="Cute romantic celebration"
               style="display:block; width: 256px; height: auto;"
             />
+          </div>
+
+          <div id="slideshow" class="slideshow" hidden>
+            <img id="slide-img" alt="Slideshow photo" />
+            <div class="slideshow-bar">
+              <button class="slide-btn" id="slide-prev" type="button">Prev</button>
+              <div class="slide-count" id="slide-count">1 / 1</div>
+              <button class="slide-btn" id="slide-next" type="button">Next</button>
+            </div>
           </div>
         </div>
         <div style="display:flex; justify-content:center; gap: 10px; margin-top: 18px; font-size: 40px;">
@@ -273,10 +359,33 @@ function renderSecretContent() {
         const viewQ = document.getElementById('view-question');
         const viewA = document.getElementById('view-accepted');
         const confetti = document.getElementById('confetti');
+        const audio = document.getElementById('bg-audio');
+        const btnMusic = document.getElementById('btn-music');
+        const musicLabel = document.getElementById('music-label');
+        const gifBox = document.getElementById('gif-box');
+        const slideshow = document.getElementById('slideshow');
+        const slideImg = document.getElementById('slide-img');
+        const slidePrev = document.getElementById('slide-prev');
+        const slideNext = document.getElementById('slide-next');
+        const slideCount = document.getElementById('slide-count');
 
         let noCount = 0;
         let accepted = false;
         let heartTimer = null;
+        let slideTimer = null;
+        let slideIndex = 0;
+
+        // ============================
+        // EDIT THESE:
+        // ============================
+        // Put your MP3 in /public (ex: public/valentine.mp3), then set:
+        const AUDIO_SRC = '/valentine.mp3';
+        // Put slideshow images in /public/slides (ex: public/slides/1.jpg), then set:
+        const SLIDES = [
+          // '/slides/1.jpg',
+          // '/slides/2.jpg',
+          // '/slides/3.jpg',
+        ];
 
         function clamp(n, min, max) { return Math.max(min, Math.min(max, n)); }
 
@@ -380,6 +489,52 @@ function renderSecretContent() {
           setTimeout(() => { confetti.innerHTML = ''; }, 5200);
         }
 
+        function setMusicUi(isOn) {
+          musicLabel.textContent = isOn ? 'Music: On' : 'Music: Off';
+        }
+
+        async function toggleMusic(force) {
+          if (!audio) return;
+          if (!audio.src) audio.src = AUDIO_SRC;
+
+          const shouldPlay = typeof force === 'boolean' ? force : audio.paused;
+          if (!shouldPlay) {
+            audio.pause();
+            setMusicUi(false);
+            return;
+          }
+          try {
+            await audio.play();
+            setMusicUi(true);
+          } catch {
+            // Autoplay restrictions: user may need to click again.
+            setMusicUi(false);
+          }
+        }
+
+        function showSlide(i) {
+          if (!SLIDES.length) return;
+          slideIndex = (i + SLIDES.length) % SLIDES.length;
+          slideImg.src = SLIDES[slideIndex];
+          slideCount.textContent = (slideIndex + 1) + ' / ' + SLIDES.length;
+        }
+
+        function startSlideshow() {
+          if (!SLIDES.length) return;
+          if (gifBox) gifBox.style.display = 'none';
+          slideshow.hidden = false;
+          showSlide(slideIndex);
+          if (slideTimer) clearInterval(slideTimer);
+          slideTimer = setInterval(() => showSlide(slideIndex + 1), 3500);
+        }
+
+        function stopSlideshow() {
+          if (slideTimer) clearInterval(slideTimer);
+          slideTimer = null;
+          if (slideshow) slideshow.hidden = true;
+          if (gifBox) gifBox.style.display = '';
+        }
+
         function accept() {
           accepted = true;
           viewQ.style.display = 'none';
@@ -387,6 +542,9 @@ function renderSecretContent() {
           restoreNoButtonHome();
           burstConfetti();
           startHearts();
+          startSlideshow();
+          // Try to start music on user gesture (works on most browsers).
+          toggleMusic(true);
         }
 
         function reset() {
@@ -399,10 +557,15 @@ function renderSecretContent() {
           viewQ.style.display = 'block';
           stopHearts();
           confetti.innerHTML = '';
+          stopSlideshow();
         }
 
         btnYes.addEventListener('click', accept);
         btnBack.addEventListener('click', reset);
+        btnMusic.addEventListener('click', () => toggleMusic());
+
+        slidePrev.addEventListener('click', () => { showSlide(slideIndex - 1); });
+        slideNext.addEventListener('click', () => { showSlide(slideIndex + 1); });
 
         btnNo.addEventListener('mouseenter', moveNoButton);
         btnNo.addEventListener('touchstart', (e) => { e.preventDefault(); moveNoButton(); }, { passive: false });
@@ -413,6 +576,7 @@ function renderSecretContent() {
         // Initialize
         setScales();
         startHearts();
+        setMusicUi(false);
       })();
     </script>
   `
