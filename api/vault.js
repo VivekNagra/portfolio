@@ -63,7 +63,8 @@ function setSecurityHeaders(res) {
       "default-src 'none'",
       "img-src 'self' data:",
       "style-src 'unsafe-inline'",
-      "script-src 'none'",
+      // Needed for the secret page interactions (no external scripts are allowed).
+      "script-src 'unsafe-inline'",
       "base-uri 'none'",
       "form-action 'self'",
       "frame-ancestors 'none'",
@@ -125,195 +126,260 @@ function renderSecretPage(req) {
     <style>
       :root { color-scheme: dark; }
       body { margin: 0; min-height: 100vh; font-family: ui-sans-serif, system-ui, Segoe UI, Roboto, Arial; background: #070A12; color: #E7EAF4; }
-      .wrap { max-width: 860px; margin: 0 auto; padding: 28px 18px; }
-      .panel { border-radius: 16px; border: 1px solid rgba(255,255,255,.10); background: rgba(255,255,255,.04); box-shadow: 0 20px 80px rgba(0,0,0,.45); padding: 22px; }
-      h1, h2, h3 { margin: 0 0 10px; }
-      p, li { color: rgba(231,234,244,.82); line-height: 1.6; }
-      code { padding: 2px 6px; border-radius: 8px; background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.10); }
-      .top { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
-      a.btn { display: inline-flex; align-items: center; justify-content: center; padding: 10px 12px; border-radius: 12px; border: 1px solid rgba(255,255,255,.12); background: rgba(255,255,255,.06); color: rgba(231,234,244,.9); text-decoration: none; font-weight: 700; }
-      a.btn:hover { background: rgba(255,255,255,.10); }
-      .stamp { font-size: 12px; color: rgba(231,234,244,.55); }
-      hr { border: none; border-top: 1px solid rgba(255,255,255,.10); margin: 14px 0; }
     </style>
   </head>
   <body>
-    <div class="wrap">
-      <div class="panel">
-        <div class="top">
-          <div>
-            <div class="stamp">Private area</div>
-          </div>
-          <a class="btn" href="${escapeHtml(logoutHref)}">Log out</a>
-        </div>
-        <hr />
-        ${renderSecretContent()}
-      </div>
-    </div>
+    ${renderSecretContent({ logoutHref: escapeHtml(logoutHref) })}
   </body>
 </html>`
 }
 
-function renderSecretContent() {
-    import { useState, useRef, useCallback } from "react";
-    import { Button } from "@/components/ui/button";
-    import FloatingHearts from "@/components/FloatingHearts";
-    import Confetti from "@/components/Confetti";
-    
-    const noTexts = [
-      "No 😢",
-      "Are you sure? 🥺",
-      "Think again! 💔",
-      "Wrong button! 😤",
-      "Not this one! 🙈",
-      "Please? 🥹",
-      "Pretty please? 🌹",
-      "Fine, I give up 😭",
-    ];
-    
-    const Index = () => {
-      const [noCount, setNoCount] = useState(0);
-      const [accepted, setAccepted] = useState(false);
-      const [noPosition, setNoPosition] = useState<{ top?: string; left?: string }>({});
-      const containerRef = useRef<HTMLDivElement>(null);
-    
-      const handleNoHover = useCallback(() => {
-        if (noCount >= noTexts.length - 1) return;
-        const container = containerRef.current;
-        if (!container) return;
-        const rect = container.getBoundingClientRect();
-        // Keep button well within bounds for mobile
-        const buttonWidth = 160;
-        const buttonHeight = 50;
-        const padding = 20;
-        const top = padding + Math.random() * (rect.height - buttonHeight - padding * 2);
-        const left = padding + Math.random() * (rect.width - buttonWidth - padding * 2);
-        setNoPosition({ top: `${top}px`, left: `${left}px` });
-        setNoCount((c) => Math.min(c + 1, noTexts.length - 1));
-      }, [noCount]);
-    
-      const noButtonSize = Math.max(0.5, 1 - noCount * 0.06);
-      const yesButtonSize = Math.min(1.6, 1 + noCount * 0.08);
-    
-      if (accepted) {
-        return (
-          <div className="flex min-h-screen flex-col items-center justify-center bg-background relative overflow-hidden px-4">
-            <Confetti />
-            <div
-              className="text-center z-10"
-              style={{ animation: "bounce-in 0.6s ease-out forwards" }}
-            >
-              <div className="text-7xl sm:text-8xl mb-6">💖</div>
-              <h1 className="font-script text-5xl sm:text-7xl text-primary mb-4">
-                Yay!!!
-              </h1>
-              <p className="font-script text-3xl sm:text-4xl text-primary/80 mb-2">
-                Vivek & Manice forever! 💕
-              </p>
-              <p className="text-lg sm:text-xl text-muted-foreground mt-4">
-                I knew you'd say yes 🥰
-              </p>
-              <div className="mt-6 rounded-2xl overflow-hidden shadow-lg" style={{ animation: "bounce-in 0.6s ease-out 0.4s both" }}>
-                <img
-                  src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExcTJ5ZXRrOHhsMGx6Y2R0MnJ6OHJrcm1nNHF4a3BhYnU2MnRxdSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/M90mJvfWfd5mbUuULX/giphy.gif"
-                  alt="Cute romantic celebration"
-                  className="w-64 h-auto mx-auto"
-                />
-              </div>
-              <div className="flex justify-center gap-2 mt-6 text-4xl">
-                <span style={{ animation: "bounce-in 0.5s ease-out 0.5s both" }}>🌹</span>
-                <span style={{ animation: "bounce-in 0.5s ease-out 0.7s both" }}>💘</span>
-                <span style={{ animation: "bounce-in 0.5s ease-out 0.9s both" }}>🌹</span>
-              </div>
-              <Button
-                variant="outline"
-                onClick={() => { setAccepted(false); setNoCount(0); setNoPosition({}); }}
-                className="mt-8 font-body rounded-full border-primary/30 text-muted-foreground"
-              >
-                ← Go back
-              </Button>
-            </div>
-            <FloatingHearts />
-          </div>
-        );
-      }
-    
-      return (
-        <div
-          ref={containerRef}
-          className="flex min-h-screen flex-col items-center justify-center bg-background relative overflow-hidden px-4"
-        >
-          <FloatingHearts />
-    
-          <div className="z-10 text-center max-w-lg mx-auto">
-            {/* Emoji art */}
-            <div className="text-6xl sm:text-7xl mb-4" style={{ animation: "bounce-in 0.6s ease-out" }}>
-              💘
-            </div>
-    
-            {/* Intro message */}
-            <p className="text-muted-foreground text-base sm:text-lg mb-2 font-body">
-              Dear Manice,
-            </p>
-            <p className="text-muted-foreground text-sm sm:text-base mb-6 font-body leading-relaxed">
-              Every moment with you feels like a dream. You make my world brighter,
-              warmer, and so much more beautiful. So I have a very important question…
-            </p>
-    
-            {/* The big question */}
-            <h1 className="font-script text-4xl sm:text-5xl md:text-6xl text-primary mb-2 leading-tight">
-              Manice,
-            </h1>
-            <h2 className="font-script text-3xl sm:text-4xl md:text-5xl text-primary/80 mb-8">
-              Will You Be My Valentine?
-            </h2>
-    
-            <p className="text-sm text-muted-foreground mb-8 font-body">— with all my love, Vivek 💕</p>
-    
-            {/* Buttons */}
-            <div className="flex flex-col items-center gap-4">
-              <Button
-                onClick={() => setAccepted(true)}
-                className="font-body font-bold text-lg px-8 py-6 rounded-full bg-primary text-primary-foreground shadow-lg transition-all duration-300"
-                style={{
-                  transform: `scale(${yesButtonSize})`,
-                  animation: "pulse-glow 2s ease-in-out infinite",
-                }}
-              >
-                Yes! 💖
-              </Button>
-    
-              <Button
-                variant="outline"
-                onMouseEnter={handleNoHover}
-                onTouchStart={handleNoHover}
-                onClick={() => {
-                  if (noCount < noTexts.length - 1) {
-                    handleNoHover();
-                  }
-                }}
-                className="font-body rounded-full border-primary/30 text-muted-foreground transition-all duration-300"
-                style={{
-                  transform: `scale(${noButtonSize})`,
-                  ...(noPosition.top
-                    ? { position: "absolute", top: noPosition.top, left: noPosition.left }
-                    : {}),
-                }}
-              >
-                {noTexts[noCount]}
-              </Button>
-            </div>
-          </div>
-        </div>
-      );
-    };
-    
-    export default Index;
-    
+function renderSecretContent({ logoutHref }) {
+  // Converted from your React version into self-contained HTML/CSS/JS (no React, no Tailwind).
+  // Keep it self-contained: no external scripts; images are avoided to preserve strict CSP.
   return `
-    <h1>Secret page</h1>
-    <p>Edit <code>api/vault.js</code> and replace the HTML inside <code>renderSecretContent()</code>.</p>
-    <p>Keep it self-contained (no external scripts) unless you also loosen the CSP in <code>setSecurityHeaders()</code>.</p>
+    <style>
+      /* Page */
+      .val-root { position: relative; min-height: 100vh; display: grid; place-items: center; padding: 24px 16px; overflow: hidden; }
+      .val-card { width: min(680px, calc(100vw - 32px)); border-radius: 18px; border: 1px solid rgba(255,255,255,.12); background: rgba(255,255,255,.04); box-shadow: 0 24px 90px rgba(0,0,0,.55); padding: 22px; text-align: center; position: relative; z-index: 2; }
+      .val-muted { color: rgba(231,234,244,.75); }
+      .val-title { margin: 6px 0 8px; font-size: clamp(34px, 5vw, 64px); letter-spacing: .2px; }
+      .val-sub { margin: 0 0 18px; font-size: clamp(24px, 4vw, 46px); color: rgba(231,234,244,.85); }
+      .val-kicker { margin: 0 0 8px; font-size: 15px; }
+      .val-par { margin: 0 auto 14px; max-width: 56ch; font-size: 15px; line-height: 1.6; }
+      .val-sign { margin: 0 0 18px; font-size: 13px; }
+
+      /* Buttons */
+      .btn-row { display: flex; flex-direction: column; align-items: center; gap: 14px; margin-top: 12px; position: relative; }
+      .btn { appearance: none; border: 1px solid rgba(255,255,255,.14); background: rgba(255,255,255,.06); color: rgba(231,234,244,.95); border-radius: 999px; padding: 14px 22px; font-weight: 900; font-size: 18px; cursor: pointer; transition: transform .18s ease, background .18s ease, filter .18s ease; user-select: none; }
+      .btn:hover { background: rgba(255,255,255,.10); }
+      .btn-primary { border-color: rgba(120,140,255,.45); background: linear-gradient(135deg, rgba(120,140,255,.95), rgba(76,210,255,.85)); color: #071018; box-shadow: 0 16px 55px rgba(120,140,255,.18); }
+      .btn-primary:hover { filter: brightness(1.05); }
+      .btn-ghost { font-weight: 800; font-size: 15px; padding: 10px 16px; }
+
+      /* Top actions */
+      .topbar { position: absolute; top: 14px; right: 14px; z-index: 3; display: flex; gap: 10px; align-items: center; }
+      a.toplink { text-decoration: none; display: inline-flex; align-items: center; justify-content: center; border-radius: 999px; padding: 10px 12px; border: 1px solid rgba(255,255,255,.14); background: rgba(255,255,255,.06); color: rgba(231,234,244,.9); font-weight: 800; font-size: 13px; }
+      a.toplink:hover { background: rgba(255,255,255,.10); }
+
+      /* Hearts */
+      .heart { position: absolute; left: 50%; top: 110%; transform: translateX(-50%); font-size: 18px; opacity: 0; pointer-events: none; }
+      @keyframes floatUp {
+        0%   { transform: translate(-50%, 0) scale(.9); opacity: 0; }
+        10%  { opacity: .85; }
+        100% { transform: translate(calc(-50% + var(--drift)), -120vh) scale(1.25); opacity: 0; }
+      }
+
+      /* Confetti */
+      .confetti { position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 1; }
+      .confetti i { position: absolute; top: -16px; width: 10px; height: 14px; border-radius: 2px; transform: rotate(var(--rot)); background: hsl(var(--h), 95%, 60%); animation: confFall var(--dur) linear forwards; }
+      @keyframes confFall {
+        0% { transform: translateY(-20px) translateX(0) rotate(var(--rot)); opacity: 1; }
+        100% { transform: translateY(110vh) translateX(var(--dx)) rotate(calc(var(--rot) + 720deg)); opacity: 0; }
+      }
+
+      /* Animations */
+      @keyframes bounceIn {
+        0% { transform: scale(.88); opacity: 0; }
+        70% { transform: scale(1.04); opacity: 1; }
+        100% { transform: scale(1); }
+      }
+      .bounce-in { animation: bounceIn .6s ease-out both; }
+
+      @keyframes pulseGlow {
+        0%, 100% { box-shadow: 0 18px 58px rgba(120,140,255,.20); }
+        50% { box-shadow: 0 24px 85px rgba(120,140,255,.35); }
+      }
+      .pulse { animation: pulseGlow 2s ease-in-out infinite; }
+
+      /* Responsiveness */
+      @media (min-width: 640px) {
+        .btn-row { flex-direction: column; }
+      }
+    </style>
+
+    <div class="val-root" id="val-root">
+      <div class="topbar">
+        <a class="toplink" href="${logoutHref}">Log out</a>
+      </div>
+
+      <div class="confetti" id="confetti" aria-hidden="true"></div>
+
+      <!-- QUESTION VIEW -->
+      <div class="val-card bounce-in" id="view-question">
+        <div style="font-size: 56px; margin-bottom: 8px;">💘</div>
+        <p class="val-muted val-kicker">Dear Manice,</p>
+        <p class="val-muted val-par">
+          Every moment with you feels like a dream. You make my world brighter,
+          warmer, and so much more beautiful. So I have a very important question…
+        </p>
+
+        <h1 class="val-title">Manice,</h1>
+        <h2 class="val-sub">Will You Be My Valentine?</h2>
+
+        <p class="val-muted val-sign">— with all my love, Vivek 💕</p>
+
+        <div class="btn-row" id="btn-area">
+          <button class="btn btn-primary pulse" id="btn-yes" type="button">Yes! 💖</button>
+          <button class="btn" id="btn-no" type="button">No 😢</button>
+        </div>
+      </div>
+
+      <!-- ACCEPTED VIEW -->
+      <div class="val-card bounce-in" id="view-accepted" style="display:none;">
+        <div style="font-size: 72px; margin-bottom: 10px;">💖</div>
+        <h1 class="val-title" style="margin-top:0;">Yay!!!</h1>
+        <p class="val-muted" style="font-size: clamp(20px, 3.2vw, 34px); margin: 0 0 6px;">Vivek &amp; Manice forever! 💕</p>
+        <p class="val-muted" style="font-size: 18px; margin: 12px 0 0;">I knew you'd say yes 🥰</p>
+        <div style="display:flex; justify-content:center; gap: 10px; margin-top: 18px; font-size: 40px;">
+          <span class="bounce-in" style="animation-delay:.2s;">🌹</span>
+          <span class="bounce-in" style="animation-delay:.35s;">💘</span>
+          <span class="bounce-in" style="animation-delay:.5s;">🌹</span>
+        </div>
+        <button class="btn btn-ghost" id="btn-back" type="button" style="margin-top: 18px;">← Go back</button>
+      </div>
+    </div>
+
+    <script>
+      (() => {
+        const noTexts = ${JSON.stringify([
+          "No 😢",
+          "Are you sure? 🥺",
+          "Think again! 💔",
+          "Wrong button! 😤",
+          "Not this one! 🙈",
+          "Please? 🥹",
+          "Pretty please? 🌹",
+          "Fine, I give up 😭",
+        ])};
+
+        const root = document.getElementById('val-root');
+        const btnArea = document.getElementById('btn-area');
+        const btnYes = document.getElementById('btn-yes');
+        const btnNo = document.getElementById('btn-no');
+        const btnBack = document.getElementById('btn-back');
+        const viewQ = document.getElementById('view-question');
+        const viewA = document.getElementById('view-accepted');
+        const confetti = document.getElementById('confetti');
+
+        let noCount = 0;
+        let accepted = false;
+        let heartTimer = null;
+
+        function clamp(n, min, max) { return Math.max(min, Math.min(max, n)); }
+
+        function setScales() {
+          const noScale = clamp(1 - noCount * 0.06, 0.5, 1);
+          const yesScale = clamp(1 + noCount * 0.08, 1, 1.6);
+          btnNo.style.transform = 'scale(' + noScale + ')';
+          btnYes.style.transform = 'scale(' + yesScale + ')';
+        }
+
+        function moveNoButton() {
+          if (noCount >= noTexts.length - 1) return;
+          const rect = root.getBoundingClientRect();
+          const buttonWidth = 160;
+          const buttonHeight = 52;
+          const padding = 22;
+          const top = padding + Math.random() * (rect.height - buttonHeight - padding * 2);
+          const left = padding + Math.random() * (rect.width - buttonWidth - padding * 2);
+
+          btnNo.style.position = 'absolute';
+          btnNo.style.top = top + 'px';
+          btnNo.style.left = left + 'px';
+
+          noCount = Math.min(noCount + 1, noTexts.length - 1);
+          btnNo.textContent = noTexts[noCount];
+          setScales();
+        }
+
+        function spawnHeart() {
+          const el = document.createElement('div');
+          el.className = 'heart';
+          el.textContent = Math.random() > 0.25 ? '💗' : '💖';
+          const x = Math.random() * 100;
+          const drift = (Math.random() * 120 - 60) + 'px';
+          const dur = (6 + Math.random() * 4) + 's';
+          const size = (14 + Math.random() * 18) + 'px';
+          el.style.left = x + '%';
+          el.style.setProperty('--drift', drift);
+          el.style.fontSize = size;
+          el.style.animation = 'floatUp ' + dur + ' ease-in forwards';
+          root.appendChild(el);
+          requestAnimationFrame(() => { el.style.opacity = '1'; });
+          setTimeout(() => el.remove(), (parseFloat(dur) * 1000) + 200);
+        }
+
+        function startHearts() {
+          if (heartTimer) return;
+          heartTimer = setInterval(spawnHeart, 450);
+        }
+
+        function stopHearts() {
+          if (!heartTimer) return;
+          clearInterval(heartTimer);
+          heartTimer = null;
+        }
+
+        function burstConfetti() {
+          confetti.innerHTML = '';
+          const pieces = 140;
+          for (let i = 0; i < pieces; i++) {
+            const p = document.createElement('i');
+            const left = Math.random() * 100;
+            const dx = (Math.random() * 240 - 120) + 'px';
+            const h = Math.floor(Math.random() * 360);
+            const rot = (Math.random() * 360) + 'deg';
+            const dur = (2.8 + Math.random() * 1.6) + 's';
+            p.style.left = left + 'vw';
+            p.style.setProperty('--dx', dx);
+            p.style.setProperty('--h', h);
+            p.style.setProperty('--rot', rot);
+            p.style.setProperty('--dur', dur);
+            confetti.appendChild(p);
+          }
+          setTimeout(() => { confetti.innerHTML = ''; }, 5200);
+        }
+
+        function accept() {
+          accepted = true;
+          viewQ.style.display = 'none';
+          viewA.style.display = 'block';
+          btnNo.style.position = '';
+          btnNo.style.top = '';
+          btnNo.style.left = '';
+          burstConfetti();
+          startHearts();
+        }
+
+        function reset() {
+          accepted = false;
+          noCount = 0;
+          btnNo.textContent = noTexts[0];
+          btnNo.style.position = '';
+          btnNo.style.top = '';
+          btnNo.style.left = '';
+          setScales();
+          viewA.style.display = 'none';
+          viewQ.style.display = 'block';
+          stopHearts();
+          confetti.innerHTML = '';
+        }
+
+        btnYes.addEventListener('click', accept);
+        btnBack.addEventListener('click', reset);
+
+        btnNo.addEventListener('mouseenter', moveNoButton);
+        btnNo.addEventListener('touchstart', (e) => { e.preventDefault(); moveNoButton(); }, { passive: false });
+        btnNo.addEventListener('click', () => {
+          if (noCount < noTexts.length - 1) moveNoButton();
+        });
+
+        // Initialize
+        setScales();
+        startHearts();
+      })();
+    </script>
   `
 }
 
