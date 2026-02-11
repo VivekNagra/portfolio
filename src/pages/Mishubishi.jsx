@@ -1,5 +1,5 @@
 import { useCallback, useRef, useState } from 'react'
-import Valentine from './Valentine.jsx'
+import Valentine from './Valentine.tsx'
 
 export default function Mishubishi() {
   const [password, setPassword] = useState('')
