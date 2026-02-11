@@ -1,7 +1,7 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
-import ValentineShell from './ValentineShell.jsx'
+import { useCallback, useRef, useState } from 'react'
+import MishubishiShell from './MishubishiShell.jsx'
 
-export default function Mishubishi() {
+export default function MishubishiGate() {
   const [password, setPassword] = useState('')
   const [unlocked, setUnlocked] = useState(false)
   const [submitting, setSubmitting] = useState(false)
@@ -36,12 +36,7 @@ export default function Mishubishi() {
     [password]
   )
 
-  useEffect(() => {
-    document.body.classList.add('mishubishi')
-    return () => document.body.classList.remove('mishubishi')
-  }, [])
-
-  if (unlocked) return <ValentineShell />
+  if (unlocked) return <MishubishiShell />
 
   return (
     <div className="min-h-screen bg-background text-foreground flex items-center justify-center px-4">

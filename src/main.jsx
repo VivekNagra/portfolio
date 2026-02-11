@@ -6,7 +6,7 @@ import { Analytics } from '@vercel/analytics/react'
 import { SpeedInsights } from "@vercel/speed-insights/next"
 import ScrollReveal from './components/ScrollReveal.jsx'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
-import Mishubishi from './pages/Mishubishi.jsx'
+import MishubishiGate from './pages/MishubishiGate.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -20,7 +20,7 @@ createRoot(document.getElementById('root')).render(
             </ScrollReveal>
           }
         />
-        <Route path="/mishubishi" element={<Mishubishi />} />
+        <Route path="/mishubishi" element={<MishubishiGate />} />
       </Routes>
     </BrowserRouter>
     <Analytics />
