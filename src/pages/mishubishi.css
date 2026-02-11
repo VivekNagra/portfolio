@@ -7,10 +7,11 @@ body.mishubishi {
 
   --background: 0 0% 100%;
   --foreground: 240 10% 3.9%;
-  --muted-foreground: 240 3.8% 46.1%;
+  /* Darken muted text so it's always readable on white */
+  --muted-foreground: 240 5% 32%;
   --primary: 346 77% 49%;
   --primary-foreground: 0 0% 100%;
-  --border: 240 5.9% 90%;
+  --border: 240 6% 86%;
 
   background-color: hsl(var(--background));
   background-image:
@@ -23,9 +24,9 @@ html.dark body.mishubishi {
   color-scheme: light;
   --background: 0 0% 100%;
   --foreground: 240 10% 3.9%;
-  --muted-foreground: 240 3.8% 46.1%;
+  --muted-foreground: 240 5% 32%;
   --primary: 346 77% 49%;
   --primary-foreground: 0 0% 100%;
-  --border: 240 5.9% 90%;
+  --border: 240 6% 86%;
 }
 

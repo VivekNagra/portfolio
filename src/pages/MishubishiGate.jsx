@@ -13,11 +13,14 @@ export default function MishubishiGate() {
   useEffect(() => {
     const root = document.documentElement
     const hadDark = root.classList.contains('dark')
+    const bodyHadDark = document.body.classList.contains('dark')
     root.classList.remove('dark')
+    document.body.classList.remove('dark')
     document.body.classList.add('mishubishi')
     return () => {
       document.body.classList.remove('mishubishi')
       if (hadDark) root.classList.add('dark')
+      if (bodyHadDark) document.body.classList.add('dark')
     }
   }, [])
 
