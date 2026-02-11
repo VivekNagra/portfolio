@@ -4,7 +4,7 @@ import Mishubishi from './Mishubishi.tsx'
 const COUNTDOWN_TARGET_UTC_MS = Date.UTC(2026, 1, 14, 11, 0, 0) // 14 Feb 2026 12:00 CET == 11:00 UTC
 
 // Put an mp3 in /public (example: public/valentine.mp3)
-const AUDIO_SRC = '/valentine.mp3'
+const AUDIO_CANDIDATES = ['/valentine.mp3', '/valentine.mp3.mp3']
 
 // Build-time load of images from the repo root `temp/` folder.
 // This keeps your request: “slideshow photos should load the photos in the folder temp”.
@@ -23,7 +23,8 @@ function getTempSlides() {
 export default function MishubishiShell() {
   const containerRef = useRef(null)
   const audioRef = useRef(null)
-  const [musicOn, setMusicOn] = useState(false)
+  // Default music to ON. (Actual playback still depends on browser autoplay rules.)
+  const [musicOn, setMusicOn] = useState(true)
   const [accepted, setAccepted] = useState(false)
   const [remaining, setRemaining] = useState(() => getRemainingParts(COUNTDOWN_TARGET_UTC_MS))
 
@@ -66,18 +67,87 @@ export default function MishubishiShell() {
     return () => window.clearInterval(t)
   }, [accepted])
 
-  // Prime audio src when accepted (browser may still require a click).
+  // Move "Go back" button to top-left without changing the page code.
   useEffect(() => {
-    if (!accepted) return
+    const el = containerRef.current
+    if (!el) return
+
+    const btn = Array.from(el.querySelectorAll('button')).find((b) =>
+      String(b.textContent || '').trim().toLowerCase().includes('go back')
+    )
+
+    if (!accepted || !btn) return
+
+    const prev = {
+      position: btn.style.position,
+      top: btn.style.top,
+      left: btn.style.left,
+      right: btn.style.right,
+      bottom: btn.style.bottom,
+      margin: btn.style.margin,
+      zIndex: btn.style.zIndex,
+    }
+
+    Object.assign(btn.style, {
+      position: 'fixed',
+      top: '16px',
+      left: '16px',
+      right: '',
+      bottom: '',
+      margin: '0',
+      zIndex: '60',
+    })
+
+    return () => {
+      Object.assign(btn.style, prev)
+    }
+  }, [accepted])
+
+  // Prime audio src and loop (browser may still require a click).
+  useEffect(() => {
     if (!audioRef.current) return
-    if (musicOn) return
-    audioRef.current.src = AUDIO_SRC
-  }, [accepted, musicOn])
+    const audio = audioRef.current
+    audio.loop = true
+    if (!audio.src) audio.src = AUDIO_CANDIDATES[0]
+  }, [])
+
+  async function tryPlay() {
+    const audio = audioRef.current
+    if (!audio) return
+
+    if (!audio.src) audio.src = AUDIO_CANDIDATES[0]
+
+    try {
+      await audio.play()
+      return true
+    } catch {
+      // Try fallbacks (e.g. if the file is named valentine.mp3.mp3)
+      for (const src of AUDIO_CANDIDATES.slice(1)) {
+        try {
+          audio.src = src
+          await audio.play()
+          return true
+        } catch {
+          // keep trying
+        }
+      }
+      return false
+    }
+  }
+
+  // If music is ON, attempt playback on the first user interaction.
+  useEffect(() => {
+    if (!musicOn) return
+    const onFirstInteraction = () => {
+      tryPlay()
+    }
+    window.addEventListener('pointerdown', onFirstInteraction, { once: true })
+    return () => window.removeEventListener('pointerdown', onFirstInteraction)
+  }, [musicOn])
 
   async function toggleMusic() {
     const audio = audioRef.current
     if (!audio) return
-    if (!audio.src) audio.src = AUDIO_SRC
 
     if (!audio.paused) {
       audio.pause()
@@ -85,15 +155,8 @@ export default function MishubishiShell() {
       return
     }
 
-    try {
-      await audio.play()
-      setMusicOn(true)
-    } catch {
-      // Usually means: audio file missing OR autoplay restriction.
-      // Keep UI responsive (so the user sees the click did something).
-      setMusicOn(false)
-      window.alert('Music could not start. Make sure you added /public/valentine.mp3, then tap again.')
-    }
+    setMusicOn(true)
+    await tryPlay()
   }
 
   return (
