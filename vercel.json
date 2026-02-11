@@ -1,9 +1,9 @@
 {
-  "rewrites": [
-    {
-      "source": "/mishubishi",
-      "destination": "/api/vault"
-    }
+  "version": 2,
+  "routes": [
+    { "handle": "filesystem" },
+    { "src": "/api/(.*)", "dest": "/api/$1" },
+    { "src": "/(.*)", "dest": "/index.html" }
   ]
 }
 
