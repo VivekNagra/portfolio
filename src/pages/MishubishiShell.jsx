@@ -1,12 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import Mishubishi from './Mishubishi.tsx'
 
-// Edit these to match your “Save the Date” details.
-const SAVE_THE_DATE = {
-  title: 'Save the Date',
-  line1: 'Vivek & Manice',
-  line2: '14 Feb 2026',
-}
+const COUNTDOWN_TARGET_UTC_MS = Date.UTC(2026, 1, 14, 11, 0, 0) // 14 Feb 2026 12:00 CET == 11:00 UTC
 
 // Put an mp3 in /public (example: public/valentine.mp3)
 const AUDIO_SRC = '/valentine.mp3'
@@ -30,6 +25,7 @@ export default function MishubishiShell() {
   const audioRef = useRef(null)
   const [musicOn, setMusicOn] = useState(false)
   const [accepted, setAccepted] = useState(false)
+  const [remaining, setRemaining] = useState(() => getRemainingParts(COUNTDOWN_TARGET_UTC_MS))
 
   const slides = useMemo(() => getTempSlides(), [])
   const [slideIdx, setSlideIdx] = useState(0)
@@ -60,6 +56,15 @@ export default function MishubishiShell() {
     }, 3500)
     return () => window.clearInterval(t)
   }, [accepted, slides.length])
+
+  // Countdown (only after accepted).
+  useEffect(() => {
+    if (!accepted) return
+    const tick = () => setRemaining(getRemainingParts(COUNTDOWN_TARGET_UTC_MS))
+    tick()
+    const t = window.setInterval(tick, 1000)
+    return () => window.clearInterval(t)
+  }, [accepted])
 
   // Prime audio src when accepted (browser may still require a click).
   useEffect(() => {
@@ -108,9 +113,15 @@ export default function MishubishiShell() {
       {accepted && (
         <>
           <div className="pointer-events-none fixed top-4 left-1/2 z-50 -translate-x-1/2 rounded-2xl border border-border bg-background/90 px-4 py-3 text-center shadow-lg backdrop-blur">
-            <div className="text-xs font-extrabold text-muted-foreground">{SAVE_THE_DATE.title}</div>
-            <div className="font-script text-2xl text-primary leading-none">{SAVE_THE_DATE.line1}</div>
-            <div className="text-sm font-bold text-muted-foreground">{SAVE_THE_DATE.line2}</div>
+            <div className="text-xs font-extrabold text-muted-foreground">
+              since you said yes please be ready for our date ill come pick you up in.
+            </div>
+            <div className="mt-2 font-script text-3xl text-primary leading-none tabular-nums">
+              {remaining.days}d {remaining.hours}h {remaining.minutes}m {remaining.seconds}s
+            </div>
+            <div className="mt-1 text-[11px] font-bold text-muted-foreground">
+              Countdown to 14 Feb 2026 · 12:00 CET
+            </div>
           </div>
 
           {slides.length > 0 && (
@@ -141,5 +152,29 @@ export default function MishubishiShell() {
       )}
     </div>
   )
+}
+
+function pad2(n) {
+  return String(n).padStart(2, '0')
+}
+
+function getRemainingParts(targetUtcMs) {
+  const now = Date.now()
+  let diff = Math.max(0, targetUtcMs - now)
+
+  const days = Math.floor(diff / (24 * 60 * 60 * 1000))
+  diff -= days * 24 * 60 * 60 * 1000
+  const hours = Math.floor(diff / (60 * 60 * 1000))
+  diff -= hours * 60 * 60 * 1000
+  const minutes = Math.floor(diff / (60 * 1000))
+  diff -= minutes * 60 * 1000
+  const seconds = Math.floor(diff / 1000)
+
+  return {
+    days,
+    hours: pad2(hours),
+    minutes: pad2(minutes),
+    seconds: pad2(seconds),
+  }
 }
 

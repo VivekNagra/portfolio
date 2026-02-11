@@ -52,10 +52,10 @@ export default function MishubishiGate() {
   if (unlocked) return <MishubishiShell />
 
   return (
-    <div className="min-h-screen bg-background text-foreground flex items-center justify-center px-4">
-      <div className="w-full max-w-sm rounded-2xl border border-border bg-background shadow-[0_20px_80px_rgba(0,0,0,.10)] p-5">
-        <h1 className="text-lg font-bold">Enter password</h1>
-        <p className="mt-1 text-sm text-muted-foreground">
+    <div className="min-h-screen bg-white text-zinc-900 flex items-center justify-center px-4">
+      <div className="w-full max-w-sm rounded-2xl border border-zinc-200 bg-white shadow-[0_20px_80px_rgba(0,0,0,.10)] p-5">
+        <h1 className="text-lg font-bold text-zinc-900">Enter password</h1>
+        <p className="mt-1 text-sm text-zinc-600">
           This page is protected. Refreshing will require the password again.
         </p>
         {error && (
@@ -64,7 +64,7 @@ export default function MishubishiGate() {
           </div>
         )}
         <form onSubmit={onSubmit} className="mt-4">
-          <label className="block text-xs font-semibold text-muted-foreground" htmlFor="pw">
+          <label className="block text-xs font-semibold text-zinc-700" htmlFor="pw">
             Password
           </label>
           <input
@@ -75,7 +75,7 @@ export default function MishubishiGate() {
             onChange={(e) => setPassword(e.target.value)}
             autoFocus
             required
-            className="mt-2 w-full rounded-xl border border-border bg-background px-3 py-3 text-foreground outline-none focus:ring-4 focus:ring-[hsl(var(--primary)/.20)]"
+            className="mt-2 w-full rounded-xl border border-zinc-200 bg-white px-3 py-3 text-zinc-900 outline-none focus:ring-4 focus:ring-[hsl(var(--primary)/.20)]"
           />
           <button
             type="submit"
