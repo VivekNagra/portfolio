@@ -287,25 +287,42 @@ function renderSecretContent() {
           btnYes.style.transform = 'scale(' + yesScale + ')';
         }
 
+        // When the "No" button starts moving, we detach it from the button stack
+        // so positioning is relative to the full-screen container (like your React version).
+        const noHome = btnNo.parentNode;
+        const noMarker = document.createComment('no-home');
+        noHome.insertBefore(noMarker, btnNo);
+
+        function restoreNoButtonHome() {
+          if (btnNo.parentNode !== noHome) {
+            noHome.insertBefore(btnNo, noMarker.nextSibling);
+          }
+          btnNo.style.position = '';
+          btnNo.style.top = '';
+          btnNo.style.left = '';
+          btnNo.style.zIndex = '';
+        }
+
         function moveNoButton() {
           if (noCount >= noTexts.length - 1) return;
 
-          // Jump anywhere on screen (closest behavior to your React version).
-          const vw = document.documentElement.clientWidth || window.innerWidth;
-          const vh = document.documentElement.clientHeight || window.innerHeight;
+          // Ensure it's positioned relative to the full-screen container
+          if (btnNo.parentNode !== root) {
+            root.appendChild(btnNo);
+          }
 
-          const btnRect = btnNo.getBoundingClientRect();
-          const buttonWidth = Math.max(120, Math.ceil(btnRect.width || 160));
-          const buttonHeight = Math.max(44, Math.ceil(btnRect.height || 52));
+          const rect = root.getBoundingClientRect();
+          const buttonWidth = 160;
+          const buttonHeight = 50;
           const padding = 20;
 
-          const maxTop = Math.max(padding, vh - buttonHeight - padding);
-          const maxLeft = Math.max(padding, vw - buttonWidth - padding);
+          const usableH = Math.max(0, rect.height - buttonHeight - padding * 2);
+          const usableW = Math.max(0, rect.width - buttonWidth - padding * 2);
 
-          const top = padding + Math.random() * (maxTop - padding);
-          const left = padding + Math.random() * (maxLeft - padding);
+          const top = padding + Math.random() * usableH;
+          const left = padding + Math.random() * usableW;
 
-          btnNo.style.position = 'fixed';
+          btnNo.style.position = 'absolute';
           btnNo.style.top = top + 'px';
           btnNo.style.left = left + 'px';
           btnNo.style.zIndex = '10';
@@ -367,10 +384,7 @@ function renderSecretContent() {
           accepted = true;
           viewQ.style.display = 'none';
           viewA.style.display = 'block';
-          btnNo.style.position = '';
-          btnNo.style.top = '';
-          btnNo.style.left = '';
-          btnNo.style.zIndex = '';
+          restoreNoButtonHome();
           burstConfetti();
           startHearts();
         }
@@ -379,10 +393,7 @@ function renderSecretContent() {
           accepted = false;
           noCount = 0;
           btnNo.textContent = noTexts[0];
-          btnNo.style.position = '';
-          btnNo.style.top = '';
-          btnNo.style.left = '';
-          btnNo.style.zIndex = '';
+          restoreNoButtonHome();
           setScales();
           viewA.style.display = 'none';
           viewQ.style.display = 'block';
