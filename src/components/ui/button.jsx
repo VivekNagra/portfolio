@@ -9,7 +9,7 @@ export const Button = React.forwardRef(function Button(
   ref
 ) {
   const base =
-    'inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 font-body font-bold transition-all duration-300 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[hsl(var(--primary)/.25)] disabled:opacity-60 disabled:pointer-events-none'
+    'inline-flex items-center justify-center gap-2 rounded-full px-9 py-4 text-lg sm:text-xl leading-none font-body font-bold transition-all duration-300 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[hsl(var(--primary)/.25)] disabled:opacity-60 disabled:pointer-events-none'
 
   const variants = {
     default:
