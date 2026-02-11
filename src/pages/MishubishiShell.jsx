@@ -125,8 +125,8 @@ export default function MishubishiShell() {
           </div>
 
           {slides.length > 0 && (
-            <div className="pointer-events-auto fixed bottom-4 left-1/2 z-40 w-[320px] -translate-x-1/2 overflow-hidden rounded-2xl border border-zinc-200 bg-white/95 shadow-lg backdrop-blur">
-              <img src={slides[slideIdx]} alt="Slideshow" className="h-56 w-full object-cover" />
+            <div className="pointer-events-auto fixed bottom-6 left-1/2 z-40 w-[380px] max-w-[calc(100vw-32px)] -translate-x-1/2 overflow-hidden rounded-2xl border border-zinc-200 bg-white/95 shadow-lg backdrop-blur">
+              <img src={slides[slideIdx]} alt="Slideshow" className="h-64 w-full object-cover" />
               <div className="flex items-center justify-between gap-2 px-3 py-2">
                 <button
                   type="button"
