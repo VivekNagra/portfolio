@@ -1,0 +1,9 @@
+{
+  "rewrites": [
+    {
+      "source": "/mishubishi",
+      "destination": "/api/vault"
+    }
+  ]
+}
+
