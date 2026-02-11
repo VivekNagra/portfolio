@@ -1,0 +1,31 @@
+/* Page-scoped styling for /mishubishi only.
+   Applied when <body> has the `mishubishi` class. */
+
+body.mishubishi {
+  /* Force a consistent (light) palette regardless of site theme */
+  color-scheme: light;
+
+  --background: 0 0% 100%;
+  --foreground: 240 10% 3.9%;
+  --muted-foreground: 240 3.8% 46.1%;
+  --primary: 346 77% 49%;
+  --primary-foreground: 0 0% 100%;
+  --border: 240 5.9% 90%;
+
+  background-color: hsl(var(--background));
+  background-image:
+    radial-gradient(900px 520px at 80% -10%, hsl(var(--primary) / .16), transparent),
+    radial-gradient(800px 420px at 20% 10%, hsl(var(--primary) / .10), transparent);
+}
+
+/* If the rest of the site uses dark mode, keep mishubishi light */
+html.dark body.mishubishi {
+  color-scheme: light;
+  --background: 0 0% 100%;
+  --foreground: 240 10% 3.9%;
+  --muted-foreground: 240 3.8% 46.1%;
+  --primary: 346 77% 49%;
+  --primary-foreground: 0 0% 100%;
+  --border: 240 5.9% 90%;
+}
+

@@ -1,5 +1,6 @@
-import { useCallback, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import MishubishiShell from './MishubishiShell.jsx'
+import './mishubishi.css'
 
 export default function MishubishiGate() {
   const [password, setPassword] = useState('')
@@ -7,6 +8,18 @@ export default function MishubishiGate() {
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState('')
   const inputRef = useRef(null)
+
+  // Page-scoped theme: force light mode for this route
+  useEffect(() => {
+    const root = document.documentElement
+    const hadDark = root.classList.contains('dark')
+    root.classList.remove('dark')
+    document.body.classList.add('mishubishi')
+    return () => {
+      document.body.classList.remove('mishubishi')
+      if (hadDark) root.classList.add('dark')
+    }
+  }, [])
 
   const onSubmit = useCallback(
     async (e) => {
