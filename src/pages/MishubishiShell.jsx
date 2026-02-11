@@ -105,43 +105,43 @@ export default function MishubishiShell() {
       <button
         type="button"
         onClick={toggleMusic}
-        className="pointer-events-auto fixed bottom-4 right-4 z-50 rounded-full border border-border bg-background/90 px-4 py-3 text-sm font-extrabold text-muted-foreground shadow-lg backdrop-blur"
+        className="pointer-events-auto fixed bottom-4 right-4 z-50 rounded-full border border-zinc-200 bg-white/95 px-4 py-3 text-sm font-extrabold text-zinc-800 shadow-lg backdrop-blur"
       >
         Music: {musicOn ? 'On' : 'Off'}
       </button>
 
       {accepted && (
         <>
-          <div className="pointer-events-none fixed top-4 left-1/2 z-50 -translate-x-1/2 rounded-2xl border border-border bg-background/90 px-4 py-3 text-center shadow-lg backdrop-blur">
-            <div className="text-xs font-extrabold text-muted-foreground">
+          <div className="pointer-events-none fixed top-4 left-1/2 z-50 -translate-x-1/2 rounded-2xl border border-zinc-200 bg-white/95 px-5 py-3 text-center shadow-lg backdrop-blur">
+            <div className="text-xs font-extrabold text-zinc-700">
               since you said yes please be ready for our date ill come pick you up in.
             </div>
-            <div className="mt-2 font-script text-3xl text-primary leading-none tabular-nums">
+            <div className="mt-2 font-script text-3xl text-rose-600 leading-none tabular-nums">
               {remaining.days}d {remaining.hours}h {remaining.minutes}m {remaining.seconds}s
             </div>
-            <div className="mt-1 text-[11px] font-bold text-muted-foreground">
+            <div className="mt-1 text-[11px] font-bold text-zinc-600">
               Countdown to 14 Feb 2026 · 12:00 CET
             </div>
           </div>
 
           {slides.length > 0 && (
-            <div className="pointer-events-auto fixed left-1/2 top-1/2 z-40 w-[320px] -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-2xl border border-border bg-background/90 shadow-lg backdrop-blur">
+            <div className="pointer-events-auto fixed bottom-4 left-1/2 z-40 w-[320px] -translate-x-1/2 overflow-hidden rounded-2xl border border-zinc-200 bg-white/95 shadow-lg backdrop-blur">
               <img src={slides[slideIdx]} alt="Slideshow" className="h-56 w-full object-cover" />
               <div className="flex items-center justify-between gap-2 px-3 py-2">
                 <button
                   type="button"
                   onClick={() => setSlideIdx((i) => (i - 1 + slides.length) % slides.length)}
-                  className="rounded-full border border-[hsl(var(--primary)/.30)] px-3 py-1 text-xs font-extrabold text-muted-foreground"
+                  className="rounded-full border border-rose-200 bg-white px-3 py-1 text-xs font-extrabold text-zinc-800"
                 >
                   Prev
                 </button>
-                <div className="text-xs font-bold text-muted-foreground">
+                <div className="text-xs font-bold text-zinc-700">
                   {slideIdx + 1} / {slides.length}
                 </div>
                 <button
                   type="button"
                   onClick={() => setSlideIdx((i) => (i + 1) % slides.length)}
-                  className="rounded-full border border-[hsl(var(--primary)/.30)] px-3 py-1 text-xs font-extrabold text-muted-foreground"
+                  className="rounded-full border border-rose-200 bg-white px-3 py-1 text-xs font-extrabold text-zinc-800"
                 >
                   Next
                 </button>

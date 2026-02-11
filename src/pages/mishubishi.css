@@ -13,6 +13,7 @@ body.mishubishi {
   --primary-foreground: 0 0% 100%;
   --border: 240 6% 86%;
 
+  color: hsl(var(--foreground));
   background-color: hsl(var(--background));
   background-image:
     radial-gradient(900px 520px at 80% -10%, hsl(var(--primary) / .16), transparent),
@@ -28,5 +29,19 @@ html.dark body.mishubishi {
   --primary: 346 77% 49%;
   --primary-foreground: 0 0% 100%;
   --border: 240 6% 86%;
+}
+
+/* Hard overrides for readability on this route only */
+body.mishubishi .text-foreground {
+  color: hsl(var(--foreground)) !important;
+}
+body.mishubishi .text-muted-foreground {
+  color: hsl(var(--muted-foreground)) !important;
+}
+body.mishubishi .bg-background {
+  background-color: hsl(var(--background)) !important;
+}
+body.mishubishi .bg-background\/90 {
+  background-color: hsl(var(--background) / 0.9) !important;
 }
 
