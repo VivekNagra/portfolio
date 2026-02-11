@@ -71,10 +71,11 @@ function setSecurityHeaders(res) {
     'Content-Security-Policy',
     [
       "default-src 'none'",
-      "img-src 'self' data:",
-      "style-src 'unsafe-inline'",
+      "img-src 'self' data: https://media.giphy.com https://i.giphy.com",
+      "style-src 'unsafe-inline' https://fonts.googleapis.com",
       // Needed for the secret page interactions (no external scripts are allowed).
       "script-src 'unsafe-inline'",
+      "font-src https://fonts.gstatic.com",
       "base-uri 'none'",
       "form-action 'self'",
       "frame-ancestors 'none'",
@@ -149,28 +150,43 @@ function renderSecretContent({ logoutHref }) {
   // Keep it self-contained: no external scripts; images are avoided to preserve strict CSP.
   return `
     <style>
+      @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;600;700&display=swap');
+
+      /* Shadcn-ish tokens */
+      :root {
+        --background: 0 0% 100%;
+        --foreground: 240 10% 3.9%;
+        --muted-foreground: 240 3.8% 46.1%;
+        --primary: 346 77% 49%; /* rose */
+        --primary-foreground: 0 0% 100%;
+        --border: 240 5.9% 90%;
+      }
+
       /* Page */
-      .val-root { position: relative; min-height: 100vh; display: grid; place-items: center; padding: 24px 16px; overflow: hidden; }
-      .val-card { width: min(680px, calc(100vw - 32px)); border-radius: 18px; border: 1px solid rgba(255,255,255,.12); background: rgba(255,255,255,.04); box-shadow: 0 24px 90px rgba(0,0,0,.55); padding: 22px; text-align: center; position: relative; z-index: 2; }
-      .val-muted { color: rgba(231,234,244,.75); }
+      body { background: hsl(var(--background)); color: hsl(var(--foreground)); }
+      .val-root { position: relative; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 24px 16px; overflow: hidden; background: hsl(var(--background)); }
+      .val-card { width: min(720px, calc(100vw - 32px)); border-radius: 18px; border: 1px solid hsl(var(--border)); background: hsl(var(--background)); box-shadow: 0 24px 90px rgba(0,0,0,.10); padding: 26px; text-align: center; position: relative; z-index: 2; }
+      .val-muted { color: hsl(var(--muted-foreground)); }
       .val-title { margin: 6px 0 8px; font-size: clamp(34px, 5vw, 64px); letter-spacing: .2px; }
-      .val-sub { margin: 0 0 18px; font-size: clamp(24px, 4vw, 46px); color: rgba(231,234,244,.85); }
+      .val-sub { margin: 0 0 18px; font-size: clamp(24px, 4vw, 46px); color: color-mix(in oklab, hsl(var(--primary)), black 15%); }
       .val-kicker { margin: 0 0 8px; font-size: 15px; }
       .val-par { margin: 0 auto 14px; max-width: 56ch; font-size: 15px; line-height: 1.6; }
       .val-sign { margin: 0 0 18px; font-size: 13px; }
+      .font-script { font-family: 'Dancing Script', ui-serif, Georgia, serif; }
+      .font-body { font-family: ui-sans-serif, system-ui, Segoe UI, Roboto, Arial; }
 
       /* Buttons */
       .btn-row { display: flex; flex-direction: column; align-items: center; gap: 14px; margin-top: 12px; position: relative; }
-      .btn { appearance: none; border: 1px solid rgba(255,255,255,.14); background: rgba(255,255,255,.06); color: rgba(231,234,244,.95); border-radius: 999px; padding: 14px 22px; font-weight: 900; font-size: 18px; cursor: pointer; transition: transform .18s ease, background .18s ease, filter .18s ease; user-select: none; }
-      .btn:hover { background: rgba(255,255,255,.10); }
-      .btn-primary { border-color: rgba(120,140,255,.45); background: linear-gradient(135deg, rgba(120,140,255,.95), rgba(76,210,255,.85)); color: #071018; box-shadow: 0 16px 55px rgba(120,140,255,.18); }
+      .btn { appearance: none; border: 1px solid color-mix(in oklab, hsl(var(--primary)), transparent 70%); background: transparent; color: hsl(var(--muted-foreground)); border-radius: 999px; padding: 14px 22px; font-weight: 800; font-size: 18px; cursor: pointer; transition: transform .18s ease, background .18s ease, filter .18s ease; user-select: none; }
+      .btn:hover { background: color-mix(in oklab, hsl(var(--primary)), transparent 92%); }
+      .btn-primary { border-color: transparent; background: hsl(var(--primary)); color: hsl(var(--primary-foreground)); box-shadow: 0 18px 60px color-mix(in oklab, hsl(var(--primary)), transparent 70%); }
       .btn-primary:hover { filter: brightness(1.05); }
       .btn-ghost { font-weight: 800; font-size: 15px; padding: 10px 16px; }
 
       /* Top actions */
       .topbar { position: absolute; top: 14px; right: 14px; z-index: 3; display: flex; gap: 10px; align-items: center; }
-      a.toplink { text-decoration: none; display: inline-flex; align-items: center; justify-content: center; border-radius: 999px; padding: 10px 12px; border: 1px solid rgba(255,255,255,.14); background: rgba(255,255,255,.06); color: rgba(231,234,244,.9); font-weight: 800; font-size: 13px; }
-      a.toplink:hover { background: rgba(255,255,255,.10); }
+      a.toplink { text-decoration: none; display: inline-flex; align-items: center; justify-content: center; border-radius: 999px; padding: 10px 12px; border: 1px solid hsl(var(--border)); background: hsl(var(--background)); color: hsl(var(--muted-foreground)); font-weight: 800; font-size: 13px; }
+      a.toplink:hover { background: color-mix(in oklab, hsl(var(--primary)), transparent 95%); }
 
       /* Hearts */
       .heart { position: absolute; left: 50%; top: 110%; transform: translateX(-50%); font-size: 18px; opacity: 0; pointer-events: none; }
@@ -197,8 +213,8 @@ function renderSecretContent({ logoutHref }) {
       .bounce-in { animation: bounceIn .6s ease-out both; }
 
       @keyframes pulseGlow {
-        0%, 100% { box-shadow: 0 18px 58px rgba(120,140,255,.20); }
-        50% { box-shadow: 0 24px 85px rgba(120,140,255,.35); }
+        0%, 100% { box-shadow: 0 18px 60px color-mix(in oklab, hsl(var(--primary)), transparent 72%); }
+        50% { box-shadow: 0 26px 95px color-mix(in oklab, hsl(var(--primary)), transparent 60%); }
       }
       .pulse { animation: pulseGlow 2s ease-in-out infinite; }
 
@@ -218,19 +234,19 @@ function renderSecretContent({ logoutHref }) {
       <!-- QUESTION VIEW -->
       <div class="val-card bounce-in" id="view-question">
         <div style="font-size: 56px; margin-bottom: 8px;">💘</div>
-        <p class="val-muted val-kicker">Dear Manice,</p>
-        <p class="val-muted val-par">
+        <p class="val-muted val-kicker font-body">Dear Manice,</p>
+        <p class="val-muted val-par font-body">
           Every moment with you feels like a dream. You make my world brighter,
           warmer, and so much more beautiful. So I have a very important question…
         </p>
 
-        <h1 class="val-title">Manice,</h1>
-        <h2 class="val-sub">Will You Be My Valentine?</h2>
+        <h1 class="val-title font-script" style="color: hsl(var(--primary));">Manice,</h1>
+        <h2 class="val-sub font-script">Will You Be My Valentine?</h2>
 
-        <p class="val-muted val-sign">— with all my love, Vivek 💕</p>
+        <p class="val-muted val-sign font-body">— with all my love, Vivek 💕</p>
 
         <div class="btn-row" id="btn-area">
-          <button class="btn btn-primary pulse" id="btn-yes" type="button">Yes! 💖</button>
+          <button class="btn btn-primary pulse font-body" id="btn-yes" type="button">Yes! 💖</button>
           <button class="btn" id="btn-no" type="button">No 😢</button>
         </div>
       </div>
@@ -238,15 +254,24 @@ function renderSecretContent({ logoutHref }) {
       <!-- ACCEPTED VIEW -->
       <div class="val-card bounce-in" id="view-accepted" style="display:none;">
         <div style="font-size: 72px; margin-bottom: 10px;">💖</div>
-        <h1 class="val-title" style="margin-top:0;">Yay!!!</h1>
-        <p class="val-muted" style="font-size: clamp(20px, 3.2vw, 34px); margin: 0 0 6px;">Vivek &amp; Manice forever! 💕</p>
-        <p class="val-muted" style="font-size: 18px; margin: 12px 0 0;">I knew you'd say yes 🥰</p>
+        <h1 class="val-title font-script" style="margin-top:0; color: hsl(var(--primary));">Yay!!!</h1>
+        <p class="val-muted font-script" style="font-size: clamp(20px, 3.2vw, 34px); margin: 0 0 6px; color: color-mix(in oklab, hsl(var(--primary)), black 8%);">Vivek &amp; Manice forever! 💕</p>
+        <p class="val-muted font-body" style="font-size: 18px; margin: 12px 0 0;">I knew you'd say yes 🥰</p>
+        <div class="bounce-in" style="margin-top: 18px; animation-delay:.25s;">
+          <div style="margin: 0 auto; width: 256px; border-radius: 16px; overflow: hidden; box-shadow: 0 18px 60px rgba(0,0,0,.12); border: 1px solid hsl(var(--border));">
+            <img
+              src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExcTJ5ZXRrOHhsMGx6Y2R0MnJ6OHJrcm1nNHF4a3BhYnU2MnRxdSZlcD12MV9naWZzX3NlYXJjaCZjdD1n/M90mJvfWfd5mbUuULX/giphy.gif"
+              alt="Cute romantic celebration"
+              style="display:block; width: 256px; height: auto;"
+            />
+          </div>
+        </div>
         <div style="display:flex; justify-content:center; gap: 10px; margin-top: 18px; font-size: 40px;">
           <span class="bounce-in" style="animation-delay:.2s;">🌹</span>
           <span class="bounce-in" style="animation-delay:.35s;">💘</span>
           <span class="bounce-in" style="animation-delay:.5s;">🌹</span>
         </div>
-        <button class="btn btn-ghost" id="btn-back" type="button" style="margin-top: 18px;">← Go back</button>
+        <button class="btn btn-ghost font-body" id="btn-back" type="button" style="margin-top: 18px;">← Go back</button>
       </div>
     </div>
 
