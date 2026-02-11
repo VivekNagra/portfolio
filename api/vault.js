@@ -289,16 +289,26 @@ function renderSecretContent() {
 
         function moveNoButton() {
           if (noCount >= noTexts.length - 1) return;
-          const rect = root.getBoundingClientRect();
-          const buttonWidth = 160;
-          const buttonHeight = 52;
-          const padding = 22;
-          const top = padding + Math.random() * (rect.height - buttonHeight - padding * 2);
-          const left = padding + Math.random() * (rect.width - buttonWidth - padding * 2);
 
-          btnNo.style.position = 'absolute';
+          // Jump anywhere on screen (closest behavior to your React version).
+          const vw = document.documentElement.clientWidth || window.innerWidth;
+          const vh = document.documentElement.clientHeight || window.innerHeight;
+
+          const btnRect = btnNo.getBoundingClientRect();
+          const buttonWidth = Math.max(120, Math.ceil(btnRect.width || 160));
+          const buttonHeight = Math.max(44, Math.ceil(btnRect.height || 52));
+          const padding = 20;
+
+          const maxTop = Math.max(padding, vh - buttonHeight - padding);
+          const maxLeft = Math.max(padding, vw - buttonWidth - padding);
+
+          const top = padding + Math.random() * (maxTop - padding);
+          const left = padding + Math.random() * (maxLeft - padding);
+
+          btnNo.style.position = 'fixed';
           btnNo.style.top = top + 'px';
           btnNo.style.left = left + 'px';
+          btnNo.style.zIndex = '10';
 
           noCount = Math.min(noCount + 1, noTexts.length - 1);
           btnNo.textContent = noTexts[noCount];
@@ -360,6 +370,7 @@ function renderSecretContent() {
           btnNo.style.position = '';
           btnNo.style.top = '';
           btnNo.style.left = '';
+          btnNo.style.zIndex = '';
           burstConfetti();
           startHearts();
         }
@@ -371,6 +382,7 @@ function renderSecretContent() {
           btnNo.style.position = '';
           btnNo.style.top = '';
           btnNo.style.left = '';
+          btnNo.style.zIndex = '';
           setScales();
           viewA.style.display = 'none';
           viewQ.style.display = 'block';
