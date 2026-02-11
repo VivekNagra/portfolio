@@ -114,8 +114,6 @@ function renderPasswordPage({ error = '', message = '' }) {
 }
 
 function renderSecretPage(req) {
-  const logoutHref = `${getPathname(req)}?logout=1`
-
   return `<!doctype html>
 <html lang="en">
   <head>
@@ -128,12 +126,12 @@ function renderSecretPage(req) {
     </style>
   </head>
   <body>
-    ${renderSecretContent({ logoutHref: escapeHtml(logoutHref) })}
+    ${renderSecretContent()}
   </body>
 </html>`
 }
 
-function renderSecretContent({ logoutHref }) {
+function renderSecretContent() {
   // Converted from your React version into self-contained HTML/CSS/JS (no React, no Tailwind).
   // Keep it self-contained: no external scripts; images are avoided to preserve strict CSP.
   return `
@@ -170,11 +168,6 @@ function renderSecretContent({ logoutHref }) {
       .btn-primary { border-color: transparent; background: hsl(var(--primary)); color: hsl(var(--primary-foreground)); box-shadow: 0 18px 60px color-mix(in oklab, hsl(var(--primary)), transparent 70%); }
       .btn-primary:hover { filter: brightness(1.05); }
       .btn-ghost { font-weight: 800; font-size: 15px; padding: 10px 16px; }
-
-      /* Top actions */
-      .topbar { position: absolute; top: 14px; right: 14px; z-index: 3; display: flex; gap: 10px; align-items: center; }
-      a.toplink { text-decoration: none; display: inline-flex; align-items: center; justify-content: center; border-radius: 999px; padding: 10px 12px; border: 1px solid hsl(var(--border)); background: hsl(var(--background)); color: hsl(var(--muted-foreground)); font-weight: 800; font-size: 13px; }
-      a.toplink:hover { background: color-mix(in oklab, hsl(var(--primary)), transparent 95%); }
 
       /* Hearts */
       .heart { position: absolute; left: 50%; top: 110%; transform: translateX(-50%); font-size: 18px; opacity: 0; pointer-events: none; }
@@ -213,10 +206,6 @@ function renderSecretContent({ logoutHref }) {
     </style>
 
     <div class="val-root" id="val-root">
-      <div class="topbar">
-        <a class="toplink" href="${logoutHref}">Log out</a>
-      </div>
-
       <div class="confetti" id="confetti" aria-hidden="true"></div>
 
       <!-- QUESTION VIEW -->
@@ -406,73 +395,6 @@ function renderSecretContent({ logoutHref }) {
   `
 }
 
-function setSessionCookie(res, secret) {
-  const now = Date.now()
-  const maxAge = getMaxAgeSeconds()
-  const exp = now + (maxAge * 1000)
-  const payload = `${exp}`
-  const sig = sign(payload, secret)
-  const value = `${payload}.${sig}`
-
-  // __Host- requires Secure; Path=/; no Domain attribute.
-  const cookie = [
-    `${COOKIE_NAME}=${value}`,
-    'Path=/',
-    `Max-Age=${maxAge}`,
-    'HttpOnly',
-    'Secure',
-    'SameSite=Strict',
-  ].join('; ')
-
-  res.setHeader('Set-Cookie', cookie)
-}
-
-function clearCookie(res) {
-  const cookie = [
-    `${COOKIE_NAME}=`,
-    'Path=/',
-    'Max-Age=0',
-    'HttpOnly',
-    'Secure',
-    'SameSite=Strict',
-  ].join('; ')
-  res.setHeader('Set-Cookie', cookie)
-}
-
-function verifySessionCookie(req, secret) {
-  const raw = req.headers?.cookie || ''
-  const cookies = parseCookies(raw)
-  const value = cookies[COOKIE_NAME]
-  if (!value) return false
-
-  const [expStr, sig] = value.split('.')
-  if (!expStr || !sig) return false
-
-  const expMs = Number(expStr)
-  if (!Number.isFinite(expMs)) return false
-  if (Date.now() > expMs) return false
-
-  const expected = sign(expStr, secret)
-  return timingSafeEqualStr(sig, expected)
-}
-
-function sign(payload, secret) {
-  return crypto.createHmac('sha256', secret).update(payload).digest('base64url')
-}
-
-function parseCookies(header) {
-  const out = {}
-  const parts = String(header).split(';')
-  for (const p of parts) {
-    const idx = p.indexOf('=')
-    if (idx === -1) continue
-    const k = p.slice(0, idx).trim()
-    const v = p.slice(idx + 1).trim()
-    if (!k) continue
-    out[k] = v
-  }
-  return out
-}
 
 async function readBody(req) {
   if (req.body && typeof req.body === 'object') return req.body
@@ -511,15 +433,4 @@ function timingSafeEqualStr(a, b) {
   return crypto.timingSafeEqual(ab, bb)
 }
 
-function getMaxAgeSeconds() {
-  const raw = process.env.VAULT_MAX_AGE_SECONDS
-  const n = raw ? Number(raw) : NaN
-  return Number.isFinite(n) && n > 60 ? Math.floor(n) : DEFAULT_MAX_AGE_SECONDS
-}
-
-function getPathname(req) {
-  const rawUrl = req.url || '/'
-  const idx = rawUrl.indexOf('?')
-  return idx === -1 ? rawUrl : rawUrl.slice(0, idx)
-}
 
