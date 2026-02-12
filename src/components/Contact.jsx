@@ -53,7 +53,7 @@ export default function Contact() {
       setStatus('success')
       setForm({ name: '', email: '', message: '' })
       setErrors({})
-    } catch (err) {
+    } catch {
       setStatus('error')
     }
   }

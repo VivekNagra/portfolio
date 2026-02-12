@@ -2,6 +2,10 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { AnimatePresence, LayoutGroup, motion } from 'motion/react'
 import { useCursorLight } from '../hooks/useCursorLight'
 
+// ESLint doesn't recognize `motion.*` JSX member usage as a "use".
+// Keep an explicit reference to satisfy no-unused-vars.
+const Motion = motion
+
 const experiences = [
   {
     id: 'student-python-dev',

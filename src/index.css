@@ -1,5 +1,4 @@
 @import "tailwindcss";
-@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;600;700&display=swap');
 
 @theme {
   /* Light mode = ice blue */
@@ -8,14 +7,6 @@
 }
 
 :root {
-  /* Shadcn-style tokens used by /mishubishi page */
-  --background: 0 0% 100%;
-  --foreground: 240 10% 3.9%;
-  --muted-foreground: 240 3.8% 46.1%;
-  --primary: 346 77% 49%;
-  --primary-foreground: 0 0% 100%;
-  --border: 240 5.9% 90%;
-
   --page-bg: #ffffff;
   --page-text: #18181b; /* zinc-900 */
   --muted-text: #52525b; /* zinc-600 */
@@ -40,13 +31,6 @@ html.dark {
   --surface-bg: rgba(24, 24, 27, 0.68);
   --surface-bg-strong: #18181b; /* zinc-900 */
   --surface-border: rgba(244, 244, 245, 0.10);
-  /* Dark-mode tokens (optional; keeps mishubishi readable in dark mode too) */
-  --background: 240 10% 7%;
-  --foreground: 0 0% 98%;
-  --muted-foreground: 240 5% 65%;
-  --primary: 346 77% 55%;
-  --primary-foreground: 0 0% 100%;
-  --border: 240 4% 20%;
   /* Cursor glow tuning (dark mode) */
   --cursor-glow-mul: 1;
   --cursor-glow-hi: 82%;
@@ -120,25 +104,6 @@ body {
     radial-gradient(1000px 520px at 85% -10%, color-mix(in oklab, var(--color-brand), transparent 84%), transparent),
     radial-gradient(900px 460px at 10% 10%, color-mix(in oklab, var(--color-brand-2), transparent 92%), transparent);
   transition: background-color 250ms ease;
-}
-
-/* Animations referenced by inline styles in Valentine.tsx */
-@keyframes bounce-in {
-  0% { transform: scale(.88); opacity: 0; }
-  70% { transform: scale(1.04); opacity: 1; }
-  100% { transform: scale(1); opacity: 1; }
-}
-@keyframes pulse-glow {
-  0%, 100% { box-shadow: 0 18px 60px hsl(var(--primary) / .30); }
-  50% { box-shadow: 0 26px 95px hsl(var(--primary) / .45); }
-}
-
-/* Mishubishi route theme (scoped) */
-body.mishubishi {
-  background-color: hsl(var(--background));
-  background-image:
-    radial-gradient(900px 520px at 80% -10%, hsl(var(--primary) / .16), transparent),
-    radial-gradient(800px 420px at 20% 10%, hsl(var(--primary) / .10), transparent);
 }
 
 html.dark body,
