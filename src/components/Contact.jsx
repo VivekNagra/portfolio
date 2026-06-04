@@ -1,5 +1,6 @@
 import { useState, useMemo, useRef } from 'react'
 import { useCursorLight } from '../hooks/useCursorLight'
+import { trackEvent, AnalyticsEvent } from '../lib/analytics'
 
 export default function Contact() {
   const [status, setStatus] = useState('idle') // idle | loading | success | error
@@ -31,9 +32,13 @@ export default function Contact() {
   async function onSubmit(e) {
     e.preventDefault()
     setServerError('')
+    trackEvent(AnalyticsEvent.ContactSubmit)
     const nextErrors = validate(form)
     setErrors(nextErrors)
-    if (Object.keys(nextErrors).length > 0) return
+    if (Object.keys(nextErrors).length > 0) {
+      trackEvent(AnalyticsEvent.ContactValidationError, { fields: Object.keys(nextErrors).join(',') })
+      return
+    }
     setStatus('loading')
     try {
       const resp = await fetch('/api/contact', {
@@ -51,10 +56,12 @@ export default function Contact() {
         throw new Error(data.error || 'Failed')
       }
       setStatus('success')
+      trackEvent(AnalyticsEvent.ContactSuccess)
       setForm({ name: '', email: '', message: '' })
       setErrors({})
     } catch {
       setStatus('error')
+      trackEvent(AnalyticsEvent.ContactError, { status: 'request_failed' })
     }
   }
 

@@ -1,5 +1,6 @@
 import { useEffect, useState, useRef, useCallback } from 'react'
 import profileUrl from '../assets/profile.jpg'
+import { trackEvent, AnalyticsEvent } from '../lib/analytics'
 
 function Typewriter({
   text,
@@ -101,6 +102,7 @@ export default function Hero() {
             <a
               href="#projects"
               aria-label="View projects"
+              onClick={() => trackEvent(AnalyticsEvent.CtaClick, { cta: 'view_projects', location: 'hero' })}
               className="group relative inline-flex w-full items-center justify-center gap-2 rounded-md px-5 py-2.5 font-semibold text-white shadow-sm transition hover:shadow-[0_12px_30px_-10px_color-mix(in_oklab,var(--color-brand),transparent_60%)] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[--color-brand]/40 active:translate-y-[0.5px] sm:w-auto btn-ambient btn-pulse"
               style={{ boxShadow: '0 0 0 2px color-mix(in oklab, var(--color-brand), transparent 80%)' }}
             >
@@ -120,6 +122,7 @@ export default function Hero() {
             <a
               href="#contact-form"
               aria-label="Contact"
+              onClick={() => trackEvent(AnalyticsEvent.CtaClick, { cta: 'contact', location: 'hero' })}
               className="group relative inline-flex w-full items-center justify-center gap-2 rounded-md px-5 py-2.5 font-semibold text-white shadow-sm transition hover:shadow-[0_12px_30px_-10px_color-mix(in_oklab,var(--color-brand),transparent_60%)] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[--color-brand]/40 active:translate-y-[0.5px] sm:w-auto btn-ambient btn-pulse"
               style={{ boxShadow: '0 0 0 2px color-mix(in oklab, var(--color-brand), transparent 80%)' }}
             >
@@ -184,6 +187,7 @@ export default function Hero() {
               target="_blank"
               rel="noopener noreferrer"
               aria-label="GitHub"
+              onClick={() => trackEvent(AnalyticsEvent.SocialClick, { network: 'github', location: 'hero' })}
               className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-[color:var(--surface-border)] bg-[var(--surface-bg)] text-[var(--muted-text)] shadow-sm ring-1 ring-[--color-brand]/10 transition hover:scale-105 hover:ring-[--color-brand]/40 hover:shadow-[0_8px_20px_-8px_color-mix(in_oklab,var(--color-brand),transparent_60%)] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[--color-brand]/40"
               style={{ boxShadow: '0 0 0 2px color-mix(in oklab, var(--color-brand), transparent 85%)' }}
             >
@@ -196,6 +200,7 @@ export default function Hero() {
               target="_blank"
               rel="noopener noreferrer"
               aria-label="LinkedIn"
+              onClick={() => trackEvent(AnalyticsEvent.SocialClick, { network: 'linkedin', location: 'hero' })}
               className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-[color:var(--surface-border)] bg-[var(--surface-bg)] text-[var(--muted-text)] shadow-sm ring-1 ring-[--color-brand]/10 transition hover:scale-105 hover:ring-[--color-brand]/40 hover:shadow-[0_8px_20px_-8px_color-mix(in_oklab,var(--color-brand),transparent_60%)] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[--color-brand]/40"
               style={{ boxShadow: '0 0 0 2px color-mix(in oklab, var(--color-brand), transparent 85%)' }}
             >

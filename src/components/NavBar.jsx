@@ -1,10 +1,21 @@
 import { useState, useRef, useEffect } from 'react'
 import { useTheme } from '../hooks/useTheme'
+import { trackEvent, AnalyticsEvent } from '../lib/analytics'
 
 export default function NavBar() {
   const [open, setOpen] = useState(false)
   const { isDark, toggle } = useTheme()
   const headerRef = useRef(null)
+
+  function handleNavClick(target) {
+    trackEvent(AnalyticsEvent.NavClick, { target })
+  }
+
+  function handleThemeToggle() {
+    // isDark reflects the current state; toggling moves to the opposite theme.
+    trackEvent(AnalyticsEvent.ThemeToggle, { theme: isDark ? 'light' : 'dark' })
+    toggle()
+  }
 
   // Keep a CSS variable in sync with the sticky header height so anchor links
   // (e.g. #experience) don't get clipped under the navbar.
@@ -52,14 +63,14 @@ export default function NavBar() {
           <a href="#home" className="text-lg font-semibold tracking-tight text-[var(--page-text)]">Vivek Singh Nagra</a>
 
           <nav className="hidden gap-6 md:flex">
-            <a href="#projects" className="text-[var(--muted-text)] hover:text-[--color-brand]">Projects</a>
-            <a href="#experience" className="text-[var(--muted-text)] hover:text-[--color-brand]">Experience</a>
-            <a href="#skills" className="text-[var(--muted-text)] hover:text-[--color-brand]">Skills</a>
-            <a href="#contact-form" className="text-[var(--muted-text)] hover:text-[--color-brand]">Contact</a>
+            <a href="#projects" onClick={() => handleNavClick('projects')} className="text-[var(--muted-text)] hover:text-[--color-brand]">Projects</a>
+            <a href="#experience" onClick={() => handleNavClick('experience')} className="text-[var(--muted-text)] hover:text-[--color-brand]">Experience</a>
+            <a href="#skills" onClick={() => handleNavClick('skills')} className="text-[var(--muted-text)] hover:text-[--color-brand]">Skills</a>
+            <a href="#contact-form" onClick={() => handleNavClick('contact')} className="text-[var(--muted-text)] hover:text-[--color-brand]">Contact</a>
           </nav>
 
           <div className="flex items-center gap-2">
-            <ThemeToggle isDark={isDark} onToggle={toggle} />
+            <ThemeToggle isDark={isDark} onToggle={handleThemeToggle} />
             <button
               className="md:hidden rounded-md border border-[color:var(--surface-border)] p-2"
               aria-label="Open menu"
@@ -76,11 +87,11 @@ export default function NavBar() {
 
         {open && (
           <div id="mobile-nav" className="mt-3 flex flex-col gap-2 md:hidden">
-            <a href="#home" onClick={closeMenu} className="rounded-md px-2 py-2 text-[var(--muted-text)] hover:bg-[--color-brand]/10">Home</a>
-            <a href="#projects" onClick={closeMenu} className="rounded-md px-2 py-2 text-[var(--muted-text)] hover:bg-[--color-brand]/10">Projects</a>
-            <a href="#experience" onClick={closeMenu} className="rounded-md px-2 py-2 text-[var(--muted-text)] hover:bg-[--color-brand]/10">Experience</a>
-            <a href="#skills" onClick={closeMenu} className="rounded-md px-2 py-2 text-[var(--muted-text)] hover:bg-[--color-brand]/10">Skills</a>
-            <a href="#contact-form" onClick={closeMenu} className="rounded-md px-2 py-2 text-[var(--muted-text)] hover:bg-[--color-brand]/10">Contact</a>
+            <a href="#home" onClick={() => { handleNavClick('home'); closeMenu() }} className="rounded-md px-2 py-2 text-[var(--muted-text)] hover:bg-[--color-brand]/10">Home</a>
+            <a href="#projects" onClick={() => { handleNavClick('projects'); closeMenu() }} className="rounded-md px-2 py-2 text-[var(--muted-text)] hover:bg-[--color-brand]/10">Projects</a>
+            <a href="#experience" onClick={() => { handleNavClick('experience'); closeMenu() }} className="rounded-md px-2 py-2 text-[var(--muted-text)] hover:bg-[--color-brand]/10">Experience</a>
+            <a href="#skills" onClick={() => { handleNavClick('skills'); closeMenu() }} className="rounded-md px-2 py-2 text-[var(--muted-text)] hover:bg-[--color-brand]/10">Skills</a>
+            <a href="#contact-form" onClick={() => { handleNavClick('contact'); closeMenu() }} className="rounded-md px-2 py-2 text-[var(--muted-text)] hover:bg-[--color-brand]/10">Contact</a>
           </div>
         )}
       </div>

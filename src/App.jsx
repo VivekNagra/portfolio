@@ -7,8 +7,11 @@ import Skills from './components/Skills'
 import Contact from './components/Contact'
 import Footer from './components/Footer'
 import BackgroundFX from './components/BackgroundFX'
+import { useSectionViews } from './hooks/useSectionViews'
 
 function App() {
+  useSectionViews()
+
   return (
     <div className="relative min-h-full bg-[var(--page-bg)] text-[var(--page-text)] antialiased">
       <BackgroundFX />

@@ -1,5 +1,6 @@
 import { useRef } from 'react'
 import { useCursorLight } from '../hooks/useCursorLight'
+import { trackEvent, AnalyticsEvent } from '../lib/analytics'
 
 const items = [
   {
@@ -30,6 +31,9 @@ function ProjectCard({ p, i }) {
     <a
       ref={ref}
       href={p.link}
+      target="_blank"
+      rel="noopener noreferrer"
+      onClick={() => trackEvent(AnalyticsEvent.ProjectClick, { project: p.title, href: p.link })}
       className={`cursor-light reveal reveal-delay-${i % 3} group rounded-lg border border-[color:var(--surface-border)] bg-[var(--surface-bg)] p-5 text-[var(--page-text)] transition will-change-transform`}
       onMouseMove={(e) => {
         const el = e.currentTarget
@@ -70,6 +74,7 @@ export default function Projects() {
           href="https://github.com/VivekNagra"
           target="_blank"
           rel="noopener noreferrer"
+          onClick={() => trackEvent(AnalyticsEvent.ProjectClick, { project: 'all_projects_github', href: 'https://github.com/VivekNagra' })}
           aria-label="View all projects on GitHub"
           className="group relative inline-flex items-center gap-2 rounded-md px-5 py-2.5 font-semibold text-white shadow-sm transition hover:shadow-[0_12px_30px_-10px_color-mix(in_oklab,var(--color-brand),transparent_60%)] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[--color-brand]/40 active:translate-y-[0.5px] btn-ambient btn-pulse"
           style={{ boxShadow: '0 0 0 2px color-mix(in oklab, var(--color-brand), transparent 80%)' }}
