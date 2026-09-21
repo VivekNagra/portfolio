@@ -1,0 +1,44 @@
+---
+description: Branch-first git workflow; never push or deploy without explicit approval
+alwaysApply: true
+---
+
+# Git Workflow
+
+## Never push or deploy without explicit approval
+
+Pushing, force-pushing, opening PRs, deploying, and anything else that leaves
+the local machine requires the user to say go ahead first. Committing locally
+is fine and does not need approval.
+
+When work is ready, stop and ask. Report the branch name and what is on it,
+then wait.
+
+```bash
+# ❌ BAD — publishing without being asked
+git commit -m "..." && git push
+
+# ✅ GOOD — commit locally, then stop and ask
+git commit -m "..."
+# "Committed to feature/contact-rate-limit. Want me to push it?"
+```
+
+## Work on a branch, never directly on main
+
+Before making changes, branch off up-to-date `main`. Follow the existing
+`feature/<short-description>` convention, or `fix/` and `chore/` when that
+describes the work better.
+
+```bash
+git checkout main && git pull
+git checkout -b feature/contact-rate-limit
+```
+
+If changes have already been started on `main` by mistake, move them onto a
+branch before committing:
+
+```bash
+git checkout -b feature/contact-rate-limit  # carries uncommitted work across
+```
+
+Keep `main` clean so it always matches what is deployed.
